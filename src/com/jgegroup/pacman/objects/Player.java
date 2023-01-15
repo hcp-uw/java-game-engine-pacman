@@ -1,12 +1,10 @@
 package src.com.jgegroup.pacman.objects;
 
-import java.awt.*;
-
 public abstract class Player {
-    private Point position;
+    private Position position;
 
-    public Player(int x, int y) {
-        this.position = new Point(x,y);
+    public Player(double x, double y) {
+        this.position = new Position(x,y);
     }
     public abstract void moveLeft();
     public abstract void moveRight();
@@ -15,4 +13,6 @@ public abstract class Player {
 
     public abstract void death();
     public abstract void respawn();
+
+    public Position getPosition(){return position;}
 }

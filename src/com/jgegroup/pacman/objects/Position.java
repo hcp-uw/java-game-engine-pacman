@@ -1,4 +1,4 @@
-package jgegroup.pacman.objects;
+package src.com.jgegroup.pacman.objects;
 
 public class Position {
     private double x;
