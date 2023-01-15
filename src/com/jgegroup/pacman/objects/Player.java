@@ -1,12 +1,18 @@
 package src.com.jgegroup.pacman.objects;
 
-public class Player {
-    public void moveLeft(){}
-    public void moveRight(){}
-    public void moveUp(){}
-    public void moveDown(){}
+import java.awt.*;
 
-    public void death(){}
-    public void respawn(){}
-    protected Collidable[] getCollision(){return null;}
+public abstract class Player {
+    private Point position;
+
+    public Player(int x, int y) {
+        this.position = new Point(x,y);
+    }
+    public abstract void moveLeft();
+    public abstract void moveRight();
+    public abstract void moveUp();
+    public abstract void moveDown();
+
+    public abstract void death();
+    public abstract void respawn();
 }
