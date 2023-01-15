@@ -6,11 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="java-game-engine-pacman" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="java-game-engine-pacman" target="17" />
+      <module name="java-game-engine-pacman" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
