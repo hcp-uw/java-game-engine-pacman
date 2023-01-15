@@ -9,6 +9,10 @@ public class Position {
         this.y = y;
     }
 
+    public Position getLocation() {
+        return this;
+    }
+
     public double getX() {
         return x;
     }
