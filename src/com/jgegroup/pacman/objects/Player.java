@@ -1,10 +1,11 @@
 package src.com.jgegroup.pacman.objects;
 
-public abstract class Player {
-    private Position position;
-
+public abstract class Player extends GameObjects{
     public Player(double x, double y) {
-        this.position = new Position(x,y);
+        super(x,y);
+    }
+    public Player(Position position){
+        super(position);
     }
     public abstract void moveLeft();
     public abstract void moveRight();
@@ -14,5 +15,5 @@ public abstract class Player {
     public abstract void death();
     public abstract void respawn();
 
-    public Position getPosition(){return position;}
+
 }

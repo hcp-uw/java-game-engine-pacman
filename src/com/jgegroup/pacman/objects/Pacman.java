@@ -1,6 +1,6 @@
 package src.com.jgegroup.pacman.objects;
 
-public class Pacman extends src.com.jgegroup.pacman.objects.Player {
+public class Pacman extends Player {
 
     public Pacman(int x, int y) {
         super(x, y);
@@ -35,5 +35,10 @@ public class Pacman extends src.com.jgegroup.pacman.objects.Player {
     }
     public void eat() {
 
+    }
+
+    @Override
+    protected int collisionHandle(GameObjects object) {
+        return 0;
     }
 }

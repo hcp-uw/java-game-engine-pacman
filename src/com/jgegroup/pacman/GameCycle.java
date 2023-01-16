@@ -15,9 +15,7 @@ public class GameCycle {
         for(Pacman _pacman: pacmen){
             mapCollision(_pacman.getPosition());
             for(Ghost _ghost : ghosts){
-                if(SimpleMath.getDistance(_pacman.getPosition(),_ghost.getPosition())<100){
-                    //TODO: do something here
-                }
+                _pacman.collisionCheck(_ghost);
             }
         }
         for(Ghost _ghost: ghosts){
