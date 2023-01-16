@@ -36,4 +36,9 @@ public class Pacman extends Player {
     public void eat() {
 
     }
+
+    @Override
+    protected int collisionHandle(GameObjects object) {
+        return 0;
+    }
 }
