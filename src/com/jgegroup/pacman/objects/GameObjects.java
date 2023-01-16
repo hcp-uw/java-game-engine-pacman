@@ -1,6 +1,6 @@
-package src.com.jgegroup.pacman.objects;
+package jgegroup.pacman.objects;
 
-import src.com.jgegroup.pacman.SimpleMath;
+import jgegroup.pacman.SimpleMath;
 
 public abstract class GameObjects {
 
