@@ -1,8 +1,8 @@
-package src.com.jgegroup.pacman;
+package jgegroup.pacman;
 
-import src.com.jgegroup.pacman.objects.Ghost;
-import src.com.jgegroup.pacman.objects.Pacman;
-import src.com.jgegroup.pacman.objects.Position;
+import jgegroup.pacman.objects.Ghost;
+import jgegroup.pacman.objects.Pacman;
+import jgegroup.pacman.objects.Position;
 
 import java.util.HashSet;
 

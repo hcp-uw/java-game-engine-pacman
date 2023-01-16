@@ -1,6 +1,6 @@
-package src.com.jgegroup.pacman.objects;
+package jgegroup.pacman.objects;
 
-public class Ghost extends src.com.jgegroup.pacman.objects.Player {
+public class Ghost extends Player {
 
     private String color;
     private boolean spooked;
