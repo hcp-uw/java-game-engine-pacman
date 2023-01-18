@@ -1,7 +1,6 @@
 package jgegroup.pacman.objects;
 
 
-import org.javafx.scene.paint.Color;
 
 public class Ghost extends Character {
 
@@ -49,6 +48,13 @@ public class Ghost extends Character {
 
     @Override
     protected int collisionHandle(GameObjects object) {
+        if (object instanceof Pacman) {
+            if (object.isSuper()) {
+                death();
+                // Wait x Seconds
+                respawn();
+            }
+        }
         return 0;
     }
 }

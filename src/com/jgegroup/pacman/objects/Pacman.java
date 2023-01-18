@@ -1,9 +1,10 @@
 package jgegroup.pacman.objects;
 
 public class Pacman extends Character {
-
+    private boolean Super;
     public Pacman(int x, int y) {
         super(x, y);
+        Super = false;
     }
 
 //    public void moveLeft() {
@@ -30,11 +31,12 @@ public class Pacman extends Character {
 
     }
 
-    public void getMove() {
-
-    }
     public void eat() {
 
+    }
+
+    public boolean isSuper() {
+        return this.Super;
     }
 
     @Override

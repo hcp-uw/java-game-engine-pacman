@@ -28,5 +28,4 @@ public abstract class GameObjects {
     }
 
     protected abstract int collisionHandle(GameObjects object);
-
 }
