@@ -1,6 +1,7 @@
 package jgegroup.pacman.objects;
 
 
+import javafx.scene.paint.Color;
 
 public class Ghost extends Character {
 
@@ -49,7 +50,7 @@ public class Ghost extends Character {
     @Override
     protected int collisionHandle(GameObjects object) {
         if (object instanceof Pacman) {
-            if (object.isSuper()) {
+            if (((Pacman)object).isSuper()) {
                 death();
                 // Wait x Seconds
                 respawn();
