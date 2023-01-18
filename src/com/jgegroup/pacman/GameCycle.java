@@ -21,6 +21,7 @@ public class GameCycle {
             }
         }
         for(Ghost _ghost: ghosts){
+
             //TODO: do what we want the ghost do here
             //We can't put the logic in the inner loop, as multiple pacman will cause
             //multiple moves.

@@ -8,7 +8,7 @@ public class Ghost extends Character {
     private boolean spooked;
     public Ghost(int x, int y, Color color) {
         super(x, y);
-        this.color=color;
+        this.color = color;
         spooked = false;
     }
 
