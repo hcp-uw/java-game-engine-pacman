@@ -1,26 +1,26 @@
 package jgegroup.pacman.objects;
 
-public class Pacman extends Player {
+public class Pacman extends Character {
 
     public Pacman(int x, int y) {
         super(x, y);
     }
 
-    public void moveLeft() {
-
-    }
-
-    public void moveRight() {
-
-    }
-
-    public void moveUp() {
-
-    }
-
-    public void moveDown() {
-
-    }
+//    public void moveLeft() {
+//        position.translate(-1.0, 0);
+//    }
+//
+//    public void moveRight() {
+//
+//    }
+//
+//    public void moveUp() {
+//
+//    }
+//
+//    public void moveDown() {
+//
+//    }
 
     public void death() {
 

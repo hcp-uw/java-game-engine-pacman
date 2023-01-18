@@ -1,8 +1,9 @@
 package jgegroup.pacman.objects;
 
-import java.awt.*;
 
-public class Ghost extends Player {
+import org.javafx.scene.paint.Color;
+
+public class Ghost extends Character {
 
     private Color color;
     private boolean spooked;
@@ -12,30 +13,31 @@ public class Ghost extends Player {
         spooked = false;
     }
 
+    // Todo: Add method signatures/code
     public void setSpooked() {
         spooked = true;
-        //Add a timer, after the timer stopped, set spooked to false.
+        //TODO: Add a timer, after the timer stopped, set spooked to false.
     }
 
 
-    public void moveLeft() {
-        // test
-        System.out.println("test");
-        System.out.println("Iman's test HAHA");
-
-    }
-
-    public void moveRight() {
-
-    }
-
-    public void moveUp() {
-
-    }
-
-    public void moveDown() {
-
-    }
+//    public void moveLeft() {
+//        // test
+//        System.out.println("test");
+//        System.out.println("Iman's test HAHA");
+//
+//    }
+//
+//    public void moveRight() {
+//
+//    }
+//
+//    public void moveUp() {
+//
+//    }
+//
+//    public void moveDown() {
+//
+//    }
 
     public void death() {
 
