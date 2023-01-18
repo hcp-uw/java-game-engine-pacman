@@ -21,6 +21,7 @@ public class Ghost extends Player {
     public void moveLeft() {
         // test
         System.out.println("test");
+        System.out.println("Iman's test HAHA");
 
     }
 
