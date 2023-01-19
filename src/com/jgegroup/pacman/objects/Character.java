@@ -1,6 +1,6 @@
 package jgegroup.pacman.objects;
 
-public abstract class Character extends GameObjects{
+public abstract class Character extends GameObjects {
     public Character(double x, double y) {
         super(x,y);
     }
