@@ -1,7 +1,7 @@
 package jgegroup.pacman.objects;
 
 public abstract class Character extends GameObjects {
-    public Character(double x, double y) {
+    public Character(int x, int y) {
         super(x,y);
     }
     public Character(Position position){
@@ -11,9 +11,5 @@ public abstract class Character extends GameObjects {
 //    public abstract void moveRight();
 //    public abstract void moveUp();
 //    public abstract void moveDown();
-
-    public abstract void death();
-    public abstract void respawn();
-
 
 }

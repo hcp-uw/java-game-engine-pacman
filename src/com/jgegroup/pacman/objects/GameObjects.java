@@ -16,6 +16,8 @@ public abstract class GameObjects {
     public Position getPosition(){return this.position;}
     public int getRadius(){return this.radius;}
 
+    public int setRadius(int radius) {this.radius = radius;}
+
 
     public int collisionCheck(GameObjects object){
         if(SimpleMath.getDistance(this.getPosition(),object.getPosition())
