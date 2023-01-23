@@ -7,22 +7,6 @@ public class Pacman extends Character {
         Super = false;
     }
 
-//    public void moveLeft() {
-//        position.translate(-1.0, 0);
-//    }
-//
-//    public void moveRight() {
-//
-//    }
-//
-//    public void moveUp() {
-//
-//    }
-//
-//    public void moveDown() {
-//
-//    }
-
     public void death() {
 
     }

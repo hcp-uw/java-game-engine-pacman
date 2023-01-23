@@ -1,10 +1,10 @@
 package jgegroup.pacman.objects;
 
 public class Position {
-    private double x;
-    private double y;
+    private int x;
+    private int y;
 
-    public Position(double x, double y) {
+    public Position(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -13,23 +13,23 @@ public class Position {
         return this;
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(int y) {
         this.y = y;
     }
 
-    public void translate(double dx, double dy) {
+    public void translate(int dx, int dy) {
         this.x += dx;
         this.y += dy;
     }
@@ -41,7 +41,7 @@ public class Position {
         return false;
     }
 
-    public void moveTo(double x, double y) {
+    public void moveTo(int x, int y) {
         this.setX(x);
         this.setY(y);
     }
