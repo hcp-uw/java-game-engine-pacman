@@ -6,7 +6,7 @@ public abstract class GameObjects {
 
     protected Position position;
     protected int radius;
-    public GameObjects(double x, double y) {
+    public GameObjects(int x, int y) {
         this.position = new Position(x, y);
     }
     public GameObjects(Position position) {
@@ -15,6 +15,8 @@ public abstract class GameObjects {
 
     public Position getPosition(){return this.position;}
     public int getRadius(){return this.radius;}
+
+    public int setRadius(int radius) {this.radius = radius;}
 
 
     public int collisionCheck(GameObjects object){

@@ -3,14 +3,16 @@ package jgegroup.pacman.objects;
 
 import javafx.scene.paint.Color;
 
-public class Ghost extends Character {
+public class Ghost extends GameObjects {
 
     private Color color;
     private boolean spooked;
+    private boolean dead;
     public Ghost(int x, int y, Color color) {
         super(x, y);
         this.color = color;
-        spooked = false;
+        this.spooked = false;
+        this.dead = false;
     }
 
     // Todo: Add method signatures/code
@@ -20,41 +22,20 @@ public class Ghost extends Character {
     }
 
 
-//    public void moveLeft() {
-//        // test
-//        System.out.println("test");
-//        System.out.println("Iman's test HAHA");
-//
-//    }
-//
-//    public void moveRight() {
-//
-//    }
-//
-//    public void moveUp() {
-//
-//    }
-//
-//    public void moveDown() {
-//
-//    }
-
     public void death() {
-
+        this.dead = true;
+        this.position.setX(/* SpawnX */);
+        this.position.setY(/* SpawnY */);
     }
 
     public void respawn() {
-
+        this.dead = false;
     }
 
     @Override
     protected int collisionHandle(GameObjects object) {
-        if (object instanceof Pacman) {
-            if (((Pacman)object).isSuper()) {
-                death();
-                // Wait x Seconds
-                respawn();
-            }
+        if (object instanceof Pacman || object instanceof Wall) {
+            return 1;
         }
         return 0;
     }
