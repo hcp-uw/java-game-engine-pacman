@@ -1,6 +1,6 @@
 package jgegroup.pacman.objects;
 
-public class Pacman extends Character {
+public class Pacman extends GameObjects {
     private boolean Super;
     private int lives;
     private int score;

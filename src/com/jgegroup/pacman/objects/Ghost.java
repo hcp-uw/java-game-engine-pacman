@@ -3,7 +3,7 @@ package jgegroup.pacman.objects;
 
 import javafx.scene.paint.Color;
 
-public class Ghost extends Character {
+public class Ghost extends GameObjects {
 
     private Color color;
     private boolean spooked;
