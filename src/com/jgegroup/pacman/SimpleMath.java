@@ -1,6 +1,6 @@
-package jgegroup.pacman;
+package com.jgegroup.pacman;
 
-import jgegroup.pacman.objects.Position;
+import com.jgegroup.pacman.objects.Position;
 
 public class SimpleMath {
     public static double getDistance(Position p1, Position p2){

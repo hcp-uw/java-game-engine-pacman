@@ -1,5 +1,4 @@
-package jgegroup.pacman.objects;
-
+package com.jgegroup.pacman.objects;
 
 import javafx.scene.paint.Color;
 

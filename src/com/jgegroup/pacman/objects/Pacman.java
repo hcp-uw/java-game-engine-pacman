@@ -1,4 +1,4 @@
-package jgegroup.pacman.objects;
+package com.jgegroup.pacman.objects;
 
 public class Pacman extends GameObjects {
     private boolean Super;
