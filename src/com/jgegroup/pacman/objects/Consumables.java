@@ -1,5 +1,4 @@
-package jgegroup.pacman.objects;
-
+package com.jgegroup.pacman.objects;
 public abstract class Consumables extends GameObjects{
     protected int score;
     public Consumables(int x, int y) {
