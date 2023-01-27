@@ -5,20 +5,36 @@ import javafx.scene.paint.Color;
 
 // Death and respawning will be handled by the game cycle by the reassignment of the ghost to
 // another ghost.
-public class Ghost extends GameObjects {
 
-    private Color color;
-    private boolean spooked;
-    public Ghost(int x, int y, Color color) {
+public class Ghost extends GameObjects {
+    private final int spookLength;
+    private Color base_color;
+    private Color current_color;
+    private int spookState;
+    public Ghost(int x, int y, int spookLength, Color color) {
         super(x, y);
-        this.color = color;
-        this.spooked = false;
+        this.spookLength = spookLength;
+        this.base_color = color;
+        this.current_color = color;
+        this.spookState = -1;
     }
 
     // Todo: Add method signatures/code
-    public void setSpooked() {
-        spooked = true;
-        //TODO: Add a timer, after the timer stopped, set spooked to false.
+    public void setSpooked() { spookState = spookLength; }
+
+    public void checkSpooked() {
+        if (spookState >= 0) {
+            if (spookState % 2 == 0) {
+                this.current_color = Color.WHITE;
+            } else {
+                this.current_color = Color.BLUE;
+            }
+            spookState--;
+        } else {
+            if (!current_color.equals(base_color)) {
+                current_color = base_color;
+            }
+        }
     }
 
     @Override
