@@ -29,7 +29,11 @@ public class Ghost extends GameObjects {
     public void setSpooked() { spookState = spookLength; }
 
     // Authors: Noah / Nicola
-    // Checks the spook state,
+    // Checks the spook state, if the state is even it will change the color of the ghost
+    // to white, and if its odd then it will change to blue, if not spooked it will return to original color
+    // Throws no exceptions
+    // Returns nothing
+    // Takes no parameters
     public void checkSpooked() {
         if (spookState >= 0) {
             if (spookState % 2 == 0) {
@@ -38,9 +42,8 @@ public class Ghost extends GameObjects {
                 this.current_color = Color.BLUE;
             }
             spookState--;
-        } else {
-            if (!current_color.equals(base_color)) {
-                current_color = base_color;
+            if (spookState < 0) {
+                this.current_color = base_color;
             }
         }
     }
