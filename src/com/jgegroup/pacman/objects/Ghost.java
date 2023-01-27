@@ -36,7 +36,7 @@ public class Ghost extends GameObjects {
     // Throws no exceptions
     // Returns nothing
     // Takes no parameters
-    public void checkSpooked() {
+    public boolean checkSpooked() {
         if (spookState >= 0) {
             if (spookState % 2 == 0) {
                 this.current_color = Color.WHITE;
@@ -47,7 +47,9 @@ public class Ghost extends GameObjects {
             if (spookState < 0) {
                 this.current_color = base_color;
             }
+            return true;
         }
+        return false;
     }
 
     @Override

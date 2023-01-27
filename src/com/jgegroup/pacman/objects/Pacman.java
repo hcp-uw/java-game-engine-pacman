@@ -1,7 +1,8 @@
 package com.jgegroup.pacman.objects;
 
 public class Pacman extends GameObjects {
-    private boolean Super;
+    private final int superLength;
+    private int Super;
     private int lives;
     private int score;
     // spawnX and spawnY are the original postion of pacman
@@ -10,13 +11,14 @@ public class Pacman extends GameObjects {
 
     private final int spawnY;
 
-    public Pacman(int spawnX, int spawnY) {
+    public Pacman(int spawnX, int spawnY, int superLength) {
+        super(spawnX, spawnY);
         this.spawnX = spawnX;
         this.spawnY = spawnY;
-        super(spawnX, spawnY);
         this.lives = 3;
-        Super = false;
-        score = 0;
+        this.superLength = superLength;
+        this.score = 0;
+        this.Super = -1;
     }
 
     public boolean death() {
@@ -32,10 +34,15 @@ public class Pacman extends GameObjects {
         this.score += consumable.score;
     }
 
-    public boolean isSuper() {
-        return this.Super;
-    }
+    public void setSuper() { this.Super += superLength; }
 
+    public boolean checkSuper() {
+        if (this.Super >= 0) {
+            this.Super--;
+            return true;
+        }
+        return false;
+    }
     @Override
     protected int collisionHandle(GameObjects object) {
         if (object instanceof Ghost) {
