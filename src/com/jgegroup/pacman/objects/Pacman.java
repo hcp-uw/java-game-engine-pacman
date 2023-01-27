@@ -1,14 +1,17 @@
 package com.jgegroup.pacman.objects;
 
 public class Pacman extends GameObjects {
+    // Interval length for how long pacman can be super after eating a big dot
     private final int superLength;
+    // Super state container for pacman, >= 0 <- super, < 0 <- not super
     private int Super;
+    // Number of lives for Pacman, initially set to 3
     private int lives;
+    // Score container
     private int score;
-    // spawnX and spawnY are the original postion of pacman
+    // spawnX and spawnY are the original position of pacman
     // at start of game
     private final int spawnX;
-
     private final int spawnY;
 
     public Pacman(int spawnX, int spawnY, int superLength) {
@@ -21,6 +24,11 @@ public class Pacman extends GameObjects {
         this.Super = -1;
     }
 
+    // Authors: Noah / Nicola
+    // Decrements lives state and moves Pacman to spawn
+    // Throws no exceptions
+    // Returns true if Pacman has lives remaining or is on last life, false if there are no more lives
+    // Takes in no parameters
     public boolean death() {
         lives--;
         if (lives >= 0) {
@@ -30,19 +38,47 @@ public class Pacman extends GameObjects {
         return false;
     }
 
+    // Author: Noah
+    // Updates score of Pacman after it eats something
+    // Throws no exceptions
+    // Returns nothing
+    // Takes in a consumable object as a parameter
     public void eat(Consumables consumable) {
         this.score += consumable.score;
     }
 
+    // Author: Noah
+    // Sets the super state
+    // Throws no exceptions
+    // Returns nothing
+    // Takes in no parameters
     public void setSuper() { this.Super += superLength; }
 
-    public boolean checkSuper() {
+    // Author: Noah
+    // Updates the super state
+    // Throws no exceptions
+    // Returns true if the pacman is super, else false
+    // Takes in no parameters
+    public boolean updateSuper() {
         if (this.Super >= 0) {
             this.Super--;
             return true;
         }
         return false;
     }
+
+    // Author: Noah
+    // Checks to see if Pacman is super
+    // Throws no exceptions
+    // Returns true if super state container is greater than or equal to 0, else false
+    // Takes in no parameters
+    public boolean isSuper() { return this.Super >= 0; }
+
+    // Authors: Noah / Jesse
+    // Examines the collision between Pacman and Object and handles it
+    // Throws no exceptions
+    // Returns 1 if a collision happens, 0 else
+    // Takes in a GameObject as a parameter
     @Override
     protected int collisionHandle(GameObjects object) {
         if (object instanceof Ghost) {
