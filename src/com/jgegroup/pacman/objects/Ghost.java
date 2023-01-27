@@ -16,6 +16,7 @@ public class Ghost extends GameObjects {
         this.spookLength = spookLength;
         this.base_color = color;
         this.current_color = color;
+        // this indicates that it is not spooked
         this.spookState = -1;
     }
 
