@@ -20,9 +20,16 @@ public class Ghost extends GameObjects {
         this.spookState = -1;
     }
 
-    // Todo: Add method signatures/code
+    // Authors: Noah / Nicola
+    // Sets spookState to maximum spook state 'spookLength'
+    // spook length represents the number of cycles to be spooked
+    // Throws no exceptions
+    // Returns nothing
+    // Takes no parameters
     public void setSpooked() { spookState = spookLength; }
 
+    // Authors: Noah / Nicola
+    // Checks the spook state,
     public void checkSpooked() {
         if (spookState >= 0) {
             if (spookState % 2 == 0) {
