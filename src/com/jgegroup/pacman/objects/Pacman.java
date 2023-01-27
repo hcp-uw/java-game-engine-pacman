@@ -4,12 +4,15 @@ public class Pacman extends GameObjects {
     private boolean Super;
     private int lives;
     private int score;
+    // spawnX and spawnY are the original postion of pacman
+    // at start of game
+    private final int spawnX;
 
-    private final int
+    private final int spawnY;
 
-    public Pacman(int x, int y, int lives) {
+    public Pacman(int x, int y) {
         super(x, y);
-        this.lives = lives;
+        this.lives = 3;
         Super = false;
         score = 0;
     }
@@ -17,8 +20,7 @@ public class Pacman extends GameObjects {
     public boolean death() {
         lives--;
         if (lives >= 0) {
-            this.position.setX(/* SpawnX */);
-            this.position.setY(/* SpawnY */);
+            this.position.moveTo(spawnX, spawnY);
             return true;
         }
         return false;
