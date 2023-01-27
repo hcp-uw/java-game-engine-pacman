@@ -11,9 +11,9 @@ public class Pacman extends GameObjects {
     private final int spawnY;
 
     public Pacman(int spawnX, int spawnY) {
+        super(spawnX, spawnY);
         this.spawnX = spawnX;
         this.spawnY = spawnY;
-        super(spawnX, spawnY);
         this.lives = 3;
         Super = false;
         score = 0;
