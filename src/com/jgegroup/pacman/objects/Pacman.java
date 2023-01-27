@@ -5,6 +5,8 @@ public class Pacman extends GameObjects {
     private int lives;
     private int score;
 
+    private final int
+
     public Pacman(int x, int y, int lives) {
         super(x, y);
         this.lives = lives;

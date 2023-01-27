@@ -7,6 +7,8 @@ import javafx.scene.paint.Color;
 // another ghost.
 
 public class Ghost extends GameObjects {
+    // Spook length is the cycle length interval for how long a ghost will
+    // be spooked. Can exceed this length if more big dots are eaten
     private final int spookLength;
     private Color base_color;
     private Color current_color;
@@ -26,7 +28,7 @@ public class Ghost extends GameObjects {
     // Throws no exceptions
     // Returns nothing
     // Takes no parameters
-    public void setSpooked() { spookState = spookLength; }
+    public void setSpooked() { spookState += spookLength; }
 
     // Authors: Noah / Nicola
     // Checks the spook state, if the state is even it will change the color of the ghost
