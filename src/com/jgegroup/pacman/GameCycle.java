@@ -15,21 +15,17 @@ public class GameCycle {
         // Todo: Add a method to get keypress for Pacman, and get the direction for Ghost
         // Then it will check to see if the move is valid, then will check collisions between other objects.
         for(Pacman _pacman : pacmen) {
-            mapCollision(_pacman.getPosition());
+            _pacman.updateSuper();
+            //TODO: a better collision check
             for(Ghost _ghost : ghosts) {
                 _pacman.collisionCheck(_ghost);
             }
         }
         for(Ghost _ghost : ghosts) {
-
+            _ghost.updateSpooked();
             //TODO: do what we want the ghost do here
             //We can't put the logic in the inner loop, as multiple pacman will cause
             //multiple moves.
         }
     }
-
-    private void mapCollision(Position pos) {
-        //TODO: add actual thing here
-    }
-
 }

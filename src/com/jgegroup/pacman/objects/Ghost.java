@@ -62,6 +62,11 @@ public class Ghost extends GameObjects {
     // Takes in no paramters
     public boolean isSpooked() { return spookState >= 0; }
 
+
+    public void think(){
+
+    }
+
     // Authors: Jesse / Noah
     // Determines if the object has collided with something or not
     // Throws, no exceptions
@@ -69,8 +74,10 @@ public class Ghost extends GameObjects {
     // Takes in a GameObject as a parameter
     @Override
     protected int collisionHandle(GameObjects object) {
-        if (object instanceof Pacman || object instanceof Wall) {
+        if (object instanceof Pacman) {
             return 1;
+        } else if (object instanceof Wall) {
+            return 2;
         }
         return 0;
     }

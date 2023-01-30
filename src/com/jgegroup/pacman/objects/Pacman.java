@@ -85,10 +85,10 @@ public class Pacman extends GameObjects {
             this.death();
             return 1;
         } else if (object instanceof Wall) {
-            return 1;
+            return 2;
         } else if (object instanceof Consumables) {
             this.eat((Consumables)object);
-            return 1;
+            return 3;
         }
         return 0;
     }
