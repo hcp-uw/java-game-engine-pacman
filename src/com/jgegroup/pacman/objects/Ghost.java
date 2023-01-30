@@ -16,6 +16,8 @@ public class Ghost extends GameObjects {
     private Color current_color;
     // State container for the spook timer
     private int spookState;
+
+
     public Ghost(int x, int y, int spookLength, Color color) {
         super(x, y);
         this.spookLength = spookLength;
@@ -23,6 +25,7 @@ public class Ghost extends GameObjects {
         this.current_color = color;
         // this indicates that it is not spooked, -1 <- no spook. > 0 <- yes spook
         this.spookState = -1;
+        this.direction = 0;
     }
 
     // Authors: Noah / Nicola

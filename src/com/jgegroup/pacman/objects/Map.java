@@ -18,5 +18,7 @@ public class Map {
         return instance;
     }
     public static HashMap<Position, GameObjects> getMap() { return instance.objects; };
-    public static void updateMap(/*Map Context*/){};
+    public static void createMap(/*Map Context*/) {
+
+    };
 }

@@ -4,6 +4,7 @@ import javax.swing.*;
 public class Main {
     //Code starts here
     public static void main(String[] args) {
+
         JFrame frame = new JFrame();
 
         //Visibility

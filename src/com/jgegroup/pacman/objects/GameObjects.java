@@ -16,16 +16,23 @@ public abstract class GameObjects {
     public Position getPosition(){return this.position;}
     public int getRadius(){return this.radius;}
 
-    public int setRadius(int radius) {this.radius = radius;}
+    public void setRadius(int radius) {this.radius = radius;}
+    public byte direction;
+    /*
+        1 - Up 0001
+        2 - Down 0010
+        3 - Left 0101
+        4 - Right 1000
+     */
 
 
     public int collisionCheck(GameObjects object){
         if(SimpleMath.getDistance(this.getPosition(),object.getPosition())
                 >(this.getRadius()+object.getRadius())){
             //There is no collision
-            return 1;
+            return -1;
         }
-        //Handle the collision, return 0 indicates success handled
+        //Handle the collision, integer returned defines collision
         return collisionHandle(object);
     }
 

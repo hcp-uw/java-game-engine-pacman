@@ -1,5 +1,9 @@
 package com.jgegroup.pacman.objects;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
+
 public class Pacman extends GameObjects {
     // Interval length for how long pacman can be super after eating a big dot
     private final int superLength;
@@ -13,6 +17,7 @@ public class Pacman extends GameObjects {
     // at start of game
     private final int spawnX;
     private final int spawnY;
+    private Queue<Position> consumed;
 
     public Pacman(int spawnX, int spawnY, int superLength) {
         super(spawnX, spawnY);
@@ -22,6 +27,8 @@ public class Pacman extends GameObjects {
         this.superLength = superLength;
         this.score = 0;
         this.Super = -1;
+        this.direction = 0;
+        consumed = new LinkedList<>();
     }
 
     // Authors: Noah / Nicola
@@ -45,6 +52,15 @@ public class Pacman extends GameObjects {
     // Takes in a consumable object as a parameter
     public void eat(Consumables consumable) {
         this.score += consumable.score;
+        consumed.add(consumable.position);
+    }
+
+    public Consumables checkQueue() {
+        if (consumed.size() > 16) {
+            return Math.round(Math.random() * 100) >= 50 ?
+                    new Dot(consumed.remove()) : new BigDot(consumed.remove());
+        }
+        return null;
     }
 
     // Author: Noah
