@@ -50,9 +50,11 @@ public class Pacman extends GameObjects {
     // Throws no exceptions
     // Returns nothing
     // Takes in a consumable object as a parameter
-    public void eat(Consumables consumable) {
+    // returns the position of dot or ghost eaten for front-end
+    public Position eat(Consumables consumable) {
         this.score += consumable.score;
         consumed.add(consumable.position);
+        return consumable.position;
     }
 
     public Consumables checkQueue() {
