@@ -2,14 +2,14 @@ package com.jgegroup.pacman.objects;
 
 import com.jgegroup.pacman.SimpleMath;
 
-public abstract class GameObjects {
+public abstract class GameObject {
 
     protected Position position;
     protected int radius;
-    public GameObjects(int x, int y) {
+    public GameObject(int x, int y) {
         this.position = new Position(x, y);
     }
-    public GameObjects(Position position) {
+    public GameObject(Position position) {
         this.position = position;
     }
 
@@ -26,7 +26,7 @@ public abstract class GameObjects {
      */
 
 
-    public int collisionCheck(GameObjects object){
+    public int collisionCheck(GameObject object){
         if(SimpleMath.getDistance(this.getPosition(),object.getPosition())
                 >(this.getRadius()+object.getRadius())){
             //There is no collision
@@ -36,5 +36,5 @@ public abstract class GameObjects {
         return collisionHandle(object);
     }
 
-    protected abstract int collisionHandle(GameObjects object);
+    protected abstract int collisionHandle(GameObject object);
 }

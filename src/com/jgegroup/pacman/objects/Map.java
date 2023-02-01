@@ -1,12 +1,13 @@
 package com.jgegroup.pacman.objects;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Map {
-    private static HashMap<Position, GameObjects> objects;
+    private static HashMap<Position, HashSet<GameObject>> objects;
     private static Map instance;
     private Map(/*Map Context*/){
         objects = new HashMap<>();
-        /* Todo: Add a method that reads data from the map file and places the componenets from the data file
+        /* Todo: Add a method that reads data from the map file and places the components from the data file
              and then loads the components into the hashmap.
         */
     }
@@ -17,7 +18,7 @@ public class Map {
         }
         return instance;
     }
-    public static HashMap<Position, GameObjects> getMap() { return instance.objects; };
+    public static HashMap<Position, HashSet<GameObject>> getMap() { return instance.objects; };
     public static void createMap(/*Map Context*/) {
 
     };

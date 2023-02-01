@@ -1,10 +1,13 @@
 package com.jgegroup.pacman.objects;
 
+import com.jgegroup.pacman.objects.consumables.*;
+import com.jgegroup.pacman.objects.immovable.Wall;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
 
-public class Pacman extends GameObjects {
+public class Pacman extends GameObject {
     // Interval length for how long pacman can be super after eating a big dot
     private final int superLength;
     // Super state container for pacman, >= 0 <- super, < 0 <- not super
@@ -51,13 +54,13 @@ public class Pacman extends GameObjects {
     // Returns nothing
     // Takes in a consumable object as a parameter
     // returns the position of dot or ghost eaten for front-end
-    public Position eat(Consumables consumable) {
+    public Position eat(Consumable consumable) {
         this.score += consumable.score;
         consumed.add(consumable.position);
         return consumable.position;
     }
 
-    public Consumables checkQueue() {
+    public Consumable checkQueue() {
         if (consumed.size() > 16) {
             return Math.round(Math.random() * 100) >= 50 ?
                     new Dot(consumed.remove()) : new BigDot(consumed.remove());
@@ -98,14 +101,13 @@ public class Pacman extends GameObjects {
     // Returns 1 if a collision happens, 0 else
     // Takes in a GameObject as a parameter
     @Override
-    protected int collisionHandle(GameObjects object) {
+    protected int collisionHandle(GameObject object) {
         if (object instanceof Ghost) {
             this.death();
             return 1;
         } else if (object instanceof Wall) {
             return 2;
-        } else if (object instanceof Consumables) {
-            this.eat((Consumables)object);
+        } else if (object instanceof Consumable) {
             return 3;
         }
         return 0;

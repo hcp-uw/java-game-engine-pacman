@@ -1,12 +1,13 @@
 package com.jgegroup.pacman.objects;
 
+import com.jgegroup.pacman.objects.immovable.Wall;
 import javafx.scene.paint.Color;
 
 
 // Note: Death and respawning will be handled by the game cycle by the reassignment of the ghost to
 // another ghost.
 
-public class Ghost extends GameObjects {
+public class Ghost extends GameObject {
     // Spook length is the cycle length interval for how long a ghost will
     // be spooked. Can exceed this length if more big dots are eaten
     private final int spookLength;
@@ -76,7 +77,7 @@ public class Ghost extends GameObjects {
     // Returns 1 if collided with Pacman or Wall, 0 otherwise
     // Takes in a GameObject as a parameter
     @Override
-    protected int collisionHandle(GameObjects object) {
+    protected int collisionHandle(GameObject object) {
         if (object instanceof Pacman) {
             return 1;
         } else if (object instanceof Wall) {
