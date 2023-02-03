@@ -7,12 +7,15 @@ import com.jgegroup.pacman.objects.Position;
 
 public class Wall extends GameObject {
 
+    byte adjacentPaths;
     public Wall(int x, int y) {
         super(x, y);
+        this.adjacentPaths = 0;
     }
 
     public Wall(Position position) {
         super(position);
+        this.adjacentPaths = 0;
     }
     @Override
     protected int collisionHandle(GameObject object) {
