@@ -1,13 +1,12 @@
 package com.jgegroup.pacman.objects;
 
-import com.jgegroup.pacman.objects.consumables.*;
-import com.jgegroup.pacman.objects.immovable.Wall;
+import com.jgegroup.pacman.objects.immovable.consumables.*;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 
-public class Pacman extends GameObject {
+public class Pacman extends MovingObject {
     // Interval length for how long pacman can be super after eating a big dot
     private final int superLength;
     // Super state container for pacman, >= 0 <- super, < 0 <- not super
@@ -30,15 +29,16 @@ public class Pacman extends GameObject {
         this.superLength = superLength;
         this.score = 0;
         this.Super = -1;
-        this.direction = 0;
+        this.direction = Enums.Direction.STOP;
         consumed = new LinkedList<>();
     }
 
-    // Authors: Noah / Nicola
-    // Decrements lives state and moves Pacman to spawn
-    // Throws no exceptions
-    // Returns true if Pacman has lives remaining or is on last life, false if there are no more lives
-    // Takes in no parameters
+    /** @Authors: Noah / Nicola
+     * Decrements lives state and moves Pacman to spawn
+     * @Throws no exceptions
+     * @Returns true if Pacman has lives remaining or is on last life, false if there are no more lives
+     * Takes in no parameters
+     **/
     public boolean death() {
         lives--;
         if (lives >= 0) {
@@ -48,12 +48,12 @@ public class Pacman extends GameObject {
         return false;
     }
 
-    // Author: Noah
-    // Updates score of Pacman after it eats something
-    // Throws no exceptions
-    // Returns nothing
-    // Takes in a consumable object as a parameter
-    // returns the position of dot or ghost eaten for front-end
+    /** @Author: Noah
+     * Updates score of Pacman after it eats something
+     * @Throws no exceptions
+     * @Returns the position of dot or ghost eaten for front-end
+     * Takes in a consumable object as a parameter
+    **/
     public Position eat(Consumable consumable) {
         this.score += consumable.score;
         consumed.add(consumable.position);
@@ -68,11 +68,12 @@ public class Pacman extends GameObject {
         return null;
     }
 
-    // Author: Noah
-    // Sets the super state
-    // Throws no exceptions
-    // Returns nothing
-    // Takes in no parameters
+    /** @Author Noah
+     * Sets the super state
+     * @Throws no exceptions
+     * @Returns nothing
+     * Takes in no parameters
+     **/
     public void setSuper() { this.Super += superLength; }
 
     // Author: Noah
@@ -101,15 +102,20 @@ public class Pacman extends GameObject {
     // Returns 1 if a collision happens, 0 else
     // Takes in a GameObject as a parameter
     @Override
-    protected int collisionHandle(GameObject object) {
+    protected int collisionHandle(MovingObject object) {
         if (object instanceof Ghost) {
             this.death();
-            return 1;
-        } else if (object instanceof Wall) {
-            return 2;
-        } else if (object instanceof Consumable) {
-            return 3;
+            return 100;
+        } else if (object instanceof Pacman) {
+            return 101;
         }
-        return 0;
+//        else if (object instanceof Consumable) {
+//            return 3;
+//        }
+        /*For Pacman, collisionHandle should be and only should be execute
+        * when they hit a ghost or a pacman
+        * Collision with immovable will be handled separately
+        * */
+        return 99;
     }
 }

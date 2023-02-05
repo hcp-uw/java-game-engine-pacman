@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class Map {
-    private static HashMap<Position, HashSet<GameObject>> objects;
+    private static HashMap<Position, HashSet<MovingObject>> objects;
     private static Map instance;
     private Map(/*Map Context*/){
         objects = new HashMap<>();
@@ -18,7 +18,7 @@ public class Map {
         }
         return instance;
     }
-    public static HashMap<Position, HashSet<GameObject>> getMap() { return instance.objects; };
+    public static HashMap<Position, HashSet<MovingObject>> getMap() { return instance.objects; };
     public static void createMap(/*Map Context*/) {
 
     };
