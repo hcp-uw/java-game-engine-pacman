@@ -1,6 +1,7 @@
 package com.jgegroup.pacman.objects;
 
 import com.jgegroup.pacman.objects.immovable.consumables.*;
+import com.jgegroup.pacman.objects.Enums.*;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -19,8 +20,10 @@ public class Pacman extends MovingObject {
     // at start of game
     private final int spawnX;
     private final int spawnY;
+    // Queue to aid in endless mode functionality
     private Queue<Position> consumed;
-
+    // move container for next move
+    public Direction nextMove;
     public Pacman(int spawnX, int spawnY, int superLength) {
         super(spawnX, spawnY);
         this.spawnX = spawnX;
@@ -30,6 +33,7 @@ public class Pacman extends MovingObject {
         this.score = 0;
         this.Super = -1;
         this.direction = Enums.Direction.STOP;
+        this.nextMove = Enums.Direction.NONE;
         consumed = new LinkedList<>();
     }
 

@@ -14,10 +14,10 @@ public class GameCycle extends Application {
     HashSet<Pacman> pacmen;
     HashSet<Ghost>  ghosts;
     //Each pixel refer to an
-    HashMap<Position, HashSet<MovingObject>> tileBoard;
+    HashMap<Position, Tile> tileBoard;
     //Object board is used to store consumables
     //NOTICE:The position ratio of pixel:object:tile is 16:4:1
-    HashMap<Position, HashSet<MovingObject>> objectBoard;
+    HashMap<Position, Tile> objectBoard;
 
     @Override
     public void start(Stage stage) throws Exception {
