@@ -19,14 +19,16 @@ public class MapUtils {
         return surrounding;
     }
 
-    public boolean moveValid(MovingObject object, HashMap<Enums.Direction, Tile>) {
+    public boolean moveValid(MovingObject object, HashMap<Enums.Direction, Tile> tileHashMap) {
 
         return true;
     }
 
-    public Position screenToWorld(Position) {
+    public Position screenToWorld(Position position) {
+        return null;
     }
 
-    public Position worldToScreen(Position) {
+    public Position worldToScreen(Position position) {
+        return null;
     }
 }
