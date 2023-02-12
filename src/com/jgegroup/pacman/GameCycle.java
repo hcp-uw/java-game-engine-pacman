@@ -19,6 +19,7 @@ public class GameCycle extends Application {
     //NOTICE:The position ratio of pixel:object:tile is 16:4:1
     HashMap<Position, Tile> objectBoard;
 
+
     @Override
     public void start(Stage stage) throws Exception {
         init(stage);

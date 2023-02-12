@@ -33,7 +33,7 @@ public class Pacman extends MovingObject {
         this.score = 0;
         this.Super = -1;
         this.direction = Enums.Direction.STOP;
-        this.nextMove = Enums.Direction.NONE;
+        this.nextMove = Enums.Direction.STOP;
         consumed = new LinkedList<>();
     }
 

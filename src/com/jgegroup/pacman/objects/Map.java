@@ -10,6 +10,7 @@ public class Map {
         /* Todo: Add a method that reads data from the map file and places the components from the data file
              and then loads the components into the hashmap.
         */
+        createMap(/*Map Context*/);
     }
 
     public static Map getMapInstance() {
