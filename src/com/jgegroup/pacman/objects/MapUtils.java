@@ -35,9 +35,11 @@ public class MapUtils {
     public Direction moveValid(MovingObject object, HashMap<Direction, Tile> surr) {
         Direction dir = object.direction;
         if (object instanceof Pacman) {
-            Direction nextDir = ((Pacman) object).nextMove;
-            if (surr.get(nextDir) instanceof Path) {
-                return nextDir;
+            if (((Pacman)object).nextMove != Direction.STOP) {
+                Direction nextDir = ((Pacman) object).nextMove;
+                if (surr.get(nextDir) instanceof Path) {
+                    return nextDir;
+                }
             }
         }
         if (surr.get(dir) instanceof Path) {
