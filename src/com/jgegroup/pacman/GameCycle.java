@@ -1,8 +1,11 @@
 package com.jgegroup.pacman;
 
 import com.jgegroup.pacman.objects.*;
+import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -15,10 +18,7 @@ public class GameCycle extends Application {
     HashSet<Ghost>  ghosts;
     //Each pixel refer to an
     HashMap<Position, Tile> tileBoard;
-    //Object board is used to store consumables
-    //NOTICE:The position ratio of pixel:object:tile is 16:4:1
-    HashMap<Position, Tile> objectBoard;
-
+    HashMap<Position, Consumable> objects;
 
     @Override
     public void start(Stage stage) throws Exception {
