@@ -24,6 +24,11 @@ public class GameCycle extends Application {
     // loop for front end to use in javaFX
     HashMap<MovingObject,Position> objectPosition;
 
+    // holds position of dot that was eaten by
+    // pacman, to then be used by frontend to remove the
+    // pixel
+    Consumable dotPosition = null;
+
     @Override
     public void start(Stage stage) throws Exception {
         init(stage);
