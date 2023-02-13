@@ -3,7 +3,6 @@ package com.jgegroup.pacman.objects;
 import java.util.HashMap;
 import com.jgegroup.pacman.objects.Enums.*;
 import com.jgegroup.pacman.objects.immovable.Path;
-import com.jgegroup.pacman.objects.immovable.Wall;
 
 
 public class MapUtils {
@@ -17,7 +16,7 @@ public class MapUtils {
      * Takes in board and the position in question
      */
     public HashMap<Direction,Tile> getSurrounding(HashMap<Position, Tile> map, Position pos) {
-        HashMap<Direction, Tile> surrounding = new HashMap<>(4);
+        HashMap<Direction, Tile> surrounding = new HashMap<>(8);
         surrounding.put(Direction.UP, map.get(new Position(pos.getX(), pos.getY() + 1)));
         surrounding.put(Direction.LEFT, map.get(new Position(pos.getX() + 1, pos.getY())));
         surrounding.put(Direction.DOWN, map.get(new Position(pos.getX(), pos.getY() - 1)));
@@ -33,7 +32,6 @@ public class MapUtils {
      * Takes in the object, and the surrounding tiles
      */
     public Direction moveValid(MovingObject object, HashMap<Direction, Tile> surr) {
-        Direction dir = object.direction;
         if (object instanceof Pacman) {
             if (((Pacman)object).nextMove != Direction.STOP) {
                 Direction nextDir = ((Pacman) object).nextMove;
@@ -42,6 +40,7 @@ public class MapUtils {
                 }
             }
         }
+        Direction dir = object.direction;
         if (surr.get(dir) instanceof Path) {
             return dir;
         }
