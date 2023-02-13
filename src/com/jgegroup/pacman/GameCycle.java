@@ -69,5 +69,14 @@ public class GameCycle extends Application {
         Map map = Map.getMapInstance();
         tileBoard = map.getMap();
         stage.setScene(null/* scene builder class */);
+
+        // initializes all the required positions for
+        // all hashmaps and hashsets
+        pacmen = new HashSet<>();
+        ghosts = new HashSet<>();
+        // need to make method getObjects!!!!
+        objects = map.getObjects();
+        objectPosition = new HashMap<>();
+
     }
 }
