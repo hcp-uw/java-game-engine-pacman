@@ -20,6 +20,10 @@ public class GameCycle extends Application {
     HashMap<Position, Tile> tileBoard;
     HashMap<Position, Consumable> objects;
 
+    // holds onto position of objects(pacman/ghosts) through each
+    // loop for front end to use in javaFX
+    HashMap<MovingObject,Position> objectPosition;
+
     @Override
     public void start(Stage stage) throws Exception {
         init(stage);
