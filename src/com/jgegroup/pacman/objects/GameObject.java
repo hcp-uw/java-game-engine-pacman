@@ -1,7 +1,5 @@
 package com.jgegroup.pacman.objects;
 
-import com.jgegroup.pacman.SimpleMath;
-
 public abstract class GameObject {
 
     protected Position position;
@@ -12,5 +10,5 @@ public abstract class GameObject {
         this.position = position;
     }
 
-    public Position getPosition(){return this.position;}
+    public Position getPosition() {return this.position;}
 }

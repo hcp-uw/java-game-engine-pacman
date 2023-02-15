@@ -13,6 +13,9 @@ import java.util.HashSet;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
+import com.jgegroup.pacman.objects.MapUtils;
+import com.jgegroup.pacman.objects.Enums.*;
+
 public class GameCycle extends Application {
     HashSet<Pacman> pacmen;
     HashSet<Ghost>  ghosts;
@@ -52,10 +55,22 @@ public class GameCycle extends Application {
              *       if move valid, perform move
              *       otherwise do not move
              */
+            Position pacPos = _pacman.getPosition();
+            HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, pacPos);
+            Direction move = MapUtils.moveValid(_pacman, surr);
+            if (move == Direction.LEFT) {
+                pacPos.translate(-1, 0);
+            } else if (move == Direction.UP) {
+                pacPos.translate(0, 1);
+            } else if (move == Direction.RIGHT) {
+                pacPos.translate(1,0);
+            } else if (move == Direction.DOWN) {
+                pacPos.translate(0,-1);
+            }
             for(Ghost _ghost : ghosts) {
                 //Although we have return values for collisionCheck,
                 // we don't need to store them when we know the result for sure
-                _pacman.collisionCheck(_ghost);
+                int coltype = _pacman.collisionCheck(_ghost);
 
             }
             //TODO: a collision check for consumables
@@ -63,7 +78,12 @@ public class GameCycle extends Application {
         }
         //Let each ghost move
         for(Ghost _ghost : ghosts) {
-            _ghost.think();
+            Position ghostPos = _ghost.getPosition();
+            HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, ghostPos);
+            if (_ghost instanceof Ghost.Red) ((Ghost.Red)_ghost).think(tileBoard);
+            else if (_ghost instanceof Ghost.Blue) ((Ghost.Blue)_ghost).think(tileBoard);
+            else if (_ghost instanceof Ghost.Pink) ((Ghost.Pink)_ghost).think(tileBoard);
+            else if (_ghost instanceof Ghost.Yellow) ((Ghost.Yellow)_ghost).think(tileBoard);
             _ghost.updateSpooked();
             //do what we want the ghost do here
         }
@@ -71,16 +91,16 @@ public class GameCycle extends Application {
     }
 
     public void init(Stage stage) {
+        // Inits map singleton and retrieves
         Map map = Map.getMapInstance();
-        tileBoard = map.getMap();
+        tileBoard = map.getTiles();
+        objects = map.getObjects();
         stage.setScene(null/* scene builder class */);
 
         // initializes all the required positions for
         // all hashmaps and hashsets
         pacmen = new HashSet<>();
         ghosts = new HashSet<>();
-        // need to make method getObjects!!!!
-        objects = map.getObjects();
         objectPosition = new HashMap<>();
 
     }

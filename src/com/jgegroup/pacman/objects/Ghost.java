@@ -1,8 +1,9 @@
 package com.jgegroup.pacman.objects;
 
-import com.jgegroup.pacman.objects.immovable.Wall;
 import javafx.scene.paint.Color;
 import com.jgegroup.pacman.objects.Enums.*;
+
+import java.util.HashMap;
 
 
 // Note: Death and respawning will be handled by the game cycle by the reassignment of the ghost to
@@ -67,11 +68,6 @@ public class Ghost extends MovingObject {
     // Takes in no paramters
     public boolean isSpooked() { return spookState >= 0; }
 
-
-    public void think(){
-
-    }
-
     // Authors: Jesse / Noah
     // Determines if the object has collided with something or not
     // Throws, no exceptions
@@ -84,6 +80,110 @@ public class Ghost extends MovingObject {
 //        } else if (object instanceof Wall) {
 //            return 2;
 //        }
+
+        // here we will need to look for the overlap in the MovingObject
+        // we will try to see if the circles overlap
+
+        // HOW WE WILL DO IT:
+        // WE will need to get the centers of each of the circles.
+        // We will need to check in all 4 directions, and we will need
+        // check to see if there is any overlap in the four directions
+
+        Position otherPosition = object.position;
+
+        Position currentPosition = this.position;
+
+        // now we will need to check
+        // all of the possible cases
+        int currentX = position.getX();
+        int currentY = position.getY();
+
+        int currentRadius = object.getRadius();
+
+        int otherX = otherPosition.getX();
+        int otherY = otherPosition.getY();
+
+        int otherRadius = this.getRadius();
+
+        // you will check for overlap in the X direction
+        if (currentX == otherX) {
+            if (currentY > otherY) {
+                if (currentY - currentRadius > otherY + otherRadius) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } else if (currentY < otherY) {
+                if (currentY + currentRadius < otherY - otherRadius) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } else {
+                return 1;
+            }
+        }
+
+        // this is where you check for overlap in the Y direction
+        if (currentY == otherY) {
+            if (currentX > otherX) {
+                if (currentX - currentRadius > otherX + otherRadius) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } else if (currentX < otherX) {
+                if (currentX + currentRadius < otherX - otherRadius) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } else {
+                return 1;
+            }
+        }
+
+        // this is when you do not have any overlap that could be possible in any direction
         return 0;
+    }
+
+    public class Red extends Ghost {
+        public Red(int x, int y, int spookLength, Color color) {
+            super(x, y, spookLength, color);
+        }
+
+        public void think(HashMap<Position, Tile> map) {
+
+        }
+    }
+
+    public class Blue extends Ghost {
+
+        public Blue(int x, int y, int spookLength, Color color) {
+            super(x, y, spookLength, color);
+        }
+
+        public void think(HashMap<Position, Tile> map) {
+        }
+    }
+
+    public class Pink extends Ghost {
+
+        public Pink(int x, int y, int spookLength, Color color) {
+            super(x, y, spookLength, color);
+        }
+
+        public void think(HashMap<Position, Tile> map) {
+        }
+    }
+
+    public class Yellow extends Ghost {
+
+        public Yellow(int x, int y, int spookLength, Color color) {
+            super(x, y, spookLength, color);
+        }
+
+        public void think(HashMap<Position, Tile> map) {
+        }
     }
 }

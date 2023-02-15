@@ -9,7 +9,6 @@ public abstract class MovingObject extends GameObject {
 
     public MovingObject(int x, int y) {
         super(x, y);
-
     }
     public MovingObject(Position position) {
         super(position);
@@ -17,6 +16,7 @@ public abstract class MovingObject extends GameObject {
 
     public int getRadius(){return this.radius;}
     public void setRadius(int radius) {this.radius = radius;}
+
 
 
     public int collisionCheck(MovingObject object){

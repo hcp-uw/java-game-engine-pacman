@@ -6,7 +6,7 @@ import com.jgegroup.pacman.objects.immovable.Path;
 
 
 public class MapUtils {
-    public final int tileSize = 32;
+    public static final int tileSize = 32;
 
     /*
      * Authors: Noah, Jesse
@@ -15,7 +15,7 @@ public class MapUtils {
      * Returns the surround tiles
      * Takes in board and the position in question
      */
-    public HashMap<Direction,Tile> getSurrounding(HashMap<Position, Tile> map, Position pos) {
+    public static HashMap<Direction,Tile> getSurrounding(HashMap<Position, Tile> map, Position pos) {
         HashMap<Direction, Tile> surrounding = new HashMap<>(8);
         surrounding.put(Direction.UP, map.get(new Position(pos.getX(), pos.getY() + 1)));
         surrounding.put(Direction.LEFT, map.get(new Position(pos.getX() + 1, pos.getY())));
@@ -31,7 +31,7 @@ public class MapUtils {
      * Returns a move
      * Takes in the object, and the surrounding tiles
      */
-    public Direction moveValid(MovingObject object, HashMap<Direction, Tile> surr) {
+    public static Direction moveValid(MovingObject object, HashMap<Direction, Tile> surr) {
         if (object instanceof Pacman) {
             if (((Pacman)object).nextMove != Direction.STOP) {
                 Direction nextDir = ((Pacman) object).nextMove;
@@ -54,7 +54,7 @@ public class MapUtils {
      * Returns a new position with the world position
      * Takes in screen position
      */
-    public Position screenToWorld(Position pos) {
+    public static Position screenToWorld(Position pos) {
         return new Position(pos.getX()*tileSize, pos.getY()*tileSize);
     }
 
@@ -65,7 +65,7 @@ public class MapUtils {
      * Returns a new position with the screen tile position
      * Takes in a world position
      */
-    public Position worldToScreen(Position pos) {
+    public static Position worldToScreen(Position pos) {
         return new Position(pos.getX() / tileSize, pos.getY() / tileSize);
     }
 }
