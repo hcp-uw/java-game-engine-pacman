@@ -149,6 +149,12 @@ public class Ghost extends MovingObject {
         return 0;
     }
 
+    @Override
+    protected void think(Direction dirX, Direction dirY, int dx, int dy) {
+        System.out.println("Something went wrong, in " +
+                "the Ghost main class think method");
+    }
+
     public void thinkPrep(HashMap<Position, Tile> map, Position pacPos) {
         Position pos = this.getPosition();
         int dx = pacPos.getX() - pos.getX();
