@@ -30,4 +30,6 @@ public abstract class MovingObject extends GameObject {
     }
 
     protected abstract int collisionHandle(MovingObject object);
+
+    protected abstract void think(Direction dirX, Direction dirY, int dx, int dy);
 }

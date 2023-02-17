@@ -1,12 +1,11 @@
 package com.jgegroup.pacman.objects;
 
 
+import com.jgegroup.pacman.objects.immovable.Wall;
 import javafx.scene.paint.Color;
 import com.jgegroup.pacman.objects.Enums.*;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
 
 
 // Note: Death and respawning will be handled by the game cycle by the reassignment of the ghost to
@@ -150,25 +149,25 @@ public class Ghost extends MovingObject {
         return 0;
     }
 
+    public void thinkPrep(HashMap<Position, Tile> map, Position pacPos) {
+        Position pos = this.getPosition();
+        int dx = pacPos.getX() - pos.getX();
+        int dy = pacPos.getY() - pos.getY();
+        Direction dirX, dirY = Direction.STOP;
+        dirX = dx < 0 ? Direction.LEFT : dx > 0 ? Direction.RIGHT : Direction.STOP;
+        dirY = dy < 0 ? Direction.DOWN : dy > 0 ? Direction.UP : Direction.STOP;
+        HashMap<Direction, Tile> surr = MapUtils.getSurrounding(map, pos);
+        dirX = surr.get(dirX) instanceof Wall ? Direction.STOP : dirX;
+        dirY = surr.get(dirY) instanceof Wall ? Direction.STOP : dirY;
+        this.think(dirX, dirY, dx, dy);
+    }
+
     public class Red extends Ghost {
         public Red(int x, int y, int spookLength, Color color) {
             super(x, y, spookLength, color);
         }
 
-        public void think(HashMap<Position, Tile> map, Position pacPos) {
-            Position pos = this.getPosition();
-            int dx = pacPos.getX() - pos.getX();
-            int dy = pacPos.getY() - pos.getY();
-            Direction dirX, dirY = Direction.STOP;
-            dirX = dx < 0 ? Direction.LEFT : dx > 0 ? Direction.RIGHT : Direction.STOP;
-            dirY = dy < 0 ? Direction.DOWN : dy > 0 ? Direction.UP : Direction.STOP;
-            HashMap<Direction, Tile> surr = MapUtils.getSurrounding(map, pos);
-            if (dirX != Direction.STOP) {
-                dirX = MapUtils.moveValid(this, surr);
-            }
-            if (dirY != Direction.STOP) {
-                dirY = MapUtils.moveValid(this, surr);
-            }
+        public void think(Direction dirX, Direction dirY, int dx, int dy) {
             if (dirY != Direction.STOP && dirX != Direction.STOP) {
                 this.direction = Math.abs(dx) <= Math.abs(dy) && dx != 0 ? dirX : dirY;
             } else if (dirX == Direction.STOP) {
@@ -185,7 +184,14 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(HashMap<Position, Tile> map, Position pacPos) {
+        public void think(Direction dirX, Direction dirY, int dx, int dy) {
+            if (dirY != Direction.STOP && dirX != Direction.STOP) {
+                this.direction = Math.abs(dy) <= Math.abs(dx) && dx != 0 ? dirY : dirX;
+            } else if (dirX == Direction.STOP) {
+                this.direction = dirY;
+            } else {
+                this.direction = dirX;
+            }
         }
     }
 
@@ -195,7 +201,16 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(HashMap<Position, Tile> map, Position pacPos) {
+        public void think(Direction dirX, Direction dirY, int dx, int dy) {
+            dirX = dirX == Direction.LEFT ? Direction.RIGHT : Direction.LEFT;
+            dirY = dirY == Direction.UP ? Direction.DOWN : Direction.UP;
+            if (dirY != Direction.STOP && dirX != Direction.STOP) {
+                this.direction = Math.abs(dy) <= Math.abs(dx) && dx != 0 ? dirX : dirY;
+            } else if (dirX == Direction.STOP) {
+                this.direction = dirY;
+            } else {
+                this.direction = dirX;
+            }
         }
     }
 
@@ -205,7 +220,14 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(HashMap<Position, Tile> map, Position pacPos) {
+        public void think(Direction dirX, Direction dirY, int dx, int dy) {
+            if (dirY != Direction.STOP && dirX != Direction.STOP) {
+                this.direction = Math.abs(dx) >= Math.abs(dy) && dx != 0 ? dirX : dirY;
+            } else if (dirX == Direction.STOP) {
+                this.direction = dirY;
+            } else {
+                this.direction = dirX;
+            }
         }
     }
 }

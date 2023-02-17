@@ -80,10 +80,7 @@ public class GameCycle extends Application {
         for(Ghost _ghost : ghosts) {
             Position ghostPos = _ghost.getPosition();
             HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, ghostPos);
-            if (_ghost instanceof Ghost.Red) ((Ghost.Red)_ghost).think(tileBoard, pacPos);
-            else if (_ghost instanceof Ghost.Blue) ((Ghost.Blue)_ghost).think(tileBoard, pacPos);
-            else if (_ghost instanceof Ghost.Pink) ((Ghost.Pink)_ghost).think(tileBoard, pacPos);
-            else if (_ghost instanceof Ghost.Yellow) ((Ghost.Yellow)_ghost).think(tileBoard, pacPos);
+            _ghost.thinkPrep(tileBoard, pacPos);
             _ghost.updateSpooked();
             //do what we want the ghost do here
         }
