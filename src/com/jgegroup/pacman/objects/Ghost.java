@@ -1,9 +1,12 @@
 package com.jgegroup.pacman.objects;
 
+
 import javafx.scene.paint.Color;
 import com.jgegroup.pacman.objects.Enums.*;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 // Note: Death and respawning will be handled by the game cycle by the reassignment of the ghost to
@@ -152,8 +155,27 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(HashMap<Position, Tile> map) {
-
+        public void think(HashMap<Position, Tile> map, Position pacPos) {
+            Position pos = this.getPosition();
+            int dx = pacPos.getX() - pos.getX();
+            int dy = pacPos.getY() - pos.getY();
+            Direction dirX, dirY = Direction.STOP;
+            dirX = dx < 0 ? Direction.LEFT : dx > 0 ? Direction.RIGHT : Direction.STOP;
+            dirY = dy < 0 ? Direction.DOWN : dy > 0 ? Direction.UP : Direction.STOP;
+            HashMap<Direction, Tile> surr = MapUtils.getSurrounding(map, pos);
+            if (dirX != Direction.STOP) {
+                dirX = MapUtils.moveValid(this, surr);
+            }
+            if (dirY != Direction.STOP) {
+                dirY = MapUtils.moveValid(this, surr);
+            }
+            if (dirY != Direction.STOP && dirX != Direction.STOP) {
+                this.direction = dx <= dy && dx != 0 ? dirX : dirY;
+            } else if (dirX == Direction.STOP) {
+                this.direction = dirY;
+            } else {
+                this.direction = dirX;
+            }
         }
     }
 
@@ -163,7 +185,7 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(HashMap<Position, Tile> map) {
+        public void think(HashMap<Position, Tile> map, Position pacPos) {
         }
     }
 
@@ -173,7 +195,7 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(HashMap<Position, Tile> map) {
+        public void think(HashMap<Position, Tile> map, Position pacPos) {
         }
     }
 
@@ -183,7 +205,7 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(HashMap<Position, Tile> map) {
+        public void think(HashMap<Position, Tile> map, Position pacPos) {
         }
     }
 }
