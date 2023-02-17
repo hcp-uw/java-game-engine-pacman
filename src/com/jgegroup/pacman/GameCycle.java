@@ -49,13 +49,13 @@ public class GameCycle extends Application {
         // perform check to see if move is valid
             // if move valid, perform move and check for collisions
             // else do not move
-
+        Position pacPos = null;
         for(Pacman _pacman : pacmen) {
             /* TODO: perform check to see if move is valid
              *       if move valid, perform move
              *       otherwise do not move
              */
-            Position pacPos = _pacman.getPosition();
+            pacPos = _pacman.getPosition();
             HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, pacPos);
             Direction move = MapUtils.moveValid(_pacman, surr);
             if (move == Direction.LEFT) {
@@ -80,10 +80,10 @@ public class GameCycle extends Application {
         for(Ghost _ghost : ghosts) {
             Position ghostPos = _ghost.getPosition();
             HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, ghostPos);
-            if (_ghost instanceof Ghost.Red) ((Ghost.Red)_ghost).think(tileBoard);
-            else if (_ghost instanceof Ghost.Blue) ((Ghost.Blue)_ghost).think(tileBoard);
-            else if (_ghost instanceof Ghost.Pink) ((Ghost.Pink)_ghost).think(tileBoard);
-            else if (_ghost instanceof Ghost.Yellow) ((Ghost.Yellow)_ghost).think(tileBoard);
+            if (_ghost instanceof Ghost.Red) ((Ghost.Red)_ghost).think(tileBoard, pacPos);
+            else if (_ghost instanceof Ghost.Blue) ((Ghost.Blue)_ghost).think(tileBoard, pacPos);
+            else if (_ghost instanceof Ghost.Pink) ((Ghost.Pink)_ghost).think(tileBoard, pacPos);
+            else if (_ghost instanceof Ghost.Yellow) ((Ghost.Yellow)_ghost).think(tileBoard, pacPos);
             _ghost.updateSpooked();
             //do what we want the ghost do here
         }

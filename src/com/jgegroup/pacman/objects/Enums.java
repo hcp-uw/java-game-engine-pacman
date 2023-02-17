@@ -4,4 +4,8 @@ public class Enums {
     public enum Direction {
         UP, DOWN, LEFT, RIGHT, STOP
     }
+
+    public enum Update {
+        DEATH, MOVED, SUPER, SCARED
+    }
 }
