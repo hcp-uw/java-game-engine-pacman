@@ -31,6 +31,11 @@ public class GameCycle extends Application {
     // pacman, to then be used by frontend to remove the
     // pixel
     Consumable dotPosition = null;
+    private boolean paused = false;
+
+    // this is used to cache the direction
+    // so it can be later passed to the pacman
+    public static Direction dir_cache;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -44,13 +49,32 @@ public class GameCycle extends Application {
         }
     }
 
-    private boolean loop(Scene scene /*, keylister*/) {
+    private boolean loop(Scene scene) {
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case UP:    dir_cache = Direction.UP; break;
+                case DOWN:  dir_cache = Direction.DOWN; break;
+                case LEFT:  dir_cache = Direction.LEFT; break;
+                case RIGHT: dir_cache = Direction.RIGHT; break;
+                case SPACE: paused =! paused; break;
+            }
+        });
+
+        //If the game is paused then skip all event handle
+        if(paused) {
+            return true;
+        }
         // direction = keylister.get
         // perform check to see if move is valid
             // if move valid, perform move and check for collisions
             // else do not move
         Position pacPos = null;
         for(Pacman _pacman : pacmen) {
+            //if(_pacman.isPlayer){
+                _pacman.nextMove=dir_cache;
+            //}
+
+
             /* TODO: perform check to see if move is valid
              *       if move valid, perform move
              *       otherwise do not move
@@ -68,7 +92,7 @@ public class GameCycle extends Application {
                 pacPos.translate(0,-1);
             }
             for(Ghost _ghost : ghosts) {
-                //Although we have return values for collisionCheck,
+                // Although we have return values for collisionCheck,
                 // we don't need to store them when we know the result for sure
                 int coltype = _pacman.collisionCheck(_ghost);
 

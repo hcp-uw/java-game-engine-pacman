@@ -122,4 +122,9 @@ public class Pacman extends MovingObject {
         * */
         return 99;
     }
+
+    @Override
+    protected void think(Direction dirX, Direction dirY, int dx, int dy) {
+        return;
+    }
 }
