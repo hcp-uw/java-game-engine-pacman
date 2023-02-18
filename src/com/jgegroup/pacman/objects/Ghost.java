@@ -70,7 +70,7 @@ public class Ghost extends MovingObject {
     // Takes in no paramters
     public boolean isSpooked() { return spookState >= 0; }
 
-    // Authors: Jesse / Noah
+    // Authors: Jesse / Noah / Davin
     // Determines if the object has collided with something or not
     // Throws, no exceptions
     // Returns 1 if collided with Pacman or Wall, 0 otherwise
@@ -150,7 +150,7 @@ public class Ghost extends MovingObject {
     }
 
     @Override
-    protected void think(Direction dirX, Direction dirY, int dx, int dy) {
+    protected void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
         System.out.println("Something went wrong, in " +
                 "the Ghost main class think method");
     }
@@ -165,7 +165,7 @@ public class Ghost extends MovingObject {
         HashMap<Direction, Tile> surr = MapUtils.getSurrounding(map, pos);
         dirX = surr.get(dirX) instanceof Wall ? Direction.STOP : dirX;
         dirY = surr.get(dirY) instanceof Wall ? Direction.STOP : dirY;
-        this.think(dirX, dirY, dx, dy);
+        this.think(dirX, dirY, dx, dy, surr);
     }
 
     public class Red extends Ghost {
@@ -173,7 +173,9 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(Direction dirX, Direction dirY, int dx, int dy) {
+        public void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
+            dirX = (surr.get(dirX) instanceof Wall) ? Direction.STOP : dirX;
+            dirY = (surr.get(dirY) instanceof Wall) ? Direction.STOP : dirY;
             if (dirY != Direction.STOP && dirX != Direction.STOP) {
                 this.direction = Math.abs(dx) <= Math.abs(dy) && dx != 0 ? dirX : dirY;
             } else if (dirX == Direction.STOP) {
@@ -190,7 +192,9 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(Direction dirX, Direction dirY, int dx, int dy) {
+        public void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
+            dirX = (surr.get(dirX) instanceof Wall) ? Direction.STOP : dirX;
+            dirY = (surr.get(dirY) instanceof Wall) ? Direction.STOP : dirY;
             if (dirY != Direction.STOP && dirX != Direction.STOP) {
                 this.direction = Math.abs(dy) <= Math.abs(dx) && dx != 0 ? dirY : dirX;
             } else if (dirX == Direction.STOP) {
@@ -207,9 +211,11 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(Direction dirX, Direction dirY, int dx, int dy) {
+        public void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
             dirX = dirX == Direction.LEFT ? Direction.RIGHT : Direction.LEFT;
             dirY = dirY == Direction.UP ? Direction.DOWN : Direction.UP;
+            dirX = (surr.get(dirX) instanceof Wall) ? Direction.STOP : dirX;
+            dirY = (surr.get(dirY) instanceof Wall) ? Direction.STOP : dirY;
             if (dirY != Direction.STOP && dirX != Direction.STOP) {
                 this.direction = Math.abs(dy) <= Math.abs(dx) && dx != 0 ? dirX : dirY;
             } else if (dirX == Direction.STOP) {
@@ -226,7 +232,9 @@ public class Ghost extends MovingObject {
             super(x, y, spookLength, color);
         }
 
-        public void think(Direction dirX, Direction dirY, int dx, int dy) {
+        public void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
+            dirX = (surr.get(dirX) instanceof Wall) ? Direction.STOP : dirX;
+            dirY = (surr.get(dirY) instanceof Wall) ? Direction.STOP : dirY;
             if (dirY != Direction.STOP && dirX != Direction.STOP) {
                 this.direction = Math.abs(dx) >= Math.abs(dy) && dx != 0 ? dirX : dirY;
             } else if (dirX == Direction.STOP) {

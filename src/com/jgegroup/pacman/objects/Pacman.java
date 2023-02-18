@@ -3,6 +3,7 @@ package com.jgegroup.pacman.objects;
 import com.jgegroup.pacman.objects.immovable.consumables.*;
 import com.jgegroup.pacman.objects.Enums.*;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -80,11 +81,12 @@ public class Pacman extends MovingObject {
      **/
     public void setSuper() { this.Super += superLength; }
 
-    // Author: Noah
-    // Updates the super state
-    // Throws no exceptions
-    // Returns true if the pacman is super, else false
-    // Takes in no parameters
+    /** @Author: Noah
+     * Updates the super state
+     * @Throws no exceptions
+     * @Returns true if the pacman is super, else false
+     * Takes in no parameters
+    **/
     public boolean updateSuper() {
         if (this.Super >= 0) {
             this.Super--;
@@ -93,18 +95,28 @@ public class Pacman extends MovingObject {
         return false;
     }
 
-    // Author: Noah
-    // Checks to see if Pacman is super
-    // Throws no exceptions
-    // Returns true if super state container is greater than or equal to 0, else false
-    // Takes in no parameters
+    /** @Author: Noah
+     * Checks to see if Pacman is super
+     * @Throws no exceptions
+     * @Returns true if super state container is greater than or equal to 0, else false
+     * Takes in no parameters
+    */
     public boolean isSuper() { return this.Super >= 0; }
 
-    // Authors: Noah / Jesse
-    // Examines the collision between Pacman and Object and handles it
-    // Throws no exceptions
-    // Returns 1 if a collision happens, 0 else
-    // Takes in a GameObject as a parameter
+    /** @Author: Noah
+     * Gets num of lives left
+     * @Throws no exceptions
+     * @Returns number of lives left
+     * Takes in no parameters
+     */
+    public int getLives() { return this.lives; }
+
+    /** @Authors: Noah / Jesse
+     * Examines the collision between Pacman and Object and handles it
+     * @Throws no exceptions
+     * @Returns 1 if a collision happens, 0 else
+     * Takes in a GameObject as a parameter
+    */
     @Override
     protected int collisionHandle(MovingObject object) {
         if (object instanceof Ghost) {
@@ -124,7 +136,7 @@ public class Pacman extends MovingObject {
     }
 
     @Override
-    protected void think(Direction dirX, Direction dirY, int dx, int dy) {
+    protected void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
         return;
     }
 }

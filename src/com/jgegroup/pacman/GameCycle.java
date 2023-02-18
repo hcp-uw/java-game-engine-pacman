@@ -99,12 +99,24 @@ public class GameCycle extends Application {
             }
             //TODO: a collision check for consumables
             _pacman.updateSuper();
+            // If Pacman is dead return false and conclude the game
+            if (_pacman.getLives() < 0 ) return false;
         }
         //Let each ghost move
         for(Ghost _ghost : ghosts) {
             Position ghostPos = _ghost.getPosition();
             HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, ghostPos);
             _ghost.thinkPrep(tileBoard, pacPos);
+            Direction move = MapUtils.moveValid(_ghost, surr);
+            if (move == Direction.LEFT) {
+                ghostPos.translate(-1, 0);
+            } else if (move == Direction.UP) {
+                ghostPos.translate(0, 1);
+            } else if (move == Direction.RIGHT) {
+                ghostPos.translate(1,0);
+            } else if (move == Direction.DOWN) {
+                ghostPos.translate(0,-1);
+            }
             _ghost.updateSpooked();
             //do what we want the ghost do here
         }

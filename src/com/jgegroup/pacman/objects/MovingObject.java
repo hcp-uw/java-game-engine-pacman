@@ -3,6 +3,8 @@ package com.jgegroup.pacman.objects;
 import com.jgegroup.pacman.SimpleMath;
 import com.jgegroup.pacman.objects.Enums.*;
 
+import java.util.HashMap;
+
 public abstract class MovingObject extends GameObject {
     protected int radius;
     protected Direction direction;
@@ -17,6 +19,7 @@ public abstract class MovingObject extends GameObject {
     public int getRadius(){return this.radius;}
     public void setRadius(int radius) {this.radius = radius;}
 
+    public Direction getDirection() { return this.direction; }
 
 
     public int collisionCheck(MovingObject object){
@@ -31,5 +34,5 @@ public abstract class MovingObject extends GameObject {
 
     protected abstract int collisionHandle(MovingObject object);
 
-    protected abstract void think(Direction dirX, Direction dirY, int dx, int dy);
+    protected abstract void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr);
 }
