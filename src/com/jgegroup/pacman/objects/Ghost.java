@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class Ghost extends MovingObject {
     // Spook length is the cycle length interval for how long a ghost will
     // be spooked. Can exceed this length if more big dots are eaten
-    private final int spookLength;
+    public final int spookLength;
     // Container for base color of the Ghost which is the color that the Ghost is when not spooked
     private Color base_color;
     // Container for the color of the Ghost that we're currently showing to the screen
@@ -149,6 +149,10 @@ public class Ghost extends MovingObject {
         return 0;
     }
 
+    public Color getColor() {
+        return this.base_color;
+    }
+
     @Override
     protected void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
         System.out.println("Something went wrong, in " +
@@ -168,7 +172,7 @@ public class Ghost extends MovingObject {
         this.think(dirX, dirY, dx, dy, surr);
     }
 
-    public class Red extends Ghost {
+    public static class Red extends Ghost {
         public Red(int x, int y, int spookLength, Color color) {
             super(x, y, spookLength, color);
         }
@@ -186,7 +190,7 @@ public class Ghost extends MovingObject {
         }
     }
 
-    public class Blue extends Ghost {
+    public static class Blue extends Ghost {
 
         public Blue(int x, int y, int spookLength, Color color) {
             super(x, y, spookLength, color);
@@ -205,7 +209,7 @@ public class Ghost extends MovingObject {
         }
     }
 
-    public class Pink extends Ghost {
+    public static class Pink extends Ghost {
 
         public Pink(int x, int y, int spookLength, Color color) {
             super(x, y, spookLength, color);
@@ -226,7 +230,7 @@ public class Ghost extends MovingObject {
         }
     }
 
-    public class Yellow extends Ghost {
+    public static class Yellow extends Ghost {
 
         public Yellow(int x, int y, int spookLength, Color color) {
             super(x, y, spookLength, color);

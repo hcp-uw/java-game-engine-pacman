@@ -1,16 +1,15 @@
 package com.jgegroup.pacman;
 
 import com.jgegroup.pacman.objects.*;
+import com.jgegroup.pacman.objects.immovable.consumables.BigDot;
 import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import com.jgegroup.pacman.objects.MapUtils;
@@ -36,13 +35,12 @@ public class GameCycle extends Application {
     // this is used to cache the direction
     // so it can be later passed to the pacman
     public static Direction dir_cache;
+    public HashMap<GameObject, HashSet<Enums.Update>> updates;
 
     @Override
     public void start(Stage stage) throws Exception {
         init(stage);
         boolean runGame = true;
-        Timer timer = new Timer();
-        // Todo: Add a keylistener for Pacman
         while (runGame) {
             runGame = loop(stage.getScene());
             TimeUnit.MILLISECONDS.sleep(1);
@@ -71,14 +69,10 @@ public class GameCycle extends Application {
         Position pacPos = null;
         for(Pacman _pacman : pacmen) {
             //if(_pacman.isPlayer){
-                _pacman.nextMove=dir_cache;
+                _pacman.nextMove = dir_cache;
             //}
 
 
-            /* TODO: perform check to see if move is valid
-             *       if move valid, perform move
-             *       otherwise do not move
-             */
             pacPos = _pacman.getPosition();
             HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, pacPos);
             Direction move = MapUtils.moveValid(_pacman, surr);
@@ -91,13 +85,72 @@ public class GameCycle extends Application {
             } else if (move == Direction.DOWN) {
                 pacPos.translate(0,-1);
             }
+            if (move != Direction.STOP) {
+                if (!updates.containsKey(_pacman)) {
+                    HashSet<Update> pUpdates = new HashSet<>();
+                    pUpdates.add(Update.MOVED);
+                    updates.put(_pacman, pUpdates);
+                } else {
+                    updates.get(_pacman).add(Update.MOVED);
+                }
+            }
             for(Ghost _ghost : ghosts) {
                 // Although we have return values for collisionCheck,
                 // we don't need to store them when we know the result for sure
                 int coltype = _pacman.collisionCheck(_ghost);
-
+                if (coltype == 101) {
+                    if (!updates.containsKey(_ghost)) {
+                        HashSet<Update> gUpdates = new HashSet<>();
+                        gUpdates.add(Update.DEATH);
+                        updates.put(_ghost, gUpdates);
+                    } else {
+                        updates.get(_ghost).add(Update.DEATH);
+                    }
+                    Color ghostColor = _ghost.getColor();
+                    Position ghostPos = _ghost.getPosition();
+                    int spookLength = _ghost.spookLength;
+                    _ghost = ghostColor == Color.RED ? new Ghost.Red(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
+                            ghostColor == Color.BLUE ? new Ghost.Blue(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
+                            ghostColor == Color.YELLOW ? new Ghost.Yellow(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
+                            new Ghost.Pink(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor);
+                } else {
+                    if (!updates.containsKey(_pacman)) {
+                        HashSet<Update> pUpdates = new HashSet<>();
+                        pUpdates.add(Update.DEATH);
+                        updates.put(_pacman, pUpdates);
+                    }
+                    _pacman.death();
+                }
             }
-            //TODO: a collision check for consumables
+            if (objects.get(pacPos) instanceof Consumable) {
+                Consumable consumable = objects.get(pacPos);
+                if (consumable instanceof BigDot) {
+                    _pacman.setSuper();
+                    if (!updates.containsKey(_pacman)) {
+                        HashSet<Update> pUpdate = new HashSet<>();
+                        pUpdate.add(Update.SUPER);
+                        updates.put(_pacman, pUpdate);
+                    } else {
+                        updates.get(_pacman).add(Update.SUPER);
+                    }
+                    for (Ghost _ghost : ghosts) {
+                        if (!updates.containsKey(_ghost)) {
+                            HashSet<Update> gUpdate = new HashSet<>();
+                            gUpdate.add(Update.SCARED);
+                            updates.put(_ghost, gUpdate);
+                        } else {
+                            updates.get(_ghost).add(Update.SCARED);
+                        }
+                    }
+                }
+                if (!updates.containsKey(consumable)) {
+                    HashSet<Update> cUpdate = new HashSet<>();
+                    cUpdate.add(Update.EATEN);
+                    updates.put(consumable, cUpdate);
+                } else {
+                    updates.get(consumable).add(Update.EATEN);
+                }
+            }
             _pacman.updateSuper();
             // If Pacman is dead return false and conclude the game
             if (_pacman.getLives() < 0 ) return false;
@@ -120,6 +173,9 @@ public class GameCycle extends Application {
             _ghost.updateSpooked();
             //do what we want the ghost do here
         }
+        redraw(updates);
+        updateMaps(updates);
+        updates.clear();
         return true;
     }
 
@@ -135,6 +191,19 @@ public class GameCycle extends Application {
         pacmen = new HashSet<>();
         ghosts = new HashSet<>();
         objectPosition = new HashMap<>();
+        updates = new HashMap<>();
 
+    }
+
+    public void redraw(HashMap<GameObject, HashSet<Update>> updates) {
+
+    }
+
+    public void updateMaps(HashMap<GameObject, HashSet<Update>> updates) {
+        for (GameObject go : updates.keySet()) {
+            if (go instanceof Consumable && updates.get(go).contains(Update.EATEN)) {
+                objects.remove(go);
+            }
+        }
     }
 }

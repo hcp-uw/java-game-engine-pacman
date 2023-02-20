@@ -120,14 +120,13 @@ public class Pacman extends MovingObject {
     @Override
     protected int collisionHandle(MovingObject object) {
         if (object instanceof Ghost) {
-            this.death();
-            return 100;
-        } else if (object instanceof Pacman) {
+            if (!this.isSuper()) {
+                return 100;
+            }
             return 101;
+        } else if (object instanceof Pacman) {
+            return 102;
         }
-//        else if (object instanceof Consumable) {
-//            return 3;
-//        }
         /*For Pacman, collisionHandle should be and only should be execute
         * when they hit a ghost or a pacman
         * Collision with immovable will be handled separately
