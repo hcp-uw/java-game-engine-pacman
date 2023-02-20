@@ -47,6 +47,11 @@ public class GameCycle extends Application {
         }
     }
 
+    // Authors: Anthony / Jesse
+    // Stores direction on press of arrow keys and pauses game when space is pressed
+    // Throws no exceptions
+    // Returns true when game paused
+    // Takes scene as parameter
     private boolean loop(Scene scene) {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
