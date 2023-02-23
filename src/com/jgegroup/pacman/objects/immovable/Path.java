@@ -5,13 +5,9 @@ import javafx.scene.image.Image;
 
 
 public class Path extends Tile {
-    public boolean isIntersection;
-    public boolean isCorner;
 
-    public Path(boolean intersection, boolean corner, Image image) {
+    public Path(Image image) {
         super(image);
-        isIntersection = intersection;
-        isCorner = corner;
     }
 
 }

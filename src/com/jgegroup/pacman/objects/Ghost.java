@@ -33,7 +33,7 @@ public class Ghost extends MovingObject {
         this.direction = Direction.STOP;
     }
 
-    // Authors: Noah / Nicola
+    // Authors: Noah / Nikola
     // Sets spookState to maximum spook state 'spookLength'
     // spook length represents the number of cycles to be spooked
     // Throws no exceptions
@@ -41,7 +41,7 @@ public class Ghost extends MovingObject {
     // Takes no parameters
     public void setSpooked() { spookState += spookLength; }
 
-    // Authors: Noah / Nicola
+    // Authors: Noah / Nikola
     // Updatess the spook state, if the state is even it will change the color of the ghost
     // to white, and if its odd then it will change to blue, if not spooked it will return to original color
     // Throws no exceptions

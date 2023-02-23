@@ -6,10 +6,8 @@ import javafx.scene.image.Image;
 
 public class Wall extends Tile {
 
-    byte adjacentPaths;
     public Wall(Image image) {
         super(image);
-        this.adjacentPaths = 0;
     }
 
 }

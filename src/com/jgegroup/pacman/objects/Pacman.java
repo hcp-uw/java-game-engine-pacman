@@ -38,7 +38,7 @@ public class Pacman extends MovingObject {
         consumed = new LinkedList<>();
     }
 
-    /** @Authors: Noah / Nicola
+    /** @Authors: Noah / Nikola
      * Decrements lives state and moves Pacman to spawn
      * @Throws no exceptions
      * @Returns true if Pacman has lives remaining or is on last life, false if there are no more lives

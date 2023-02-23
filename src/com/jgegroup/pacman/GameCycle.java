@@ -47,7 +47,7 @@ public class GameCycle extends Application {
         }
     }
 
-    // Authors: Anthony / Jesse
+    // Authors: Anthony / Jesse / Noah / Nikola
     // Stores direction on press of arrow keys and pauses game when space is pressed
     // Throws no exceptions
     // Returns true when game paused
