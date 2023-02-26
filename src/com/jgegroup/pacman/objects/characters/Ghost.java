@@ -1,6 +1,10 @@
-package com.jgegroup.pacman.objects;
+package com.jgegroup.pacman.objects.characters;
 
 
+import com.jgegroup.pacman.objects.MapUtils;
+import com.jgegroup.pacman.objects.MovingObject;
+import com.jgegroup.pacman.objects.Position;
+import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.Wall;
 import javafx.scene.paint.Color;
 import com.jgegroup.pacman.objects.Enums.*;
@@ -12,7 +16,7 @@ import java.util.HashMap;
 // another ghost.
 
 public class Ghost extends MovingObject {
-    // Spook length is the cycle length interval for how long a ghost will
+    //Spook length is the cycle length interval for how long a ghost will
     // be spooked. Can exceed this length if more big dots are eaten
     public final int spookLength;
     // Container for base color of the Ghost which is the color that the Ghost is when not spooked
@@ -33,20 +37,22 @@ public class Ghost extends MovingObject {
         this.direction = Direction.STOP;
     }
 
-    // Authors: Noah / Nikola
-    // Sets spookState to maximum spook state 'spookLength'
-    // spook length represents the number of cycles to be spooked
-    // Throws no exceptions
-    // Returns nothing
-    // Takes no parameters
+    /** @@Authors: Noah / Nikola
+     * Sets spookState to maximum spook state 'spookLength'
+     * spook length represents the number of cycles to be spooked
+     * Throws no exceptions
+     * Returns nothing
+     * Takes no parameters
+    */
     public void setSpooked() { spookState += spookLength; }
 
-    // Authors: Noah / Nikola
-    // Updatess the spook state, if the state is even it will change the color of the ghost
-    // to white, and if its odd then it will change to blue, if not spooked it will return to original color
-    // Throws no exceptions
-    // Returns true if is currently spooked or if its coming out of being spooked
-    // Takes no parameters
+    /** @@Authors: Noah / Nikola
+     * Updatess the spook state, if the state is even it will change the color of the ghost
+     * to white, and if its odd then it will change to blue, if not spooked it will return to original color
+     * Throws no exceptions
+     * Returns true if is currently spooked or if its coming out of being spooked
+     * Takes no parameters
+    */
     public boolean updateSpooked() {
         if (spookState >= 0) {
             if (spookState % 2 == 0) {
@@ -63,25 +69,27 @@ public class Ghost extends MovingObject {
         return false;
     }
 
-    // Author: Noah
-    // Checks to see if the ghost is spooked
-    // Throws no exceptions
-    // Returns true if spookState container is greater than or equal to 0, else false
-    // Takes in no paramters
+    /** @@Author: Noah
+     * Checks to see if the ghost is spooked
+     * Throws no exceptions
+     * Returns true if spookState container is greater than or equal to 0, else false
+     * Takes in no paramters
+    */
     public boolean isSpooked() { return spookState >= 0; }
 
-    // Authors: Jesse / Noah / Davin
-    // Determines if the object has collided with something or not
-    // Throws, no exceptions
-    // Returns 1 if collided with Pacman or Wall, 0 otherwise
-    // Takes in a GameObject as a parameter
+    /** @@Authors: Jesse / Noah / Davin
+     * Determines if the object has collided with something or not
+     * Throws, no exceptions
+     * Returns 1 if collided with Pacman or Wall, 0 otherwise
+     * Takes in a GameObject as a parameter
+    */
     @Override
     protected int collisionHandle(MovingObject object) {
-//        if (object instanceof Pacman) {
-//            return 1;
-//        } else if (object instanceof Wall) {
-//            return 2;
-//        }
+ //        if (object instanceof Pacman) {
+ //            return 1;
+ //        } else if (object instanceof Wall) {
+ //            return 2;
+ //        }
 
         // here we will need to look for the overlap in the MovingObject
         // we will try to see if the circles overlap
@@ -91,7 +99,7 @@ public class Ghost extends MovingObject {
         // We will need to check in all 4 directions, and we will need
         // check to see if there is any overlap in the four directions
 
-        Position otherPosition = object.position;
+        Position otherPosition = object.getPosition();
 
         Position currentPosition = this.position;
 
@@ -153,12 +161,29 @@ public class Ghost extends MovingObject {
         return this.base_color;
     }
 
-    @Override
-    protected void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
+    /** @@Author: Noah
+     *  Allows the ghost to process its next move. The original ghost class has no movement capability
+     *  so this method is purely for debugging purpose. See inheritors: Pink, Blue, Red, Yellow
+     *  Throws no exceptions
+     *  Returns nothing
+     * @param dirX X direction
+     * @param dirY Y direction
+     * @param dx direction difference from pacman X
+     * @param dy direction difference from pacman Y
+     * @param surr surrounding tiles
+     */
+    public void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
         System.out.println("Something went wrong, in " +
                 "the Ghost main class think method");
     }
 
+    /** @@Author: Noah
+     * Processes the data from thinkPrep and conducts the movement choice evaluation
+     * Throws no exceptions
+     * @param map tiles of the map
+     * @param pacPos pacmans current position
+     * Returns nothing
+     */
     public void thinkPrep(HashMap<Position, Tile> map, Position pacPos) {
         Position pos = this.getPosition();
         int dx = pacPos.getX() - pos.getX();

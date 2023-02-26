@@ -1,11 +1,9 @@
 import com.jgegroup.pacman.objects.Enums.*;
-import com.jgegroup.pacman.objects.Ghost;
-import com.jgegroup.pacman.objects.Position;
-import com.jgegroup.pacman.objects.Tile;
+import com.jgegroup.pacman.objects.characters.Pink;
+import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.Path;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import jdk.incubator.vector.VectorOperators;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestSource;
 
@@ -19,9 +17,9 @@ public class movementTests {
     class PinkGhostMovementAllPath implements TestSource {
 
         public HashMap<Direction, Tile> pseudoSurr;
-        public Ghost pinkie;
+        public Pink pinkie;
         public PinkGhostMovementAllPath() {
-            pinkie = new Ghost.Pink(0,0,10, Color.PINK);
+            pinkie = new Pink(0,0,10, Color.PINK);
             pseudoSurr = new HashMap<Direction, Tile>();
             pseudoSurr.put(Direction.UP, new Path(false, false, new Image(testImageUrl)));
             pseudoSurr.put(Direction.RIGHT, new Path(false, false, new Image(testImageUrl)));
@@ -33,7 +31,7 @@ public class movementTests {
         void checkPacmanNorthWest() {
             int dx = -1;
             int dy = 1;
-            ((Ghost.Pink)pinkie).think(Direction.LEFT, Direction.UP, dx, dy, pseudoSurr);
+            pinkie.think(Direction.LEFT, Direction.UP, dx, dy, pseudoSurr);
             assertEquals(pinkie.getDirection(), Direction.DOWN);
         }
     }

@@ -1,4 +1,4 @@
-package com.jgegroup.pacman.objects;
+package com.jgegroup.pacman.objects.immovable;
 
 import javafx.scene.image.Image;
 

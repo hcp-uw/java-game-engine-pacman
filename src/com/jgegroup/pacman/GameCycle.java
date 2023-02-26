@@ -1,6 +1,8 @@
 package com.jgegroup.pacman;
 
 import com.jgegroup.pacman.objects.*;
+import com.jgegroup.pacman.objects.characters.*;
+import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.consumables.BigDot;
 import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
 import javafx.application.Application;
@@ -114,10 +116,10 @@ public class GameCycle extends Application {
                     Color ghostColor = _ghost.getColor();
                     Position ghostPos = _ghost.getPosition();
                     int spookLength = _ghost.spookLength;
-                    _ghost = ghostColor == Color.RED ? new Ghost.Red(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
-                            ghostColor == Color.BLUE ? new Ghost.Blue(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
-                            ghostColor == Color.YELLOW ? new Ghost.Yellow(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
-                            new Ghost.Pink(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor);
+                    _ghost = ghostColor == Color.RED ? new Red(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
+                            ghostColor == Color.BLUE ? new Blue(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
+                            ghostColor == Color.YELLOW ? new Yellow(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
+                            new Pink(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor);
                 } else {
                     if (!updates.containsKey(_pacman)) {
                         HashSet<Update> pUpdates = new HashSet<>();

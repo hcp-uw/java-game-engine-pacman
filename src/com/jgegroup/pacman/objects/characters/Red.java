@@ -1,5 +1,7 @@
-package com.jgegroup.pacman.objects;
+package com.jgegroup.pacman.objects.characters;
 
+import com.jgegroup.pacman.objects.Enums;
+import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.Wall;
 import javafx.scene.paint.Color;
 
@@ -10,7 +12,17 @@ public class Red extends Ghost {
             super(x, y, spookLength, color);
         }
 
-        public void think(Enums.Direction dirX, Enums.Direction dirY, int dx, int dy, HashMap<Enums.Direction, Tile> surr) {
+    /** @@Author: Noah
+     * Enables the Red ghost to process its next move
+     * Throws no exceptions
+     * Returns nothing
+     * @param dirX
+     * @param dirY
+     * @param dx
+     * @param dy
+     * @param surr
+     */
+    public void think(Enums.Direction dirX, Enums.Direction dirY, int dx, int dy, HashMap<Enums.Direction, Tile> surr) {
             dirX = (surr.get(dirX) instanceof Wall) ? Enums.Direction.STOP : dirX;
             dirY = (surr.get(dirY) instanceof Wall) ? Enums.Direction.STOP : dirY;
             if (dirY != Enums.Direction.STOP && dirX != Enums.Direction.STOP) {

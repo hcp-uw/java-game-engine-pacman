@@ -1,6 +1,5 @@
 package com.jgegroup.pacman.objects.immovable;
 
-import com.jgegroup.pacman.objects.Tile;
 import javafx.scene.image.Image;
 
 

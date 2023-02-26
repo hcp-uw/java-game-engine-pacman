@@ -2,20 +2,21 @@ package com.jgegroup.pacman.objects;
 
 import java.util.HashMap;
 import com.jgegroup.pacman.objects.Enums.*;
+import com.jgegroup.pacman.objects.characters.Pacman;
 import com.jgegroup.pacman.objects.immovable.Path;
+import com.jgegroup.pacman.objects.immovable.Tile;
 
 
 public class MapUtils {
     public static final int tileSize = 32;
 
-    /*
-     * Authors: Noah, Jesse
+    /** @@Authors: Noah, Jesse
      * Gets the surrounding tiles from the map for a given position
      * Throws no Exceptions
      * Returns the surround tiles
      * Takes in board and the position in question
      */
-    public static HashMap<Direction,Tile> getSurrounding(HashMap<Position, Tile> map, Position pos) {
+    public static HashMap<Direction, Tile> getSurrounding(HashMap<Position, Tile> map, Position pos) {
         HashMap<Direction, Tile> surrounding = new HashMap<>(8);
         surrounding.put(Direction.UP, map.get(new Position(pos.getX(), pos.getY() + 1)));
         surrounding.put(Direction.LEFT, map.get(new Position(pos.getX() + 1, pos.getY())));
@@ -24,8 +25,7 @@ public class MapUtils {
         return surrounding;
     }
 
-    /*
-     * Authors: Noah, Jesse
+    /** @@Authors: Noah, Jesse
      * Determines if a move is valid, if it is it sends back the next move
      * Throws no exceptions
      * Returns a move
@@ -47,8 +47,7 @@ public class MapUtils {
         return Direction.STOP;
     }
 
-    /*
-     * Authors: Noah, Jesse
+    /** @@Authors: Noah, Jesse
      * Translates the screen tile position to the world position size
      * Throws no exceptions
      * Returns a new position with the world position
@@ -58,8 +57,7 @@ public class MapUtils {
         return new Position(pos.getX()*tileSize, pos.getY()*tileSize);
     }
 
-    /*
-     * Authors: Noah, Jesse
+    /** @@Authors: Noah, Jesse
      * Translates the world position to the screen tile position
      * Throws no exceptions
      * Returns a new position with the screen tile position

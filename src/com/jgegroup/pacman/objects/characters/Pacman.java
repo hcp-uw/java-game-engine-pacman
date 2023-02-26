@@ -1,5 +1,9 @@
-package com.jgegroup.pacman.objects;
+package com.jgegroup.pacman.objects.characters;
 
+import com.jgegroup.pacman.objects.Enums;
+import com.jgegroup.pacman.objects.MovingObject;
+import com.jgegroup.pacman.objects.Position;
+import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.consumables.*;
 import com.jgegroup.pacman.objects.Enums.*;
 
@@ -38,7 +42,7 @@ public class Pacman extends MovingObject {
         consumed = new LinkedList<>();
     }
 
-    /** @Authors: Noah / Nikola
+    /** @@Authors: Noah / Nikola
      * Decrements lives state and moves Pacman to spawn
      * @Throws no exceptions
      * @Returns true if Pacman has lives remaining or is on last life, false if there are no more lives
@@ -53,7 +57,7 @@ public class Pacman extends MovingObject {
         return false;
     }
 
-    /** @Author: Noah
+    /** @@Author: Noah
      * Updates score of Pacman after it eats something
      * @Throws no exceptions
      * @Returns the position of dot or ghost eaten for front-end
@@ -61,8 +65,8 @@ public class Pacman extends MovingObject {
     **/
     public Position eat(Consumable consumable) {
         this.score += consumable.score;
-        consumed.add(consumable.position);
-        return consumable.position;
+        consumed.add(consumable.getPosition());
+        return consumable.getPosition();
     }
 
     public Consumable checkQueue() {
@@ -73,7 +77,7 @@ public class Pacman extends MovingObject {
         return null;
     }
 
-    /** @Author Noah
+    /** @@Author Noah
      * Sets the super state
      * @Throws no exceptions
      * @Returns nothing
@@ -81,7 +85,7 @@ public class Pacman extends MovingObject {
      **/
     public void setSuper() { this.Super += superLength; }
 
-    /** @Author: Noah
+    /** @@Author: Noah
      * Updates the super state
      * @Throws no exceptions
      * @Returns true if the pacman is super, else false
@@ -95,7 +99,7 @@ public class Pacman extends MovingObject {
         return false;
     }
 
-    /** @Author: Noah
+    /** @@Author: Noah
      * Checks to see if Pacman is super
      * @Throws no exceptions
      * @Returns true if super state container is greater than or equal to 0, else false
@@ -103,7 +107,7 @@ public class Pacman extends MovingObject {
     */
     public boolean isSuper() { return this.Super >= 0; }
 
-    /** @Author: Noah
+    /** @@Author: Noah
      * Gets num of lives left
      * @Throws no exceptions
      * @Returns number of lives left
@@ -111,7 +115,7 @@ public class Pacman extends MovingObject {
      */
     public int getLives() { return this.lives; }
 
-    /** @Authors: Noah / Jesse
+    /** @@Authors: Noah / Jesse
      * Examines the collision between Pacman and Object and handles it
      * @Throws no exceptions
      * @Returns 1 if a collision happens, 0 else
@@ -134,8 +138,4 @@ public class Pacman extends MovingObject {
         return 99;
     }
 
-    @Override
-    protected void think(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
-        return;
-    }
 }
