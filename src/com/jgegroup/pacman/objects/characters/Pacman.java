@@ -64,7 +64,7 @@ public class Pacman extends MovingObject {
      * Takes in a consumable object as a parameter
     **/
     public Position eat(Consumable consumable) {
-        this.score += consumable.score;
+        this.score += consumable.getScore();
         consumed.add(consumable.getPosition());
         return consumable.getPosition();
     }
