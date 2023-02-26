@@ -5,27 +5,36 @@ import com.jgegroup.pacman.objects.Tile;
 import com.jgegroup.pacman.objects.immovable.Path;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import jdk.incubator.vector.VectorOperators;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.TestSource;
 
 import java.util.HashMap;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class movementTests {
     public static final String testImageUrl =
             "https://developer.mozilla.org/en-US/docs/Games/Techniques/Tilemaps/screen_shot_2015-10-06_at_15.56.05.png";
-    class PinkGhostMovement {
+    class PinkGhostMovementAllPath implements TestSource {
 
         public HashMap<Direction, Tile> pseudoSurr;
         public Ghost pinkie;
-        public PinkGhostMovement() {
+        public PinkGhostMovementAllPath() {
             pinkie = new Ghost.Pink(0,0,10, Color.PINK);
             pseudoSurr = new HashMap<Direction, Tile>();
+            pseudoSurr.put(Direction.UP, new Path(false, false, new Image(testImageUrl)));
+            pseudoSurr.put(Direction.RIGHT, new Path(false, false, new Image(testImageUrl)));
+            pseudoSurr.put(Direction.DOWN, new Path(false, false, new Image(testImageUrl)));
+            pseudoSurr.put(Direction.LEFT, new Path(false, false, new Image(testImageUrl)));
         }
 
         @Test
-        void checkOnlyLeftMovement() {
-
+        void checkPacmanNorthWest() {
+            int dx = -1;
+            int dy = 1;
+            ((Ghost.Pink)pinkie).think(Direction.LEFT, Direction.UP, dx, dy, pseudoSurr);
+            assertEquals(pinkie.getDirection(), Direction.DOWN);
         }
     }
-
-
 }
