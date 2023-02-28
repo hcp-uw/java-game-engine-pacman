@@ -22,6 +22,8 @@ public abstract class MovingObject extends GameObject {
 
     public Direction getDirection() { return this.direction; }
 
+    public void setDirection(Direction dir) { this.direction = dir; }
+
     /** @@Author: Jesse
      * Performs a collision check on an object that this object could
      * have collided with

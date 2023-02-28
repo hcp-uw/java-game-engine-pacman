@@ -26,7 +26,7 @@ public class Pacman extends MovingObject {
     private final int spawnX;
     private final int spawnY;
     // Queue to aid in endless mode functionality
-    private Queue<Position> consumed;
+    private Queue<Consumable> consumed;
     // move container for next move
     public Direction nextMove;
     public Pacman(int spawnX, int spawnY, int superLength) {
@@ -63,16 +63,29 @@ public class Pacman extends MovingObject {
      * @Returns the position of dot or ghost eaten for front-end
      * Takes in a consumable object as a parameter
     **/
-    public Position eat(Consumable consumable) {
+    public Consumable eat(Consumable consumable) {
         this.score += consumable.getScore();
-        consumed.add(consumable.getPosition());
-        return consumable.getPosition();
+        consumed.add(consumable);
+        return consumable;
     }
 
+    /** @@Author: Noah
+     *  Returns the score variable
+     *  Throws no exceptions
+     *  @return Pacman's score
+     *  Takes in no parameters
+     */
+    public int getScore() { return this.score; }
+
+    /** @@Author: Noah
+     *  Returns the consumable that was first eaten in the queue
+     *  Throws no exceptions
+     *  @return A new consumable with the position of the first eaten consumable thats in the queue
+     *  Takes in no params
+     */
     public Consumable checkQueue() {
         if (consumed.size() > 16) {
-            return Math.round(Math.random() * 100) >= 50 ?
-                    new Dot(consumed.remove()) : new BigDot(consumed.remove());
+            return consumed.remove();
         }
         return null;
     }
@@ -83,7 +96,12 @@ public class Pacman extends MovingObject {
      * @Returns nothing
      * Takes in no parameters
      **/
-    public void setSuper() { this.Super += superLength; }
+    public void setSuper() {
+        if (this.Super <= 0)
+            this.Super = superLength;
+        else
+            this.Super += superLength;
+    }
 
     /** @@Author: Noah
      * Updates the super state
@@ -92,7 +110,7 @@ public class Pacman extends MovingObject {
      * Takes in no parameters
     **/
     public boolean updateSuper() {
-        if (this.Super >= 0) {
+        if (this.Super > 0) {
             this.Super--;
             return true;
         }
@@ -106,6 +124,14 @@ public class Pacman extends MovingObject {
      * Takes in no parameters
     */
     public boolean isSuper() { return this.Super >= 0; }
+
+    /** @@Author: Noah
+     * Gets the remaining super cycles
+     * Throws no exceptions
+     * @return Integer denoting how many super cycles are left
+     * Takes in no parameters
+     */
+    public int getSuper() { return this.Super; }
 
     /** @@Author: Noah
      * Gets num of lives left
