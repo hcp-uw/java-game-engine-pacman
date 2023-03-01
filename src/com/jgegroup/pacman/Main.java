@@ -1,24 +1,31 @@
 package com.jgegroup.pacman;
-import javax.swing.*;
+import com.jgegroup.pacman.GameScene;
+import javafx.stage.Stage;
+import javafx.application.Application;
+import javafx.scene.image.Image;
 
-public class Main {
+
+
+
+public class Main extends Application {
     //Code starts here
     // hello
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
+      launch(args);
 
-        JFrame frame = new JFrame();
-
-        //Visibility
-        frame.setTitle("Pac Chilling Game");
-        frame.setVisible(true);
-
-        //Others Stuff
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // if map out of the way, add this frame.setResizeable(false);
-
-        // Add Gamepanel to Jpanel
-        GamePanel gamePanel = new GamePanel();
-        frame.add(gamePanel);
-        frame.pack();  // make Jframe window size same as largest Jpanel size. So frame'size = gamePanel's size.
     }
+  @Override
+  public void start(Stage stage) throws Exception {
+      stage = new Stage();
+      GameScene gameScene = new GameScene();
+
+      // icon and name
+      stage.setTitle("2D Pacman Game");
+      Image icon = new Image("icon/icon.png");
+      stage.getIcons().add(icon);
+      // add scene
+      stage.setScene(gameScene.gameScene);
+      stage.setResizable(false);
+      stage.show();
+  }
 }
