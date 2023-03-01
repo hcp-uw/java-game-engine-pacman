@@ -5,3 +5,5 @@ public class GameLaunch {
     Main.main(args);
   }
 }
+
+// Use this to launch the game
