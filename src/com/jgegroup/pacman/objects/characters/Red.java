@@ -39,6 +39,10 @@ public class Red extends Ghost implements GhostMovement {
                 this.setDirection(dY);
             }
         }
+        if (dX != Direction.STOP)
+            this.setDirection(dX);
+        if (dY != Direction.STOP)
+            this.setDirection(dY);
     }
 
     /** @@Author: Noah
@@ -51,14 +55,10 @@ public class Red extends Ghost implements GhostMovement {
      */
     public void spookedThink(int dx, int dy, HashMap<Direction, Tile> surr) {
         Direction dX = Direction.STOP, dY = Direction.STOP;
-        if (dx != 0) {
-            dX = dx >= 0 ? Direction.LEFT : Direction.RIGHT;
-            dX = validateMove(dX, surr);
-        }
-        if (dy != 0) {
-            dY = dy >= 0 ? Direction.DOWN : Direction.UP;
-            dY = validateMove(dY, surr);
-        }
+        dX = dx >= 0 ? Direction.LEFT : Direction.RIGHT;
+        dX = validateMove(dX, surr);
+        dY = dy >= 0 ? Direction.DOWN : Direction.UP;
+        dY = validateMove(dY, surr);
         if (dX != Direction.STOP && dY != Direction.STOP) {
             if (dx < dy) {
                 this.setDirection(dX);
@@ -66,5 +66,9 @@ public class Red extends Ghost implements GhostMovement {
                 this.setDirection(dY);
             }
         }
+        if (dX != Direction.STOP)
+            this.setDirection(dX);
+        if (dY != Direction.STOP)
+            this.setDirection(dY);
     }
 }
