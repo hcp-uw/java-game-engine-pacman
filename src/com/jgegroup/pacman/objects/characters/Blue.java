@@ -2,12 +2,13 @@ package com.jgegroup.pacman.objects.characters;
 
 import com.jgegroup.pacman.objects.Enums.*;
 import com.jgegroup.pacman.objects.immovable.Tile;
-import com.jgegroup.pacman.objects.immovable.Wall;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 
-public class Blue extends Ghost implements GhostMovement{
+import static com.jgegroup.pacman.objects.MapUtils.validateMove;
+
+public class Blue extends Ghost implements GhostMovement {
 
     /** @@Author: Noah
      *  Blue Ghost
@@ -17,30 +18,61 @@ public class Blue extends Ghost implements GhostMovement{
     }
 
     /** @@Author Noah
-     * Chooses the next move for the blue ghost
+     * Chooses the next move for the blue ghost in its normal state
      * Throws no exceptions
-     * Returns nothin
-     * @param dirX direction X
-     * @param dirY direction Y
+     * Returns nothing
      * @param dx x distance to the pacman
      * @param dy y distance to the pacman
      * @param surr surrounding tiles
      */
-    @Override
-    public void normalThink(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
-        dirX = (surr.get(dirX) instanceof Wall) ? Direction.STOP : dirX;
-        dirY = (surr.get(dirY) instanceof Wall) ? Direction.STOP : dirY;
-        if (dirY != Direction.STOP && dirX != Direction.STOP) {
-            this.direction = Math.abs(dy) <= Math.abs(dx) && dx != 0 ? dirY : dirX;
-        } else if (dirX == Direction.STOP) {
-            this.direction = dirY;
-        } else {
-            this.direction = dirX;
+    public void normalThink(int dx, int dy, HashMap<Direction, Tile> surr) {
+        Direction dX = Direction.STOP, dY = Direction.STOP;
+        if (dx != 0) {
+            dX = dx < 0 ? Direction.LEFT : Direction.RIGHT;
+            dX = validateMove(dX, surr);
         }
+        if (dy != 0) {
+            dY = dy > 0 ? Direction.DOWN : Direction.UP;
+            dY = validateMove(dY, surr);
+        }
+        if (dX != Direction.STOP && dY != Direction.STOP) {
+            if (dx > dy) {
+                this.setDirection(dX);
+            } else {
+                this.setDirection(dY);
+            }
+        }
+        if (dX != Direction.STOP)
+            this.setDirection(dX);
+        if (dY != Direction.STOP)
+            this.setDirection(dY);
     }
 
-    @Override
-    public void spookedThink(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
-
+    /** @@Author: Noah
+     * Enables the blue ghost to process its next move in the spooked state
+     * Throws no exceptions
+     * Returns nothing
+     * @param dx
+     * @param dy
+     * @param surr
+     */
+    public void spookedThink(int dx, int dy, HashMap<Direction, Tile> surr) {
+        Direction dX = Direction.STOP, dY = Direction.STOP;
+        dX = dx > 0 ? Direction.LEFT : Direction.RIGHT;
+        dX = validateMove(dX, surr);
+        dY = dy < 0 ? Direction.DOWN : Direction.UP;
+        dY = validateMove(dY, surr);
+        if (dX != Direction.STOP && dY != Direction.STOP) {
+            if (dx > dy) {
+                this.setDirection(dX);
+            } else {
+                this.setDirection(dY);
+            }
+        }
+        if (dX != Direction.STOP)
+            this.setDirection(dX);
+        if (dY != Direction.STOP)
+            this.setDirection(dY);
     }
+
 }

@@ -7,38 +7,66 @@ import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 
+import static com.jgegroup.pacman.objects.MapUtils.validateMove;
+
 public class Pink extends Ghost implements GhostMovement{
     public Pink(int x, int y, int spookLength, Color color) {
         super(x, y, spookLength, color);
     }
 
     /** @@Author: Noah
-     * Enables the pink ghost to proces its next move
+     * Enables the pink ghost to process its next move in normal state
      * Throws no exceptions
      * Returns nothing
-     * @param dirX
-     * @param dirY
      * @param dx
      * @param dy
      * @param surr
      */
-    @Override
-    public void normalThink(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
-        dirX = dirX == Direction.LEFT ? Direction.RIGHT : Direction.LEFT;
-        dirY = dirY == Direction.UP ? Direction.DOWN : Direction.UP;
-        dirX = (surr.get(dirX) instanceof Wall) ? Direction.STOP : dirX;
-        dirY = (surr.get(dirY) instanceof Wall) ? Direction.STOP : dirY;
-        if (dirY != Direction.STOP && dirX != Direction.STOP) {
-            this.direction = Math.abs(dy) <= Math.abs(dx) && dx != 0 ? dirX : dirY;
-        } else if (dirX == Direction.STOP) {
-            this.direction = dirY;
-        } else {
-            this.direction = dirX;
+    public void normalThink(int dx, int dy, HashMap<Direction, Tile> surr) {
+        Direction dX = Direction.STOP, dY = Direction.STOP;
+        if (dx != 0) {
+            dX = dx < 0 ? Direction.LEFT : Direction.RIGHT;
+            dX = validateMove(dX, surr);
         }
+        if (dy != 0) {
+            dY = dy < 0 ? Direction.DOWN : Direction.UP;
+            dY = validateMove(dY, surr);
+        }
+        if (dX != Direction.STOP && dY != Direction.STOP) {
+            if (dx < dy) {
+                this.setDirection(dX);
+            } else {
+                this.setDirection(dY);
+            }
+        }
+        if (dX != Direction.STOP)
+            this.setDirection(dX);
+        if (dY != Direction.STOP)
+            this.setDirection(dY);
     }
 
-    @Override
-    public void spookedThink(Direction dirX, Direction dirY, int dx, int dy, HashMap<Direction, Tile> surr) {
-
+    /** @@Author: Noah
+     * Enables the pink ghost to process its next move in spooked state
+     * @param dx
+     * @param dy
+     * @param surr
+     */
+    public void spookedThink(int dx, int dy, HashMap<Direction, Tile> surr) {
+        Direction dX = Direction.STOP, dY = Direction.STOP;
+        dX = dx >= 0 ? Direction.LEFT : Direction.RIGHT;
+        dX = validateMove(dX, surr);
+        dY = dy >= 0 ? Direction.DOWN : Direction.UP;
+        dY = validateMove(dY, surr);
+        if (dX != Direction.STOP && dY != Direction.STOP) {
+            if (dx < dy) {
+                this.setDirection(dX);
+            } else {
+                this.setDirection(dY);
+            }
+        }
+        if (dX != Direction.STOP)
+            this.setDirection(dX);
+        if (dY != Direction.STOP)
+            this.setDirection(dY);
     }
 }
