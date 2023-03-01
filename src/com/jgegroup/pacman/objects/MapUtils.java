@@ -5,6 +5,7 @@ import com.jgegroup.pacman.objects.Enums.*;
 import com.jgegroup.pacman.objects.characters.Pacman;
 import com.jgegroup.pacman.objects.immovable.Path;
 import com.jgegroup.pacman.objects.immovable.Tile;
+import com.jgegroup.pacman.objects.immovable.Wall;
 
 
 public class MapUtils {
@@ -65,5 +66,11 @@ public class MapUtils {
      */
     public static Position worldToScreen(Position pos) {
         return new Position(pos.getX() / tileSize, pos.getY() / tileSize);
+    }
+
+    public static Direction validateMove(Direction dir, HashMap<Direction, Tile> surr) {
+        if (surr.get(dir) instanceof Wall)
+            return Direction.STOP;
+        return dir;
     }
 }

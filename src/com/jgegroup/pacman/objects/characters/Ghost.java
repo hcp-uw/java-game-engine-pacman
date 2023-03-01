@@ -15,7 +15,7 @@ import java.util.HashMap;
 // Note: Death and respawning will be handled by the game cycle by the reassignment of the ghost to
 // another ghost.
 
-public class Ghost extends MovingObject {
+public class Ghost extends MovingObject implements GhostMovement {
     //Spook length is the cycle length interval for how long a ghost will
     // be spooked. Can exceed this length if more big dots are eaten
     public final int spookLength;
@@ -188,12 +188,21 @@ public class Ghost extends MovingObject {
         Position pos = this.getPosition();
         int dx = pacPos.getX() - pos.getX();
         int dy = pacPos.getY() - pos.getY();
-        Direction dirX, dirY = Direction.STOP;
-        dirX = dx < 0 ? Direction.LEFT : dx > 0 ? Direction.RIGHT : Direction.STOP;
-        dirY = dy < 0 ? Direction.DOWN : dy > 0 ? Direction.UP : Direction.STOP;
         HashMap<Direction, Tile> surr = MapUtils.getSurrounding(map, pos);
-        dirX = surr.get(dirX) instanceof Wall ? Direction.STOP : dirX;
-        dirY = surr.get(dirY) instanceof Wall ? Direction.STOP : dirY;
-        this.think(dirX, dirY, dx, dy, surr);
+        if (this.isSpooked()) {
+            this.spookedThink(dx,dy,surr);
+        } else {
+            this.normalThink(dx,dy,surr);
+        }
+    }
+
+    @Override
+    public void normalThink(int dx, int dy, HashMap<Direction, Tile> surr) {
+
+    }
+
+    @Override
+    public void spookedThink(int dx, int dy, HashMap<Direction, Tile> surr) {
+
     }
 }
