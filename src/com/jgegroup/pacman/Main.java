@@ -24,8 +24,10 @@ public class Main extends Application {
     Image icon = new Image("icon/icon.png");
     stage.getIcons().add(icon);
     // add scene
+    stage.setHeight(gameScene.RESOLUTION_VERTICAL);
+    stage.setWidth(gameScene.RESOLUTION_HORIZONTAL);
     stage.setScene(gameScene.gameScene);
-    stage.setResizable(false);
+    stage.setResizable(true);
     stage.show();
   }
 }
