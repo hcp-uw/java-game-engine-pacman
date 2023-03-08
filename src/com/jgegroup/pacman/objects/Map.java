@@ -80,20 +80,22 @@ public class Map {
    * Takes in nothing
    */
    public void drawMap(){
-     /** ==> first create input stream and reader*/
+     /** ==> first create a canvas(image) and graphics context*/
       canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL);
       GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
       int row = 0;
       int column = 0;
       int x = 0;
       int y = 0;
+     /** ==>loop top to bottom, left column to right column*/
       while(row < GameScene.NUMBER_OF_TILE_LENGTH){
         while(column < GameScene.NUMBER_OF_TILE_WIDTH){
-          System.out.println(tilePosition[row][column]);
+          /** ==> use GraphicsContext to draw the canvas, the type of image to draw is called from tilePosition[][]*/
           graphicsContext.drawImage(tile[tilePosition[row][column]].getImage(), x, y , GameScene.tileSize ,GameScene.tileSize);
           column++;
           x+= GameScene.tileSize;
         }
+        /** ==> move pointer back to first column, next under row*/
         column = 0;
         x=0;
         row++;
