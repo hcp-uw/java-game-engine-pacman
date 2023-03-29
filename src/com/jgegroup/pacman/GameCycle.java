@@ -116,10 +116,10 @@ public class GameCycle extends Application {
                     Color ghostColor = _ghost.getColor();
                     Position ghostPos = _ghost.getPosition();
                     int spookLength = _ghost.spookLength;
-                    _ghost = ghostColor == Color.RED ? new Red(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
-                            ghostColor == Color.BLUE ? new Blue(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
-                            ghostColor == Color.YELLOW ? new Yellow(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor) :
-                            new Pink(ghostPos.getX(), ghostPos.getY(), spookLength, ghostColor);
+                    _ghost = ghostColor == Color.RED ? new Red(ghostPos.getX(), ghostPos.getY(), spookLength) :
+                            ghostColor == Color.BLUE ? new Blue(ghostPos.getX(), ghostPos.getY(), spookLength) :
+                            ghostColor == Color.YELLOW ? new Yellow(ghostPos.getX(), ghostPos.getY(), spookLength) :
+                            new Pink(ghostPos.getX(), ghostPos.getY(), spookLength);
                 } else {
                     if (!updates.containsKey(_pacman)) {
                         HashSet<Update> pUpdates = new HashSet<>();

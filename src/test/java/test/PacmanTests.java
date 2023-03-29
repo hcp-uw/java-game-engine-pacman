@@ -175,7 +175,7 @@ class PacmanTests {
     void collisionHandle() {
         Pacman testSubject = new Pacman(0,0,10);
         Pacman testSubject2 = new Pacman(0,0,10);
-        Ghost pinkie = new Pink(0,0,10, Color.PINK);
+        Ghost pinkie = new Pink(0,0,10);
         testSubject.setRadius(1);
         testSubject2.setRadius(1);
         pinkie.setRadius(1);

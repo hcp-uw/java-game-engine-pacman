@@ -10,8 +10,8 @@ import java.util.HashMap;
 import static com.jgegroup.pacman.objects.MapUtils.validateMove;
 
 public class Yellow extends Ghost implements GhostMovement {
-    public Yellow(int x, int y, int spookLength, Color color) {
-        super(x, y, spookLength, color);
+    public Yellow(int x, int y, int spookLength) {
+        super(x, y, spookLength, Color.YELLOW);
     }
 
     /** @@Author: Noah

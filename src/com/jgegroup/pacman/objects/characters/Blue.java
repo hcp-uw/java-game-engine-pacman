@@ -13,8 +13,8 @@ public class Blue extends Ghost implements GhostMovement {
     /** @@Author: Noah
      *  Blue Ghost
      */
-    public Blue(int x, int y, int spookLength, Color color) {
-        super(x, y, spookLength, color);
+    public Blue(int x, int y, int spookLength) {
+        super(x, y, spookLength, Color.BLUE);
     }
 
     /** @@Author Noah
