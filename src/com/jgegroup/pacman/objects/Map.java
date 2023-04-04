@@ -3,13 +3,13 @@ package com.jgegroup.pacman.objects;
 import com.jgegroup.pacman.GameScene;
 import com.jgegroup.pacman.objects.immovable.*;
 import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -19,15 +19,17 @@ public class Map {
     private static HashMap<Position, Consumable> objects;
     private static Map instance;
 
-    private static Canvas canvas;
+    private static Canvas canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL); // tool
+    private static GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
+    private Tile[] tileType = new Tile[2]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
+    private int[][] mapArray = new int[GameScene.NUMBER_OF_TILE_LENGTH][GameScene.NUMBER_OF_TILE_WIDTH];
+
 
 //    int tilePosition [] [];
 //    Tile[] tile;
     public Map(/*Map Context*/){
         objects = new HashMap<>();
         tiles = new HashMap<>();
-//        tile = new Tile[3];
-//        tilePosition = new int[GameScene.NUMBER_OF_TILE_LENGTH] [GameScene.NUMBER_OF_TILE_WIDTH];
         createMap(/*Map Context*/);
     }
 
@@ -64,12 +66,11 @@ public class Map {
 
 
     public void createMap(/*Map Context*/) {
-        Tile[] tileTypes = new Tile[2];
-        int[][] tiles = new int[GameScene.NUMBER_OF_TILE_LENGTH][GameScene.NUMBER_OF_TILE_WIDTH];
-        loadTileImage(tileTypes);
-        getMap(tiles);
-        drawMap(tileTypes, tiles);
-        extractMapToBoard(tiles, tileTypes);
+        loadTileImage(tileType);
+        getMap(mapArray);
+        drawMap(tileType, mapArray);
+        drawDot(tileType, mapArray);
+        extractMapToBoard(mapArray, tileType);
     }
     public  void loadTileImage(Tile[] tile) {
       Image floor = new Image("tiles/floor.png");
@@ -77,36 +78,6 @@ public class Map {
 
       Image wall = new Image("tiles/wall.png");
       tile[1] = new Tile(wall);
-   }
-
-  /** @@Author: Tung, Noah
-   * draw map method
-   * Throws no exception
-   * @return nothing
-   * Takes in tile types and tile positions
-   */
-   public void drawMap(Tile[] tileTypes, int[][] tilePositions){
-     /** ==> first create a canvas(image) and graphics context*/
-      canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL);
-      GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-      int row = 0;
-      int column = 0;
-      int x = 0;
-      int y = 0;
-     /** ==>loop top to bottom, left column to right column*/
-      while(row < tilePositions.length){
-        while(column < tilePositions[0].length){
-          /** ==> use GraphicsContext to draw the canvas, the type of image to draw is called from tilePosition[][]*/
-          graphicsContext.drawImage(tileTypes[tilePositions[row][column]].getImage(), x, y , GameScene.tileSize ,GameScene.tileSize);
-          column++;
-          x+= GameScene.tileSize;
-        }
-        /** ==> move pointer back to first column, next under row*/
-        column = 0;
-        x=0;
-        row++;
-        y += GameScene.tileSize;
-      }
    }
 
   /** @@Author: Tung
@@ -145,6 +116,51 @@ public class Map {
          e.printStackTrace();
      }
    }
+
+  /** @@Author: Tung, Noah
+   * draw map method
+   * Throws no exception
+   * @return nothing
+   * Takes in tile types and tile positions
+   */
+   public void drawMap(Tile[] tileType, int[][] tilePositions){
+     /** ==> first create a canvas(image) and graphics context*/
+      int row = 0;
+      int column = 0;
+      int x = 0;
+      int y = 0;
+     /** ==>loop top to bottom, left column to right column*/
+      while(row < tilePositions.length){
+        while(column < tilePositions[0].length){
+          /** ==> use GraphicsContext to draw the canvas, the type of image to draw is called from tilePosition[][]*/
+          graphicsContext.drawImage(tileType[tilePositions[row][column]].getImage(), x, y , GameScene.tileSize ,GameScene.tileSize);
+          column++;
+          x+= GameScene.tileSize;
+        }
+        /** ==> move pointer back to first column, next under row*/
+        column = 0;
+        x=0;
+        row++;
+        y += GameScene.tileSize;
+      }
+   }
+   public void drawDot(Tile[] tileType, int[][] tileArray){
+     /* TODO write a nested loop that iterate the 2D array tileArray, draw dot at any index contain the floor object
+      To draw dot, use the graphicsContext of canvas to draw.
+      I think the syntax might look like this graphicsContext.fillRect(x location, y location, x size, y size)
+      to set or change color, it might be a weird.
+      So imagine you can only have a bucket of color, if you want to change color, you have to replace to whole bucket.
+      For example, if you want to draw two object with 2 different colors:
+      graphicsContext.setFill(Color.RED);      ---> bucket of color red.
+      draw();
+      graphicsContext.setFill(Color.BLUE);     ---> throw the red bucket, now use the blue bucket.
+      draw();
+      (keep it mind now your bucket color is still BLUE)
+      */
+
+
+   }
+
 
    public void extractMapToBoard(int[][] tiles, Tile[] tileTypes) {
        for (int x = 0; x < tiles.length; x++) {
