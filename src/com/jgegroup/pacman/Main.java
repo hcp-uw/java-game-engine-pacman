@@ -1,5 +1,4 @@
 package com.jgegroup.pacman;
-
 import com.jgegroup.pacman.GameScene;
 import javafx.stage.Stage;
 import javafx.application.Application;
