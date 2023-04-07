@@ -1,8 +1,13 @@
-package com.jgegroup.pacman.objects;
+package com.jgegroup.pacman.objects.characters;
 
+import com.jgegroup.pacman.objects.Enums;
+import com.jgegroup.pacman.objects.MovingObject;
+import com.jgegroup.pacman.objects.Position;
+import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.consumables.*;
 import com.jgegroup.pacman.objects.Enums.*;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -21,7 +26,7 @@ public class Pacman extends MovingObject {
     private final int spawnX;
     private final int spawnY;
     // Queue to aid in endless mode functionality
-    private Queue<Position> consumed;
+    private Queue<Consumable> consumed;
     // move container for next move
     public Direction nextMove;
     public Pacman(int spawnX, int spawnY, int superLength) {
@@ -37,7 +42,7 @@ public class Pacman extends MovingObject {
         consumed = new LinkedList<>();
     }
 
-    /** @Authors: Noah / Nicola
+    /** @@Authors: Noah / Nikola
      * Decrements lives state and moves Pacman to spawn
      * @Throws no exceptions
      * @Returns true if Pacman has lives remaining or is on last life, false if there are no more lives
@@ -52,74 +57,111 @@ public class Pacman extends MovingObject {
         return false;
     }
 
-    /** @Author: Noah
+    /** @@Author: Noah
      * Updates score of Pacman after it eats something
      * @Throws no exceptions
      * @Returns the position of dot or ghost eaten for front-end
      * Takes in a consumable object as a parameter
     **/
-    public Position eat(Consumable consumable) {
-        this.score += consumable.score;
-        consumed.add(consumable.position);
-        return consumable.position;
+    public Consumable eat(Consumable consumable) {
+        this.score += consumable.getScore();
+        consumed.add(consumable);
+        return consumable;
     }
 
+    /** @@Author: Noah
+     *  Returns the score variable
+     *  Throws no exceptions
+     *  @return Pacman's score
+     *  Takes in no parameters
+     */
+    public int getScore() { return this.score; }
+
+    /** @@Author: Noah
+     *  Returns the consumable that was first eaten in the queue
+     *  Throws no exceptions
+     *  @return A new consumable with the position of the first eaten consumable thats in the queue
+     *  Takes in no params
+     */
     public Consumable checkQueue() {
         if (consumed.size() > 16) {
-            return Math.round(Math.random() * 100) >= 50 ?
-                    new Dot(consumed.remove()) : new BigDot(consumed.remove());
+            return consumed.remove();
         }
         return null;
     }
 
-    /** @Author Noah
+    /** @@Author Noah
      * Sets the super state
      * @Throws no exceptions
      * @Returns nothing
      * Takes in no parameters
      **/
-    public void setSuper() { this.Super += superLength; }
+    public void setSuper() {
+        if (this.Super <= 0)
+            this.Super = superLength;
+        else
+            this.Super += superLength;
+    }
 
-    // Author: Noah
-    // Updates the super state
-    // Throws no exceptions
-    // Returns true if the pacman is super, else false
-    // Takes in no parameters
+    /** @@Author: Noah
+     * Updates the super state
+     * @Throws no exceptions
+     * @Returns true if the pacman is super, else false
+     * Takes in no parameters
+    **/
     public boolean updateSuper() {
-        if (this.Super >= 0) {
+        if (this.Super > 0) {
             this.Super--;
             return true;
         }
         return false;
     }
 
-    // Author: Noah
-    // Checks to see if Pacman is super
-    // Throws no exceptions
-    // Returns true if super state container is greater than or equal to 0, else false
-    // Takes in no parameters
+    /** @@Author: Noah
+     * Checks to see if Pacman is super
+     * @Throws no exceptions
+     * @Returns true if super state container is greater than or equal to 0, else false
+     * Takes in no parameters
+    */
     public boolean isSuper() { return this.Super >= 0; }
 
-    // Authors: Noah / Jesse
-    // Examines the collision between Pacman and Object and handles it
-    // Throws no exceptions
-    // Returns 1 if a collision happens, 0 else
-    // Takes in a GameObject as a parameter
+    /** @@Author: Noah
+     * Gets the remaining super cycles
+     * Throws no exceptions
+     * @return Integer denoting how many super cycles are left
+     * Takes in no parameters
+     */
+    public int getSuper() { return this.Super; }
+
+    /** @@Author: Noah
+     * Gets num of lives left
+     * @Throws no exceptions
+     * @Returns number of lives left
+     * Takes in no parameters
+     */
+    public int getLives() { return this.lives; }
+
+    /** @@Authors: Noah / Jesse
+     * Examines the collision between Pacman and Object and handles it
+     * @Throws no exceptions
+     * @Returns 1 if a collision happens, 0 else
+     * Takes in a GameObject as a parameter
+    */
     @Override
     protected int collisionHandle(MovingObject object) {
         if (object instanceof Ghost) {
-            this.death();
-            return 100;
-        } else if (object instanceof Pacman) {
+            if (!this.isSuper()) {
+                return 100;
+            }
             return 101;
+        } else if (object instanceof Pacman) {
+            return 102;
         }
-//        else if (object instanceof Consumable) {
-//            return 3;
-//        }
         /*For Pacman, collisionHandle should be and only should be execute
         * when they hit a ghost or a pacman
         * Collision with immovable will be handled separately
         * */
         return 99;
     }
+
 }
