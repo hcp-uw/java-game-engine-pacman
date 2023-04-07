@@ -22,11 +22,7 @@ public class GameCycle extends Application {
     HashSet<Ghost>  ghosts;
     //Each pixel refer to an
     HashMap<Position, Tile> tileBoard;
-    HashMap<Position, Consumable> objects;
-
-    // holds onto position of objects(pacman/ghosts) through each
-    // loop for front end to use in javaFX
-    HashMap<MovingObject,Position> objectPosition;
+    HashMap<Position, Consumable> consumables;
 
     // holds position of dot that was eaten by
     // pacman, to then be used by frontend to remove the
@@ -55,6 +51,7 @@ public class GameCycle extends Application {
     // Returns true when game paused
     // Takes scene as parameter
     private boolean loop(Scene scene) {
+        // scan for player input
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case UP:    dir_cache = Direction.UP; break;
@@ -75,14 +72,16 @@ public class GameCycle extends Application {
             // else do not move
         Position pacPos = null;
         for(Pacman _pacman : pacmen) {
-            //if(_pacman.isPlayer){
-                _pacman.nextMove = dir_cache;
-            //}
+            // Move cached direction into nextMove
+            _pacman.nextMove = dir_cache;
 
-
+            // Set Pacman position
             pacPos = _pacman.getPosition();
+            // Get surrounding tiles from POV of Pacman
             HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, pacPos);
+            // Validate move
             Direction move = MapUtils.moveValid(_pacman, surr);
+            // Process move
             if (move == Direction.LEFT) {
                 pacPos.translate(-1, 0);
             } else if (move == Direction.UP) {
@@ -92,6 +91,7 @@ public class GameCycle extends Application {
             } else if (move == Direction.DOWN) {
                 pacPos.translate(0,-1);
             }
+            // Add Pacman movement to update hashmap
             if (move != Direction.STOP) {
                 if (!updates.containsKey(_pacman)) {
                     HashSet<Update> pUpdates = new HashSet<>();
@@ -101,11 +101,15 @@ public class GameCycle extends Application {
                     updates.get(_pacman).add(Update.MOVED);
                 }
             }
+            // Process Collision checks with Ghosts from the POV of Pacman
             for(Ghost _ghost : ghosts) {
                 // Although we have return values for collisionCheck,
                 // we don't need to store them when we know the result for sure
+                // Get the collision type
                 int coltype = _pacman.collisionCheck(_ghost);
+                // if collided with Pacman
                 if (coltype == 101) {
+                    // If pacman is Super add death to updates
                     if (!updates.containsKey(_ghost)) {
                         HashSet<Update> gUpdates = new HashSet<>();
                         gUpdates.add(Update.DEATH);
@@ -113,6 +117,7 @@ public class GameCycle extends Application {
                     } else {
                         updates.get(_ghost).add(Update.DEATH);
                     }
+                    // respawn the ghost
                     Color ghostColor = _ghost.getColor();
                     Position ghostPos = _ghost.getPosition();
                     int spookLength = _ghost.spookLength;
@@ -120,19 +125,35 @@ public class GameCycle extends Application {
                             ghostColor == Color.BLUE ? new Blue(ghostPos.getX(), ghostPos.getY(), spookLength) :
                             ghostColor == Color.YELLOW ? new Yellow(ghostPos.getX(), ghostPos.getY(), spookLength) :
                             new Pink(ghostPos.getX(), ghostPos.getY(), spookLength);
+                    // end pacman is super
                 } else {
-                    if (!updates.containsKey(_pacman)) {
-                        HashSet<Update> pUpdates = new HashSet<>();
-                        pUpdates.add(Update.DEATH);
-                        updates.put(_pacman, pUpdates);
+                    // else Pacman is not super, add pacman death to updates
+
+                    // call pacman death
+                    boolean alive = _pacman.death();
+                    if (!alive) {
+                        return false;
+                    } else {
+                        if (!updates.containsKey(_pacman)) {
+                            HashSet<Update> pUpdates = new HashSet<>();
+                            pUpdates.add(Update.DEATH);
+                            updates.put(_pacman, pUpdates);
+                        } else {
+                            updates.get(_pacman).add(Update.DEATH);
+                        }
                     }
-                    _pacman.death();
+
                 }
             }
-            if (objects.get(pacPos) instanceof Consumable) {
-                Consumable consumable = objects.get(pacPos);
+            // Process consumable collisions
+            if (consumables.get(pacPos) instanceof Consumable) {
+                // get the consumable at Pacpos
+                Consumable consumable = consumables.get(pacPos);
+                // check to see if it is a BigDot
                 if (consumable instanceof BigDot) {
+                    // set the super state for Pacman
                     _pacman.setSuper();
+                    // Add the super state to updates
                     if (!updates.containsKey(_pacman)) {
                         HashSet<Update> pUpdate = new HashSet<>();
                         pUpdate.add(Update.SUPER);
@@ -140,7 +161,11 @@ public class GameCycle extends Application {
                     } else {
                         updates.get(_pacman).add(Update.SUPER);
                     }
+                    // add the scared state to all the ghosts
                     for (Ghost _ghost : ghosts) {
+                        // set the spooked state
+                        _ghost.setSpooked();
+                        // add the spooked state to the updates map
                         if (!updates.containsKey(_ghost)) {
                             HashSet<Update> gUpdate = new HashSet<>();
                             gUpdate.add(Update.SCARED);
@@ -150,6 +175,7 @@ public class GameCycle extends Application {
                         }
                     }
                 }
+                // Add the consumable to the updates map with update eaten
                 if (!updates.containsKey(consumable)) {
                     HashSet<Update> cUpdate = new HashSet<>();
                     cUpdate.add(Update.EATEN);
@@ -158,16 +184,33 @@ public class GameCycle extends Application {
                     updates.get(consumable).add(Update.EATEN);
                 }
             }
+            // end of pacman loop, update the super state, check for game over
             _pacman.updateSuper();
+            Consumable consumable = _pacman.checkQueue();
+            if (consumable != null) {
+                if (!updates.containsKey(consumable)) {
+                    HashSet<Update> cUpdate = new HashSet<>();
+                    cUpdate.add(Update.RESPAWN);
+                    updates.put(consumable, cUpdate);
+                } else {
+                    updates.get(consumable).add(Update.RESPAWN);
+                }
+            }
             // If Pacman is dead return false and conclude the game
             if (_pacman.getLives() < 0 ) return false;
         }
-        //Let each ghost move
+        // Process Ghosts
         for(Ghost _ghost : ghosts) {
+            // Process movement begin
+            // get position
             Position ghostPos = _ghost.getPosition();
+            // get surrounding from POV of ghost
             HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, ghostPos);
+            // Process move
             _ghost.thinkPrep(tileBoard, pacPos);
+            // Validate move
             Direction move = MapUtils.moveValid(_ghost, surr);
+            // Update position
             if (move == Direction.LEFT) {
                 ghostPos.translate(-1, 0);
             } else if (move == Direction.UP) {
@@ -177,11 +220,21 @@ public class GameCycle extends Application {
             } else if (move == Direction.DOWN) {
                 ghostPos.translate(0,-1);
             }
+            // Add moved to updates map for ghost
+            if (!updates.containsKey(_ghost)) {
+                HashSet<Update> gUpdates = new HashSet<>();
+                gUpdates.add(Update.MOVED);
+                updates.put(_ghost, gUpdates);
+            } else {
+                updates.get(_ghost).add(Update.MOVED);
+            }
+            // Process ghost movement end
+            // end of ghost loop process spooked state
             _ghost.updateSpooked();
-            //do what we want the ghost do here
         }
+        // Process updates and redraw
         redraw(updates);
-        updateMaps(updates);
+        // Clear the updates map for next loop cycle
         updates.clear();
         return true;
     }
@@ -190,26 +243,30 @@ public class GameCycle extends Application {
         // Inits map singleton and retrieves
         Map map = Map.getMapInstance();
         tileBoard = map.getTiles();
-        objects = map.getObjects();
+        consumables = map.getObjects();
         stage.setScene(null/* scene builder class */);
 
         // initializes all the required positions for
         // all hashmaps and hashsets
         pacmen = new HashSet<>();
         ghosts = new HashSet<>();
-        objectPosition = new HashMap<>();
         updates = new HashMap<>();
 
     }
 
     public void redraw(HashMap<GameObject, HashSet<Update>> updates) {
+        // Remove eaten Consumables
+        for (GameObject gameObject : updates.keySet()) {
+            if (gameObject instanceof Consumable) {
+                if (updates.get(gameObject).contains(Update.EATEN))
+                    consumables.remove(gameObject);
+                else if (updates.get(gameObject).contains(Update.RESPAWN)) {
+                    consumables.put(gameObject.getPosition(), (Consumable) gameObject);
+                }
+            } else if (gameObject instanceof Pacman) {
 
-    }
+            } else if (gameObject instanceof Ghost) {
 
-    public void updateMaps(HashMap<GameObject, HashSet<Update>> updates) {
-        for (GameObject go : updates.keySet()) {
-            if (go instanceof Consumable && updates.get(go).contains(Update.EATEN)) {
-                objects.remove(go);
             }
         }
     }
