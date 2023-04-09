@@ -1,10 +1,15 @@
 package com.jgegroup.mapwriter.config;
 
 public class Config {
+    // Items wanting to use
     private final String[] resources;
+    // desired width of map
     private final int xBound;
+    // desired height of map
     private final int yBound;
+    // tile size width and height
     private final int tileSize;
+    // path to resources folder
     private final String path;
 
     protected Config(String[] resources, int x, int y, int tileSize, String path) {

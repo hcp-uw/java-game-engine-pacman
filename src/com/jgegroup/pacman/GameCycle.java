@@ -39,6 +39,9 @@ public class GameCycle extends Application {
     public static Direction dir_cache;
     public HashMap<GameObject, HashSet<Enums.Update>> updates;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
     @Override
     public void start(Stage stage) throws Exception {
         init(stage);
@@ -191,7 +194,8 @@ public class GameCycle extends Application {
         Map map = Map.getMapInstance();
         tileBoard = map.getTiles();
         objects = map.getObjects();
-        stage.setScene(null/* scene builder class */);
+        GameScene gameScene = new GameScene();
+        stage.setScene(gameScene.gameScene);
 
         // initializes all the required positions for
         // all hashmaps and hashsets
