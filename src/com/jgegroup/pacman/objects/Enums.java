@@ -14,6 +14,6 @@ public class Enums {
      *  Contains update types
      */
     public enum Update {
-        DEATH, MOVED, SUPER, SCARED, EATEN
+        DEATH, MOVED, SUPER, SCARED, EATEN, RESPAWN
     }
 }

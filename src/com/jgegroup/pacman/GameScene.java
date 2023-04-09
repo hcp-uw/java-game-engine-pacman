@@ -1,7 +1,7 @@
 package com.jgegroup.pacman;
 
-
 import com.jgegroup.pacman.objects.Map;
+
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
@@ -24,4 +24,4 @@ public class GameScene {
     Map map = new Map();
     stackPane.getChildren().add(Map.getCanvas());
   }
-}
+ }
