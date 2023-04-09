@@ -259,17 +259,24 @@ public class GameCycle extends Application {
     }
 
     public void redraw(HashMap<GameObject, HashSet<Update>> updates) {
-        // Remove eaten Consumables
         for (GameObject gameObject : updates.keySet()) {
+            // if game object is consumable: (Dot, or BigDot)
             if (gameObject instanceof Consumable) {
-                if (updates.get(gameObject).contains(Update.EATEN))
-                    consumables.remove(gameObject);
+                // if it was eaten remove from map
+                if (updates.get(gameObject).contains(Update.EATEN)) {
+                    Position pos = gameObject.getPosition();
+                    consumables.remove(pos);
+                }
+                // else if respawned, add to map
                 else if (updates.get(gameObject).contains(Update.RESPAWN)) {
                     consumables.put(gameObject.getPosition(), (Consumable) gameObject);
                 }
+            // else if game object is pacman
             } else if (gameObject instanceof Pacman) {
 
-            } else if (gameObject instanceof Ghost) {
+            }
+            // else if game object is Ghost
+            else if (gameObject instanceof Ghost) {
 
             }
         }
