@@ -15,12 +15,12 @@ import javafx.scene.image.Image;
 
 
 public class Map {
-    private static HashMap<Position, Tile> tiles;
-    private static HashMap<Position, Consumable> objects;
+    private  HashMap<Position, Tile> tiles;
+    private  HashMap<Position, Consumable> objects;
     private static Map instance;
 
-    private static Canvas canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL); // tool
-    private static GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
+    private  Canvas canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL); // tool
+    private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
     private Tile[] tileType = new Tile[2]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
     private int[][] mapArray = new int[GameScene.NUMBER_OF_TILE_LENGTH][GameScene.NUMBER_OF_TILE_WIDTH];
 
@@ -52,9 +52,9 @@ public class Map {
      * @return map instance tiles
      * Takes in nothing
      */
-    public static HashMap<Position, Tile> getTiles() { return instance.tiles; }
+    public HashMap<Position, Tile> getTiles() { return instance.tiles; }
 
-    public static Canvas getCanvas() { return instance.canvas; }
+    public Canvas getCanvas() { return instance.canvas; }
 
     /** @@Author: Noah
      * Gets the objects that are on the map
@@ -62,7 +62,7 @@ public class Map {
      * @return map instance objects
      * Takes in nothing
      */
-    public static HashMap<Position, Consumable> getObjects() { return instance.objects; }
+    public HashMap<Position, Consumable> getObjects() { return instance.objects; }
 
 
     public void createMap(/*Map Context*/) {
@@ -167,7 +167,7 @@ public class Map {
            for (int y = 0; y < tiles[x].length; y++) {
                Position pos = new Position(x,y);
                int tileType = tiles[x][y];
-               instance.tiles.put(pos, tileTypes[tileType]);
+               Map.tiles.put(pos, tileTypes[tileType]);
            }
        }
    }
