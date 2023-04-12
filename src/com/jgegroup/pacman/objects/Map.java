@@ -21,8 +21,8 @@ public class Map {
 
     private  Canvas canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
-    private Tile[] tileType = new Tile[2]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
-    private int[][] mapArray = new int[GameScene.NUMBER_OF_TILE_LENGTH][GameScene.NUMBER_OF_TILE_WIDTH];
+    public Tile[] tileType = new Tile[2]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
+    public int[][] mapArray = new int[GameScene.NUMBER_OF_TILE_LENGTH][GameScene.NUMBER_OF_TILE_WIDTH];
 
 
 //    int tilePosition [] [];
@@ -69,7 +69,7 @@ public class Map {
         loadTileImage(tileType);
         getMap(mapArray);
         drawMap(tileType, mapArray);
-        drawDot(tileType, mapArray);
+        drawDot();
         // extractMapToBoard(mapArray, tileType);
     }
     public  void loadTileImage(Tile[] tile) {
@@ -144,7 +144,7 @@ public class Map {
         y += GameScene.TILE_SIZE;
       }
    }
-   public void drawDot(Tile[] tileType, int[][] tileArray){
+   public void drawDot(){
      /* TODO write a nested loop that iterate the 2D array tileArray, draw dot at any index contain the floor object
       To draw dot, use the graphicsContext of canvas to draw.
       I think the syntax might look like this graphicsContext.fillRect(x location, y location, x size, y size)
@@ -162,7 +162,7 @@ public class Map {
        graphicsContext.setFill(Color.YELLOW);
        for (int x = 0; x < GameScene.NUMBER_OF_TILE_LENGTH; x++) {
            for (int y = 0; y < GameScene.NUMBER_OF_TILE_WIDTH; y++) {
-               if (tileArray[x][y] == 0) {
+               if (mapArray[x][y] == 0) {
                    int xCoord = y * GameScene.TILE_SIZE + (GameScene.TILE_SIZE/2) - (dotSize/2);
                    int yCoord = x * GameScene.TILE_SIZE + (GameScene.TILE_SIZE/2) - (dotSize/2);
                    graphicsContext.fillRect(xCoord, yCoord, dotSize, dotSize);
