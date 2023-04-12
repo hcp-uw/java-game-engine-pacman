@@ -18,6 +18,8 @@ public class Map {
     private  HashMap<Position, Tile> tiles;
     private  HashMap<Position, Consumable> objects;
     private static Map instance;
+    private Position pacmanSpawn;
+    private Position ghostSpawn;
 
     private  Canvas canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
@@ -146,16 +148,16 @@ public class Map {
    }
    public void drawDot(Tile[] tileType, int[][] tileArray){
      /* TODO write a nested loop that iterate the 2D array tileArray, draw dot at any index contain the floor object
-      To draw dot, use the graphicsContext of canvas to draw.
-      I think the syntax might look like this graphicsContext.fillRect(x location, y location, x size, y size)
-      to set or change color, it might be a weird.
-      So imagine you can only have a bucket of color, if you want to change color, you have to replace to whole bucket.
-      For example, if you want to draw two object with 2 different colors:
-      graphicsContext.setFill(Color.RED);      ---> bucket of color red.
-      draw();
-      graphicsContext.setFill(Color.BLUE);     ---> throw the red bucket, now use the blue bucket.
-      draw();
-      (keep it mind now your bucket color is still BLUE)
+         To draw dot, use the graphicsContext of canvas to draw.
+         I think the syntax might look like this graphicsContext.fillRect(x location, y location, x size, y size)
+         to set or change color, it might be a weird.
+         So imagine you can only have a bucket of color, if you want to change color, you have to replace to whole bucket.
+         For example, if you want to draw two object with 2 different colors:
+         graphicsContext.setFill(Color.RED);      ---> bucket of color red.
+         draw();
+         graphicsContext.setFill(Color.BLUE);     ---> throw the red bucket, now use the blue bucket.
+         draw();
+         (keep it mind now your bucket color is still BLUE)
       */
 
 
@@ -167,9 +169,17 @@ public class Map {
            for (int y = 0; y < tiles[x].length; y++) {
                Position pos = new Position(x,y);
                int tileType = tiles[x][y];
-               Map.tiles.put(pos, tileTypes[tileType]);
+               instance.tiles.put(pos, tileTypes[tileType]);
            }
        }
+   }
+
+   public Position getPacmanSpawn() {
+       return pacmanSpawn;
+   }
+
+   public Position getGhostSpawn() {
+       return ghostSpawn;
    }
 }
 

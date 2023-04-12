@@ -253,7 +253,20 @@ public class GameCycle extends Application {
         // initializes all the required positions for
         // all hashmaps and hashsets
         pacmen = new HashSet<>();
+        Position pacSpawn = map.getPacmanSpawn();
+        pacmen.add(new Pacman(pacSpawn.getX(), pacSpawn.getY(), 10));
+        for (Pacman pacman : pacmen) {
+            map.drawPacman(pacman);
+        }
         ghosts = new HashSet<>();
+        Position ghostSpawn = map.getGhostSpawn();
+        ghosts.add(new Blue(ghostSpawn.getX(), ghostSpawn.getY(), 10));
+        ghosts.add(new Red(ghostSpawn.getX(), ghostSpawn.getY(), 10));
+        ghosts.add(new Pink(ghostSpawn.getX(), ghostSpawn.getY(), 10));
+        ghosts.add(new Yellow(ghostSpawn.getX(), ghostSpawn.getY(), 10));
+        for (Ghost ghost : ghosts) {
+            map.drawGhost(ghost);
+        }
         updates = new HashMap<>();
 
     }
