@@ -292,6 +292,7 @@ public class GameCycle extends Application {
             else if (gameObject instanceof Ghost) {
 
             }
+            Map.getMapInstance().drawDot();
         }
     }
 }
