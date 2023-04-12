@@ -1,12 +1,8 @@
 package com.jgegroup.pacman;
-
 import com.jgegroup.pacman.GameScene;
 import javafx.stage.Stage;
 import javafx.application.Application;
 import javafx.scene.image.Image;
-
-
-
 
 public class Main extends Application {
   //Code starts here
