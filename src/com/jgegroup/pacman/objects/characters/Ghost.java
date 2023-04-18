@@ -5,7 +5,6 @@ import com.jgegroup.pacman.objects.MapUtils;
 import com.jgegroup.pacman.objects.MovingObject;
 import com.jgegroup.pacman.objects.Position;
 import com.jgegroup.pacman.objects.immovable.Tile;
-import com.jgegroup.pacman.objects.immovable.Wall;
 import javafx.scene.paint.Color;
 import com.jgegroup.pacman.objects.Enums.*;
 

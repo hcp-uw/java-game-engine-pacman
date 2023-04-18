@@ -260,10 +260,10 @@ public class GameCycle extends Application {
         }
         ghosts = new HashSet<>();
         Position ghostSpawn = map.getGhostSpawn();
-        ghosts.add(new Blue(ghostSpawn.getX(), ghostSpawn.getY(), 10));
-        ghosts.add(new Red(ghostSpawn.getX(), ghostSpawn.getY(), 10));
-        ghosts.add(new Pink(ghostSpawn.getX(), ghostSpawn.getY(), 10));
-        ghosts.add(new Yellow(ghostSpawn.getX(), ghostSpawn.getY(), 10));
+        ghosts.add(new Blue(ghostSpawn.getX() - 2, ghostSpawn.getY(), 10));
+        ghosts.add(new Red(ghostSpawn.getX() - 1, ghostSpawn.getY(), 10));
+        ghosts.add(new Pink(ghostSpawn.getX() + 1, ghostSpawn.getY(), 10));
+        ghosts.add(new Yellow(ghostSpawn.getX() + 2, ghostSpawn.getY(), 10));
         for (Ghost ghost : ghosts) {
             map.drawGhost(ghost);
         }

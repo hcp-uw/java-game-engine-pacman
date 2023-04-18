@@ -2,12 +2,10 @@ package com.jgegroup.pacman.objects.characters;
 
 import com.jgegroup.pacman.objects.Enums;
 import com.jgegroup.pacman.objects.MovingObject;
-import com.jgegroup.pacman.objects.Position;
-import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.consumables.*;
 import com.jgegroup.pacman.objects.Enums.*;
+import javafx.scene.image.Image;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -29,6 +27,10 @@ public class Pacman extends MovingObject {
     private Queue<Consumable> consumed;
     // move container for next move
     public Direction nextMove;
+
+    public Image[] images;
+
+
     public Pacman(int spawnX, int spawnY, int superLength) {
         super(spawnX, spawnY);
         this.spawnX = spawnX;
@@ -162,6 +164,12 @@ public class Pacman extends MovingObject {
         * Collision with immovable will be handled separately
         * */
         return 99;
+    }
+
+    public void loadImages() {
+        images = new Image[4];
+        images[0] = new Image("characters/Pacman.png");
+        images[1] =
     }
 
 }

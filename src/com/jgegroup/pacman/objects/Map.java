@@ -82,6 +82,9 @@ public class Map {
       tile[1] = new Tile(wall);
    }
 
+
+
+
   /** @@Author: Tung
    * A map context reader
    * Throws IOException when streams cannot be made or cannot be read from
@@ -171,9 +174,11 @@ public class Map {
                }
            }
        }
-
-
    }
+   public void drawPacman(){
+//       Image pacmanImage = new Image();
+   }
+
 
 
    public void extractMapToBoard(int[][] tiles, Tile[] tileTypes) {

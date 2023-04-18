@@ -2,9 +2,6 @@ package com.jgegroup.pacman.objects;
 
 import com.jgegroup.pacman.SimpleMath;
 import com.jgegroup.pacman.objects.Enums.*;
-import com.jgegroup.pacman.objects.immovable.Tile;
-
-import java.util.HashMap;
 
 public abstract class MovingObject extends GameObject {
     protected int radius;
