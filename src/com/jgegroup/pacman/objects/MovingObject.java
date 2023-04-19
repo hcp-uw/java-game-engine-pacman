@@ -55,7 +55,7 @@ public abstract class MovingObject extends GameObject {
             objImage[0] = new Image(res/characters/Ghost.png);
         }
         for (int i = 1; i < objImage.length; i++) {
-            objImage[i] = rotateCharacter(obj, 90); // wrote the degree so that we can maybe reuse rotate function in angry bird
+            objImage[i] = rotateCharacter(obj[i-1], 90); // wrote the degree so that we can maybe reuse rotate function in angry bird
         }
     }
 
