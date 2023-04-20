@@ -2,6 +2,7 @@ package com.jgegroup.pacman.objects;
 
 import com.jgegroup.pacman.SimpleMath;
 import com.jgegroup.pacman.objects.Enums.*;
+import com.jgegroup.pacman.objects.characters.Ghost;
 
 public abstract class MovingObject extends GameObject {
     protected int radius;
@@ -46,18 +47,21 @@ public abstract class MovingObject extends GameObject {
      * @param obj: moving object like Pacman or ghost
      * @return image array with size of 4.
      */
-    import javafx.scene.image.Image;
-    public Image[] drawCharacter(MovingObject obj) {
+   /*
+    public Image[] getImages(MovingObject obj) {
         Image[] objImage = new Image[4];
-        if (obj.getName().equals("Pacman")) {
-            objImage[0] = new Image(res/characters/Pacman.png);
-        } else if (obj.getName().equals("Ghost")) { // need to specify which ghost to implement
-            objImage[0] = new Image(res/characters/Ghost.png);
+        if (obj instanceof Pacman) {
+            objImage[0] = new Image("res/characters/Pacman.png");
+        } else if (obj instanceof Ghost) { // need to specify which ghost to implement
+            objImage[0] = new Image("res/characters/Ghost.png");
         }
         for (int i = 1; i < objImage.length; i++) {
             objImage[i] = rotateCharacter(obj[i-1], 90); // wrote the degree so that we can maybe reuse rotate function in angry bird
         }
+        return objImage;
     }
+
+    */
 
     /** @@Author: Jesse
      * Handles the collision for the inheritor class

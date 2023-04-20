@@ -166,10 +166,10 @@ public class Pacman extends MovingObject {
         return 99;
     }
 
-    public void loadImages() {
-        images = new Image[4];
-        images[0] = new Image("characters/Pacman.png");
-        images[1] =
-    }
+//    public void loadImages() {
+//        images = new Image[4];
+//        images[0] = new Image("characters/Pacman.png");
+//        images[1] =
+//    }
 
 }

@@ -12,19 +12,20 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import com.jgegroup.pacman.objects.characters.Pacman;
 
 
 public class Map {
     private  HashMap<Position, Tile> tiles;
     private  HashMap<Position, Consumable> objects;
     private static Map instance;
-    private Position pacmanSpawn;
-    private Position ghostSpawn;
+    private Position pacmanSpawn = new Position(40, 40);
+    private Position ghostSpawn = new Position(40, 900);
 
     private  Canvas canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
     public Tile[] tileType = new Tile[2]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
-    public int[][] mapArray = new int[GameScene.NUMBER_OF_TILE_LENGTH][GameScene.NUMBER_OF_TILE_WIDTH];
+    public  int[][] mapArray = new int[GameScene.NUMBER_OF_TILE_LENGTH][GameScene.NUMBER_OF_TILE_WIDTH];
 
 
 //    int tilePosition [] [];
@@ -175,8 +176,11 @@ public class Map {
            }
        }
    }
-   public void drawPacman(){
-//       Image pacmanImage = new Image();
+   public void drawPacman(Pacman pacman){
+     graphicsContext.setFill(Color.RED);
+     Position pos = pacman.getPosition();
+     int x = pos.getX(), y = pos.getY();
+     graphicsContext.fillRect(x, y, 20, 20);
    }
 
 

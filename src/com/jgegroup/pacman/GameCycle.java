@@ -7,6 +7,7 @@ import com.jgegroup.pacman.objects.immovable.consumables.BigDot;
 import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -23,6 +24,7 @@ public class GameCycle extends Application {
     //Each pixel refer to an
     HashMap<Position, Tile> tileBoard;
     HashMap<Position, Consumable> consumables;
+    Map map;
 
     // holds position of dot that was eaten by
     // pacman, to then be used by frontend to remove the
@@ -44,7 +46,7 @@ public class GameCycle extends Application {
         boolean runGame = true;
         while (runGame) {
             runGame = loop(stage.getScene());
-            TimeUnit.MILLISECONDS.sleep(1);
+//            TimeUnit.MILLISECONDS.sleep(1);
         }
     }
 
@@ -57,10 +59,10 @@ public class GameCycle extends Application {
         // scan for player input
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
-                case UP:    dir_cache = Direction.UP; break;
-                case DOWN:  dir_cache = Direction.DOWN; break;
-                case LEFT:  dir_cache = Direction.LEFT; break;
-                case RIGHT: dir_cache = Direction.RIGHT; break;
+                case W:    dir_cache = Direction.UP; break;
+                case S:  dir_cache = Direction.DOWN; break;
+                case A:  dir_cache = Direction.LEFT; break;
+                case D: dir_cache = Direction.RIGHT; break;
                 case SPACE: paused =! paused; break;
             }
         });
@@ -93,6 +95,12 @@ public class GameCycle extends Application {
                 pacPos.translate(1,0);
             } else if (move == Direction.DOWN) {
                 pacPos.translate(0,-1);
+            }
+            if (MapUtils.validateMove(_pacman.nextMove, MapUtils.getSurrounding(tileBoard, pacPos)) == _pacman.nextMove) {
+              _pacman.setDirection(_pacman.nextMove);
+              System.out.println(_pacman.nextMove);
+              _pacman.nextMove = Direction.STOP;
+              System.out.println(_pacman.getDirection());
             }
             // Add Pacman movement to update hashmap
             if (move != Direction.STOP) {
@@ -133,7 +141,7 @@ public class GameCycle extends Application {
                     // else Pacman is not super, add pacman death to updates
 
                     // call pacman death
-                    boolean alive = _pacman.death();
+                    boolean alive = _pacman.death();;
                     if (!alive) {
                         return false;
                     } else {
@@ -244,11 +252,22 @@ public class GameCycle extends Application {
 
     public void init(Stage stage) {
         // Inits map singleton and retrieves
-        Map map = Map.getMapInstance();
+        GameScene gameScene = new GameScene();
+
+        // icon and name
+        stage.setTitle("2D Pacman Game");
+        Image icon = new Image("icon/icon.png");
+        stage.getIcons().add(icon);
+        // add scene
+        stage.setHeight(gameScene.RESOLUTION_VERTICAL);
+        stage.setWidth(gameScene.RESOLUTION_HORIZONTAL);
+        stage.setScene(gameScene.gameScene);
+        stage.setResizable(true);
+        stage.show();
+        map = Map.getMapInstance();
         tileBoard = map.getTiles();
         consumables = map.getObjects();
-        GameScene gameScene = new GameScene();
-        stage.setScene(gameScene.gameScene);
+        updates = new HashMap<>();
 
         // initializes all the required positions for
         // all hashmaps and hashsets
@@ -264,11 +283,17 @@ public class GameCycle extends Application {
         ghosts.add(new Red(ghostSpawn.getX() - 1, ghostSpawn.getY(), 10));
         ghosts.add(new Pink(ghostSpawn.getX() + 1, ghostSpawn.getY(), 10));
         ghosts.add(new Yellow(ghostSpawn.getX() + 2, ghostSpawn.getY(), 10));
+        /*
         for (Ghost ghost : ghosts) {
             map.drawGhost(ghost);
         }
         updates = new HashMap<>();
-
+         */
+      map.drawMap(map.tileType, map.mapArray);
+      map.drawDot();
+      for (Pacman pacman : pacmen) {
+        map.drawPacman(pacman );
+      }
     }
 
     public void redraw(HashMap<GameObject, HashSet<Update>> updates) {
@@ -286,13 +311,15 @@ public class GameCycle extends Application {
                 }
             // else if game object is pacman
             } else if (gameObject instanceof Pacman) {
-
+                if (updates.get(gameObject).contains(Update.MOVED)) {
+                  map.drawPacman((Pacman) gameObject);
+                }
             }
             // else if game object is Ghost
             else if (gameObject instanceof Ghost) {
-
             }
-            Map.getMapInstance().drawDot();
+
+
         }
     }
 }
