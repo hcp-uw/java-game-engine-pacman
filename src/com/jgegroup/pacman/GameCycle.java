@@ -37,6 +37,8 @@ public class GameCycle extends Application {
     public static Direction dir_cache;
     public HashMap<GameObject, HashSet<Enums.Update>> updates;
 
+    GameScene gameScene;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -45,8 +47,8 @@ public class GameCycle extends Application {
         init(stage);
         boolean runGame = true;
         while (runGame) {
-            runGame = loop(stage.getScene());
-//            TimeUnit.MILLISECONDS.sleep(1);
+            runGame = loop(gameScene.gameScene);
+            TimeUnit.MILLISECONDS.sleep(5000);
         }
     }
 
@@ -55,7 +57,7 @@ public class GameCycle extends Application {
     // Throws no exceptions
     // Returns true when game paused
     // Takes scene as parameter
-    private boolean loop(Scene scene) {
+    private boolean loop(Scene  scene) {
         // scan for player input
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -79,7 +81,6 @@ public class GameCycle extends Application {
         for(Pacman _pacman : pacmen) {
             // Move cached direction into nextMove
             _pacman.nextMove = dir_cache;
-
             // Set Pacman position
             pacPos = _pacman.getPosition();
             // Get surrounding tiles from POV of Pacman
@@ -137,7 +138,8 @@ public class GameCycle extends Application {
                             ghostColor == Color.YELLOW ? new Yellow(ghostPos.getX(), ghostPos.getY(), spookLength) :
                             new Pink(ghostPos.getX(), ghostPos.getY(), spookLength);
                     // end pacman is super
-                } else {
+                } else if (coltype == 100) {
+                  System.out.println("a");
                     // else Pacman is not super, add pacman death to updates
 
                     // call pacman death
@@ -247,12 +249,14 @@ public class GameCycle extends Application {
         redraw(updates);
         // Clear the updates map for next loop cycle
         updates.clear();
-        return true;
+      System.out.println("processed... going to the next cyle");
+      return true;
     }
 
     public void init(Stage stage) {
+        System.out.println("Initializing...");
         // Inits map singleton and retrieves
-        GameScene gameScene = new GameScene();
+         gameScene = new GameScene();
 
         // icon and name
         stage.setTitle("2D Pacman Game");
@@ -318,8 +322,6 @@ public class GameCycle extends Application {
             // else if game object is Ghost
             else if (gameObject instanceof Ghost) {
             }
-
-
         }
     }
 }
