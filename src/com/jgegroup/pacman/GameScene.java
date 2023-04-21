@@ -23,5 +23,8 @@ public class GameScene {
     gameScene = new Scene(stackPane, RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL, Color.BLACK);
     Map map = Map.getMapInstance();
     stackPane.getChildren().add(map.getCanvas());
+
+
+
   }
  }
