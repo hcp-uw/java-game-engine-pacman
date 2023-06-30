@@ -350,6 +350,7 @@ public class GameCycle extends Application {
       return true;
     }
 
+    /*
     public void init(Stage stage) {
         System.out.println("Initializing...");
         // Inits map singleton and retrieves
@@ -384,18 +385,20 @@ public class GameCycle extends Application {
         ghosts.add(new Red(ghostSpawn.getX() - 1, ghostSpawn.getY(), 10));
         ghosts.add(new Pink(ghostSpawn.getX() + 1, ghostSpawn.getY(), 10));
         ghosts.add(new Yellow(ghostSpawn.getX() + 2, ghostSpawn.getY(), 10));
-        /*
+
+        // this was commented out
         for (Ghost ghost : ghosts) {
             map.drawGhost(ghost);
         }
         updates = new HashMap<>();
-         */
+
       map.drawMap(map.tileType, map.mapArray);
       map.drawDot();
       for (Pacman pacman : pacmen) {
-        map.drawPacman(pacman );
+        map.drawPacman(pacman);
       }
     }
+     */
 
     public void redraw(HashMap<GameObject, HashSet<Update>> updates) {
         for (GameObject gameObject : updates.keySet()) {

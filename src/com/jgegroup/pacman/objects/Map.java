@@ -73,7 +73,7 @@ public class Map {
         getMap(mapArray);
         drawMap(tileType, mapArray);
         drawDot();
-        // extractMapToBoard(mapArray, tileType);
+        extractMapToBoard(mapArray, tileType);
     }
     public  void loadTileImage(Tile[] tile) {
       Image floor = new Image("tiles/floor.png");

@@ -36,16 +36,11 @@ public class MapUtils {
         if (object instanceof Pacman) {
             if (((Pacman)object).nextMove != Direction.STOP) {
                 Direction nextDir = ((Pacman) object).nextMove;
-                if (surr.get(nextDir) instanceof Path) {
-                    return nextDir;
-                }
+                return validateMove(nextDir, surr);
             }
         }
         Direction dir = object.direction;
-        if (surr.get(dir) instanceof Path) {
-            return dir;
-        }
-        return Direction.STOP;
+        return validateMove(dir, surr);
     }
 
     /** @@Authors: Noah, Jesse
@@ -68,6 +63,12 @@ public class MapUtils {
         return new Position(pos.getX() / tileSize, pos.getY() / tileSize);
     }
 
+    /**
+     * @@Authors: Noah
+     * @param dir - input direction
+     * @param surr - hashmap of surrounding tiles
+     * @return
+     */
     public static Direction validateMove(Direction dir, HashMap<Direction, Tile> surr) {
         if (surr.get(dir) instanceof Wall)
             return Direction.STOP;
