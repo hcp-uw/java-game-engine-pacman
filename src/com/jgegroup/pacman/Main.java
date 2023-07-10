@@ -5,8 +5,7 @@ import javafx.application.Application;
 import javafx.scene.image.Image;
 
 public class Main extends Application {
-  //Code starts here
-  // hello
+
   public static void main(String[] args)  {
     launch(args);
   }
@@ -20,8 +19,7 @@ public class Main extends Application {
     Image icon = new Image("icon/icon.png");
     stage.getIcons().add(icon);
     // add scene
-    stage.setHeight(gameScene.RESOLUTION_VERTICAL);
-    stage.setWidth(gameScene.RESOLUTION_HORIZONTAL);
+
     stage.setScene(gameScene.gameScene);
     stage.setResizable(true);
     stage.show();
