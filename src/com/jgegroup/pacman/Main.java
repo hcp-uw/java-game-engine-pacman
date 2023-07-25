@@ -12,16 +12,15 @@ public class Main extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     stage = new Stage();
-    GameScene gameScene = new GameScene();
-
-    // icon and name
     stage.setTitle("2D Pacman Game");
     Image icon = new Image("icon/icon.png");
     stage.getIcons().add(icon);
-    // add scene
 
+
+    GameScene gameScene = new GameScene();
     stage.setScene(gameScene.gameScene);
     stage.setResizable(true);
     stage.show();
+    gameScene.startThread();
   }
 }
