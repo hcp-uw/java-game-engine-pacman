@@ -18,7 +18,7 @@ import com.jgegroup.pacman.objects.characters.Pacman;
 public class Map {
     private  HashMap<Position, Tile> tiles;
     private  HashMap<Position, Consumable> objects;
-    private static Map instance;
+    private static Map Map_Instance;
     private Position pacmanSpawn = new Position(40, 40);
     private Position ghostSpawn = new Position(40, 900);
 
@@ -33,7 +33,6 @@ public class Map {
     public Map(/*Map Context*/){
         objects = new HashMap<>();
         tiles = new HashMap<>();
-        createMap(/*Map Context*/);
     }
 
     /** @@Author: Noah
@@ -43,10 +42,10 @@ public class Map {
      * Takes no parameters
      */
     public static Map getMapInstance() {
-        if (instance == null) {
-            instance = new Map();
+        if (Map_Instance == null) {
+          Map_Instance = new Map();
         }
-        return instance;
+        return Map_Instance;
     }
 
     /** @@Author: Noah
@@ -55,9 +54,9 @@ public class Map {
      * @return map instance tiles
      * Takes in nothing
      */
-    public HashMap<Position, Tile> getTiles() { return instance.tiles; }
+    public HashMap<Position, Tile> getTiles() { return Map_Instance.tiles; }
 
-    public Canvas getCanvas() { return instance.canvas; }
+    public Canvas getCanvas() { return Map_Instance.canvas; }
 
     /** @@Author: Noah
      * Gets the objects that are on the map
@@ -65,7 +64,7 @@ public class Map {
      * @return map instance objects
      * Takes in nothing
      */
-    public HashMap<Position, Consumable> getObjects() { return instance.objects; }
+    public HashMap<Position, Consumable> getObjects() { return Map_Instance.objects; }
 
 
     public void createMap(/*Map Context*/) {
@@ -73,7 +72,7 @@ public class Map {
         getMap(mapArray);
         drawMap(tileType, mapArray);
         drawDot();
-        // extractMapToBoard(mapArray, tileType);
+        extractMapToBoard(mapArray, tileType);
     }
     public  void loadTileImage(Tile[] tile) {
       Image floor = new Image("tiles/floor.png");
@@ -150,28 +149,16 @@ public class Map {
         y += GameScene.TILE_SIZE;
       }
    }
-   public void drawDot(){
-     /* TODO write a nested loop that iterate the 2D array tileArray, draw dot at any index contain the floor object
-         To draw dot, use the graphicsContext of canvas to draw.
-         I think the syntax might look like this graphicsContext.fillRect(x location, y location, x size, y size)
-         to set or change color, it might be a weird.
-         So imagine you can only have a bucket of color, if you want to change color, you have to replace to whole bucket.
-         For example, if you want to draw two object with 2 different colors:
-         graphicsContext.setFill(Color.RED);      ---> bucket of color red.
-         draw();
-         graphicsContext.setFill(Color.BLUE);     ---> throw the red bucket, now use the blue bucket.
-         draw();
-         (keep it mind now your bucket color is still BLUE)
-      */
+   public void drawDot() {
        int dotSize = 8;
 
        graphicsContext.setFill(Color.YELLOW);
        for (int x = 0; x < GameScene.NUMBER_OF_TILE_LENGTH; x++) {
            for (int y = 0; y < GameScene.NUMBER_OF_TILE_WIDTH; y++) {
                if (mapArray[x][y] == 0) {
-                   int xCoord = y * GameScene.TILE_SIZE + (GameScene.TILE_SIZE/2) - (dotSize/2);
-                   int yCoord = x * GameScene.TILE_SIZE + (GameScene.TILE_SIZE/2) - (dotSize/2);
-                   graphicsContext.fillRect(xCoord, yCoord, dotSize, dotSize);
+                   int xCoordinate = y * GameScene.TILE_SIZE + (GameScene.TILE_SIZE/2) - (dotSize/2);
+                   int yCoordinate = x * GameScene.TILE_SIZE + (GameScene.TILE_SIZE/2) - (dotSize/2);
+                   graphicsContext.fillRect(xCoordinate, yCoordinate, dotSize, dotSize);
                }
            }
        }
@@ -190,7 +177,7 @@ public class Map {
            for (int y = 0; y < tiles[x].length; y++) {
                Position pos = new Position(x,y);
                int tileType = tiles[x][y];
-               instance.tiles.put(pos, tileTypes[tileType]);
+               Map_Instance.tiles.put(pos, tileTypes[tileType]);
            }
        }
    }
