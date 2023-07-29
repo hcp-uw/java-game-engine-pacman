@@ -62,8 +62,6 @@ public class GameCycle extends Application {
     // Returns true when game paused
     // Takes scene as parameter
     private boolean loop(Scene scene) {
-        // scan for player input
-        processInput(scene);
         //If the game is paused then skip all event handle
         if(paused) {
             return true;
@@ -71,39 +69,7 @@ public class GameCycle extends Application {
         boolean run = processPacman();
         if (!run)
             return false;
-        // Process Ghosts
-        for(Ghost _ghost : ghosts) {
-            // Process movement begin
-            // get position
-            Position ghostPos = _ghost.getPosition();
-            // get surrounding from POV of ghost
-            HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, ghostPos);
-            // Process move
-            _ghost.thinkPrep(tileBoard, pacPos);
-            // Validate move
-            Direction move = MapUtils.moveValid(_ghost, surr);
-            // Update position
-            if (move == LEFT) {
-                ghostPos.translate(-1, 0);
-            } else if (move == UP) {
-                ghostPos.translate(0, 1);
-            } else if (move == RIGHT) {
-                ghostPos.translate(1,0);
-            } else if (move == DOWN) {
-                ghostPos.translate(0,-1);
-            }
-            // Add moved to updates map for ghost
-            if (!updates.containsKey(_ghost)) {
-                HashSet<Update> gUpdates = new HashSet<>();
-                gUpdates.add(Update.MOVED);
-                updates.put(_ghost, gUpdates);
-            } else {
-                updates.get(_ghost).add(Update.MOVED);
-            }
-            // Process ghost movement end
-            // end of ghost loop process spooked state
-            _ghost.updateSpooked();
-        }
+        processGhost();
         // Process updates and redraw
         redraw(updates);
         // Clear the updates map for next loop cycle
@@ -112,8 +78,9 @@ public class GameCycle extends Application {
     }
 
     public void init(Stage stage) {
+        System.out.println("Initializing...");
         // Inits map singleton and retrieves
-        GameScene gameScene = new GameScene();
+        gameScene = new GameScene();
 
         // icon and name
         stage.setTitle("2D Pacman Game");
@@ -129,15 +96,14 @@ public class GameCycle extends Application {
         tileBoard = map.getTiles();
         consumables = map.getObjects();
         updates = new HashMap<>();
+        initInputHook(stage.getScene());
 
         // initializes all the required positions for
         // all hashmaps and hashsets
-        pacmen = new HashSet<>();
-        Position pacSpawn = map.getPacmanSpawn();
-        pacmen.add(new Pacman(pacSpawn.getX(), pacSpawn.getY(), 10));
-        for (Pacman pacman : pacmen) {
-            map.drawPacman(pacman);
-        }
+
+        //init pacman
+        initPacman();
+        //init ghost
         ghosts = new HashSet<>();
         Position ghostSpawn = map.getGhostSpawn();
         ghosts.add(new Blue(ghostSpawn.getX() - 2, ghostSpawn.getY(), 10));
@@ -149,14 +115,11 @@ public class GameCycle extends Application {
             map.drawGhost(ghost);
         }
          */
-      map.drawMap(map.tileType, map.mapArray);
-      map.drawDot();
-      for (Pacman pacman : pacmen) {
-        map.drawPacman(pacman );
-      }
+        map.drawMap(map.tileType, map.mapArray);
+        map.drawDot();
     }
 
-    public void processInput(Scene scene) {
+    public void initInputHook(Scene scene) {
         scene.setOnKeyPressed(event -> {
             KeyCode keyCode = event.getCode();
             if (keyCode.equals(KeyCode.W)) {
@@ -195,6 +158,7 @@ public class GameCycle extends Application {
             } else if (move == DOWN) {
                 pacPos.translate(0,-1);
             }
+            pacPos = MapUtils.worldToScreen(pacPos);
             if (MapUtils.validateMove(_pacman.nextMove, MapUtils.getSurrounding(tileBoard, pacPos)) == _pacman.nextMove) {
                 _pacman.setDirection(_pacman.nextMove);
                 System.out.println(_pacman.nextMove);
@@ -350,51 +314,40 @@ public class GameCycle extends Application {
       return true;
     }
 
-    public void init(Stage stage) {
-        System.out.println("Initializing...");
-        // Inits map singleton and retrieves
-         gameScene = new GameScene();
-
-        // icon and name
-        stage.setTitle("2D Pacman Game");
-        Image icon = new Image("icon/icon.png");
-        stage.getIcons().add(icon);
-        // add scene
-        stage.setHeight(gameScene.RESOLUTION_VERTICAL);
-        stage.setWidth(gameScene.RESOLUTION_HORIZONTAL);
-        stage.setScene(gameScene.gameScene);
-        stage.setResizable(true);
-        stage.show();
-        map = Map.getMapInstance();
-        tileBoard = map.getTiles();
-        consumables = map.getObjects();
-        updates = new HashMap<>();
-
-        // initializes all the required positions for
-        // all hashmaps and hashsets
-        pacmen = new HashSet<>();
-        Position pacSpawn = map.getPacmanSpawn();
-        pacmen.add(new Pacman(pacSpawn.getX(), pacSpawn.getY(), 10));
-        for (Pacman pacman : pacmen) {
-            map.drawPacman(pacman);
+    public void processGhost() {
+        // Process Ghosts
+        for(Ghost _ghost : ghosts) {
+            // Process movement begin
+            // get position
+            Position ghostPos = _ghost.getPosition();
+            // get surrounding from POV of ghost
+            HashMap<Direction, Tile> surr = MapUtils.getSurrounding(tileBoard, ghostPos);
+            // Process move
+            _ghost.thinkPrep(tileBoard, pacPos);
+            // Validate move
+            Direction move = MapUtils.moveValid(_ghost, surr);
+            // Update position
+            if (move == LEFT) {
+                ghostPos.translate(-1, 0);
+            } else if (move == UP) {
+                ghostPos.translate(0, 1);
+            } else if (move == RIGHT) {
+                ghostPos.translate(1,0);
+            } else if (move == DOWN) {
+                ghostPos.translate(0,-1);
+            }
+            // Add moved to updates map for ghost
+            if (!updates.containsKey(_ghost)) {
+                HashSet<Update> gUpdates = new HashSet<>();
+                gUpdates.add(Update.MOVED);
+                updates.put(_ghost, gUpdates);
+            } else {
+                updates.get(_ghost).add(Update.MOVED);
+            }
+            // Process ghost movement end
+            // end of ghost loop process spooked state
+            _ghost.updateSpooked();
         }
-        ghosts = new HashSet<>();
-        Position ghostSpawn = map.getGhostSpawn();
-        ghosts.add(new Blue(ghostSpawn.getX() - 2, ghostSpawn.getY(), 10));
-        ghosts.add(new Red(ghostSpawn.getX() - 1, ghostSpawn.getY(), 10));
-        ghosts.add(new Pink(ghostSpawn.getX() + 1, ghostSpawn.getY(), 10));
-        ghosts.add(new Yellow(ghostSpawn.getX() + 2, ghostSpawn.getY(), 10));
-        /*
-        for (Ghost ghost : ghosts) {
-            map.drawGhost(ghost);
-        }
-        updates = new HashMap<>();
-         */
-      map.drawMap(map.tileType, map.mapArray);
-      map.drawDot();
-      for (Pacman pacman : pacmen) {
-        map.drawPacman(pacman );
-      }
     }
 
     public void redraw(HashMap<GameObject, HashSet<Update>> updates) {
@@ -422,5 +375,21 @@ public class GameCycle extends Application {
 
 
         }
+    }
+    public void initPacman(){
+        pacmen = new HashSet<>();
+        Position pacSpawn = map.getPacmanSpawn();
+        pacmen.add(new Pacman(pacSpawn.getX(), pacSpawn.getY(), 10));
+        for (Pacman pacman : pacmen) {
+            map.drawPacman(pacman);
+        }
+    }
+    public void initGhosts(){
+        ghosts = new HashSet<>();
+        Position ghostSpawn = map.getGhostSpawn();
+        ghosts.add(new Blue(ghostSpawn.getX() - 2, ghostSpawn.getY(), 10));
+        ghosts.add(new Red(ghostSpawn.getX() - 1, ghostSpawn.getY(), 10));
+        ghosts.add(new Pink(ghostSpawn.getX() + 1, ghostSpawn.getY(), 10));
+        ghosts.add(new Yellow(ghostSpawn.getX() + 2, ghostSpawn.getY(), 10));
     }
 }
