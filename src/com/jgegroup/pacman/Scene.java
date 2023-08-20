@@ -37,8 +37,8 @@ public class Scene implements Runnable, javafx.event.EventHandler<javafx.scene.i
   static Map map;
 
 
-  static int a = 300;
-  static int b = 300;
+  static int x = 300;
+  static int y = 300;
   static int c = 0;
 
   Thread gameThread;
@@ -82,9 +82,9 @@ public class Scene implements Runnable, javafx.event.EventHandler<javafx.scene.i
     System.out.println("a is now at:" + c);
   }
   public void redraw() {
-   //Layer_Upper_PaintComponent.clearRect(a - 1 , a - 1, 20, 20);
+    Layer_Upper_PaintComponent.clearRect(x - 5 , y - 5, RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL);
     Layer_Upper_PaintComponent.setFill(Color.WHITE);
-    Layer_Upper_PaintComponent.fillRect(c, c, 20, 20);
+    Layer_Upper_PaintComponent.fillRect(x, y, 20, 20);
   }
 
 
@@ -95,20 +95,22 @@ public class Scene implements Runnable, javafx.event.EventHandler<javafx.scene.i
     KeyCode keyCode = keyEvent.getCode();
     switch (keyCode) {
       case LEFT:
-        a -= 5;
+        x -= 5;
         break;
       case RIGHT:
-        a += 5;
+        x += 5;
         break;
       case UP:
-        b -= 5;
+        y -= 5;
         break;
       case DOWN:
-        b += 5;
+        y += 5;
         break;
       default:
         break;
     }
+  }
+  public void checkEat() {
   }
   public void addCanvasLayer(Canvas canvas) {
     stackPane.getChildren().add(canvas);
