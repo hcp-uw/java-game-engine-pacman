@@ -6,8 +6,6 @@ import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.consumables.BigDot;
 import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -37,7 +35,7 @@ public class GameCycle extends Application {
     public static Direction dir_cache;
     public HashMap<GameObject, HashSet<Enums.Update>> updates;
 
-    GameScene gameScene;
+    Scene scene;
 
     public static void main(String[] args) {
         launch(args);
@@ -46,7 +44,7 @@ public class GameCycle extends Application {
     public void start(Stage stage) throws Exception {
         boolean runGame = true;
         while (runGame) {
-            runGame = loop(gameScene.gameScene);
+            runGame = loop(scene.gameScene);
             TimeUnit.MILLISECONDS.sleep(5000);
         }
     }
@@ -56,7 +54,7 @@ public class GameCycle extends Application {
     // Throws no exceptions
     // Returns true when game paused
     // Takes scene as parameter
-    private boolean loop(Scene  scene) {
+    private boolean loop(javafx.scene.Scene scene) {
         // scan for player input
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {

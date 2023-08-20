@@ -1,6 +1,6 @@
 package com.jgegroup.pacman.objects;
 
-import com.jgegroup.pacman.GameScene;
+import com.jgegroup.pacman.Scene;
 import com.jgegroup.pacman.objects.immovable.*;
 import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
 import java.io.BufferedReader;
@@ -22,10 +22,10 @@ public class Map {
     private Position pacmanSpawn = new Position(40, 40);
     private Position ghostSpawn = new Position(40, 900);
 
-    private  Canvas canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL); // tool
+    private  Canvas canvas = new Canvas(Scene.RESOLUTION_HORIZONTAL, Scene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
     public Tile[] tileType = new Tile[2]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
-    public  int[][] mapArray = new int[GameScene.NUMBER_OF_TILE_LENGTH][GameScene.NUMBER_OF_TILE_WIDTH];
+    public  int[][] mapArray = new int[Scene.NUMBER_OF_TILE_LENGTH][Scene.NUMBER_OF_TILE_WIDTH];
 
 
 //    int tilePosition [] [];
@@ -101,11 +101,11 @@ public class Map {
        int row = 0;
 
        /** ==> create loop read from top to bottom */
-       while (row < GameScene.NUMBER_OF_TILE_LENGTH) {
+       while (row < Scene.NUMBER_OF_TILE_LENGTH) {
          /** ==> read the whole row */
          String mapLine = br.readLine();
          /** ==> read every element in the row, put elements in array */
-         while (column < GameScene.NUMBER_OF_TILE_WIDTH) {
+         while (column < Scene.NUMBER_OF_TILE_WIDTH) {
            String numbers[] = mapLine.split(" "); // ["n"] from n n n
            int num = Integer.parseInt(numbers[column]); // ["1"] --> to integer
            tiles[row][column] = num;
@@ -138,26 +138,26 @@ public class Map {
       while(row < tilePositions.length){
         while(column < tilePositions[0].length){
           /** ==> use GraphicsContext to draw the canvas, the type of image to draw is called from tilePosition[][]*/
-          graphicsContext.drawImage(tileType[tilePositions[row][column]].getImage(), x, y , GameScene.TILE_SIZE ,GameScene.TILE_SIZE);
+          graphicsContext.drawImage(tileType[tilePositions[row][column]].getImage(), x, y , Scene.TILE_SIZE , Scene.TILE_SIZE);
           column++;
-          x+= GameScene.TILE_SIZE;
+          x+= Scene.TILE_SIZE;
         }
         /** ==> move pointer back to first column, next under row*/
         column = 0;
         x=0;
         row++;
-        y += GameScene.TILE_SIZE;
+        y += Scene.TILE_SIZE;
       }
    }
    public void drawDot() {
        int dotSize = 8;
 
        graphicsContext.setFill(Color.YELLOW);
-       for (int x = 0; x < GameScene.NUMBER_OF_TILE_LENGTH; x++) {
-           for (int y = 0; y < GameScene.NUMBER_OF_TILE_WIDTH; y++) {
+       for (int x = 0; x < Scene.NUMBER_OF_TILE_LENGTH; x++) {
+           for (int y = 0; y < Scene.NUMBER_OF_TILE_WIDTH; y++) {
                if (mapArray[x][y] == 0) {
-                   int xCoordinate = y * GameScene.TILE_SIZE + (GameScene.TILE_SIZE/2) - (dotSize/2);
-                   int yCoordinate = x * GameScene.TILE_SIZE + (GameScene.TILE_SIZE/2) - (dotSize/2);
+                   int xCoordinate = y * Scene.TILE_SIZE + (Scene.TILE_SIZE/2) - (dotSize/2);
+                   int yCoordinate = x * Scene.TILE_SIZE + (Scene.TILE_SIZE/2) - (dotSize/2);
                    graphicsContext.fillRect(xCoordinate, yCoordinate, dotSize, dotSize);
                }
            }
