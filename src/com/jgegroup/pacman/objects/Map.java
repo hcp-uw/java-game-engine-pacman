@@ -76,9 +76,11 @@ public class Map {
     public  void loadTileImage(Tile[] tile) {
       Image floor = new Image("tiles/floor.png");
       tile[0]  = new Path(floor);
+      tile[0].setCollision(false);
 
       Image wall = new Image("tiles/wall.png");
       tile[1] = new Tile(wall);
+      tile[1].setCollision(true);
    }
 
 
