@@ -2,6 +2,7 @@ package com.jgegroup.pacman;
 
 import com.jgegroup.pacman.objects.Map;
 
+import com.jgegroup.pacman.objects.characters.Pac;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
@@ -9,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 
 
-public class Scene implements Runnable, javafx.event.EventHandler<javafx.scene.input.KeyEvent> {
+public class Scene implements Runnable{
   static long FPS = 60;
   static long targetTimePerFrame = 1000000000 / FPS;
   static long lastTime = System.nanoTime();
@@ -30,12 +31,12 @@ public class Scene implements Runnable, javafx.event.EventHandler<javafx.scene.i
   Canvas Layer_Lower;
   Canvas Layer_Upper;
 
-
-
   static GraphicsContext Layer_Lower_PaintComponent;
   static GraphicsContext Layer_Upper_PaintComponent;
   static Map map;
 
+
+  private KeyHandler keyHandler;
 
   static int x = 300;
   static int y = 300;
@@ -54,7 +55,8 @@ public class Scene implements Runnable, javafx.event.EventHandler<javafx.scene.i
     Layer_Upper_PaintComponent = Layer_Upper.getGraphicsContext2D();
     addCanvasLayer(Layer_Lower);
     addCanvasLayer(Layer_Upper);
-    gameScene.setOnKeyPressed(this);
+    keyHandler = new KeyHandler();
+    gameScene.setOnKeyPressed(keyHandler);
   }
 
   // startThread() -> run -> update() & redraw()
@@ -72,14 +74,32 @@ public class Scene implements Runnable, javafx.event.EventHandler<javafx.scene.i
   @Override
   public void run() {
     while (true) {
+      update();
       redraw();
       FPSControl();
     }
   }
 
   public void update() {
-    c += 1;
-    System.out.println("a is now at:" + c);
+    switch (keyHandler.movement) {
+      case 0:
+        this.y += 1;
+        break;
+      case 1:
+        this.y -= 1;
+        break;
+      case 2:
+        this.x -= 1;
+        break;
+      case 3:
+        this.x += 1;
+        break;
+      default:
+        break;
+    }
+
+
+    System.out.println("Movement:" + keyHandler.movement);
   }
   public void redraw() {
     Layer_Upper_PaintComponent.clearRect(x - 5 , y - 5, RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL);
@@ -90,26 +110,6 @@ public class Scene implements Runnable, javafx.event.EventHandler<javafx.scene.i
 
   // Functions
 
-  @Override
-  public void handle(javafx.scene.input.KeyEvent  keyEvent) {
-    KeyCode keyCode = keyEvent.getCode();
-    switch (keyCode) {
-      case LEFT:
-        x -= 5;
-        break;
-      case RIGHT:
-        x += 5;
-        break;
-      case UP:
-        y -= 5;
-        break;
-      case DOWN:
-        y += 5;
-        break;
-      default:
-        break;
-    }
-  }
   public void checkEat() {
   }
   public void addCanvasLayer(Canvas canvas) {
