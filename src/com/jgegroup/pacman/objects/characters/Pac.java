@@ -6,14 +6,15 @@ import com.jgegroup.pacman.objects.Entity;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class Pac extends Entity {
 
-    MainScene pacScene;
+    MainScene mainScene;
     KeyHandler keyHandler;
 
-    public Pac(MainScene PacScene, KeyHandler keyHandler) {
-        this.pacScene = PacScene;
+    public Pac(MainScene mainScene, KeyHandler keyHandler) {
+        this.mainScene = mainScene;
         this.keyHandler = keyHandler;
         setDefaultValues();
         setPacImage();
@@ -22,7 +23,10 @@ public class Pac extends Entity {
     public void setDefaultValues() {
         x = 200;
         y = 200;
+        collision_range = new Rectangle(0, 0, 5, 5);
+
         speed = 1;
+        direction = "not moving";
     }
 
     public void setPacImage() {
@@ -31,30 +35,51 @@ public class Pac extends Entity {
 
     public void update() {
         switch (keyHandler.movement) {
-            case 0:
-                this.y += speed;
+            case "up":
+                direction = "up";
                 break;
-            case 1:
-                this.y -= speed;
+            case "down":
+                direction = "down";
                 break;
-            case 2:
-                this.x -= speed;
+            case "left":
+                direction = "left";
                 break;
-            case 3:
-                this.x += speed;
+            case "right":
+                direction = "right";
                 break;
             default:
                 break;
         }
-        System.out.println("Movement:" + keyHandler.movement);
+        collisionDetected = false;
+        mainScene.collisionChecker.checkTile(this);
+
+        if (collisionDetected == false) {
+            switch (keyHandler.movement) {
+                case "up":
+                    this.y -= speed;
+                    break;
+                case "down":
+                    this.y += speed;
+                    break;
+                case "left":
+                    this.x -= speed;
+                    break;
+                case "right":
+                    this.x += speed;
+                    break;
+                default:
+                    break;
+            }
+        }
+        System.out.println("Entity collisionDetected is " + collisionDetected);
     }
 
     public void redraw(GraphicsContext painter) {
-//        painter.clearRect(x - 5 , y - 5, pacScene.RESOLUTION_HORIZONTAL, pacScene.RESOLUTION_VERTICAL );
-//        painter.setFill(Color.WHITE);
-//        painter.fillRect(x, y, 20, 20);
-        painter.clearRect(x - speed, y - speed, pacScene.RESOLUTION_HORIZONTAL, pacScene.RESOLUTION_VERTICAL);
-        painter.drawImage(up, x, y, 400, 100);
+        painter.clearRect(x - 5 , y - 5, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL );
+        painter.setFill(Color.WHITE);
+        painter.fillRect(x, y, 20, 20);
+//        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
+//        painter.drawImage(up, x, y, 400, 100);
 
 
 

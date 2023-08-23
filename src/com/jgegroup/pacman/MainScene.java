@@ -10,6 +10,7 @@ import javafx.scene.canvas.Canvas;
 
 
 public class MainScene implements Runnable{
+  Thread gameThread;
   static long FPS = 60;
   static long targetTimePerFrame = 1000000000 / FPS;
   static long lastTime = System.nanoTime();
@@ -22,9 +23,9 @@ public class MainScene implements Runnable{
 
   public static final int RESOLUTION_HORIZONTAL = TILE_SIZE * NUMBER_OF_TILE_WIDTH; // 768
   public static final int RESOLUTION_VERTICAL = TILE_SIZE * NUMBER_OF_TILE_LENGTH; // 1024
+  public CollisionChecker collisionChecker = new CollisionChecker(this);
+  javafx.scene.Scene mainScene;
 
-
-  javafx.scene.Scene gameScene;
   StackPane stackPane;
 
   Canvas Layer_Lower;
@@ -32,10 +33,8 @@ public class MainScene implements Runnable{
 
   static GraphicsContext Layer_Lower_PaintComponent;
   static GraphicsContext Layer_Upper_PaintComponent;
-  static Map map;
+  public  Map map;
   private KeyHandler keyHandler;
-
-
   Pac pac;
 
 
@@ -44,13 +43,12 @@ public class MainScene implements Runnable{
   static int y = 300;
   static int c = 0;
 
-  Thread gameThread;
 
   MainScene() {
     map = Map.getMapInstance();
     map.createMap();
     stackPane = new StackPane();
-    gameScene = new javafx.scene.Scene(stackPane, RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL, Color.BLACK);
+    mainScene = new javafx.scene.Scene(stackPane, RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL, Color.BLACK);
     Layer_Lower = map.getCanvas() ;
     Layer_Upper = new Canvas(RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL);
     Layer_Lower_PaintComponent = Layer_Lower.getGraphicsContext2D();
@@ -58,7 +56,7 @@ public class MainScene implements Runnable{
     addCanvasLayer(Layer_Lower);
     addCanvasLayer(Layer_Upper);
     keyHandler = new KeyHandler();
-    gameScene.setOnKeyPressed(keyHandler);
+    mainScene.setOnKeyPressed(keyHandler);
     pac = new Pac(this, keyHandler);
   }
 

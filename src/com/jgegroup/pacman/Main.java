@@ -17,7 +17,7 @@ public class Main extends Application {
 
 
     MainScene mainScene = new MainScene();
-    stage.setScene(mainScene.gameScene);
+    stage.setScene(mainScene.mainScene);
     stage.setResizable(true);
     stage.show();
     mainScene.startThread();

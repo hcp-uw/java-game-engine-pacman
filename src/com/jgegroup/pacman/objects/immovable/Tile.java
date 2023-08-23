@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 public class Tile {
     private Image image;
 
-    private boolean collision = false; // false mean it object can be walk through.
+    private boolean collisionOn = false; // false mean it object can be walk through.
     public Tile(Image image) {
         this.image = image;
     }
@@ -14,10 +14,10 @@ public class Tile {
       return this.image;
     }
 
-    public void setCollision(boolean canCollide) {
-         this.collision = canCollide;
+    public void setCollisionOn(boolean canCollide) {
+         this.collisionOn = canCollide;
     }
-    public boolean getCollision() {
-        return collision;
+    public boolean getCollisionOn() {
+        return collisionOn;
     }
 }

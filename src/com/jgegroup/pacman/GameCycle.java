@@ -44,7 +44,7 @@ public class GameCycle extends Application {
     public void start(Stage stage) throws Exception {
         boolean runGame = true;
         while (runGame) {
-            runGame = loop(scene.gameScene);
+            runGame = loop(scene.mainScene);
             TimeUnit.MILLISECONDS.sleep(5000);
         }
     }
