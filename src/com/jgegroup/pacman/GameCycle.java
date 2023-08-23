@@ -35,7 +35,7 @@ public class GameCycle extends Application {
     public static Direction dir_cache;
     public HashMap<GameObject, HashSet<Enums.Update>> updates;
 
-    Scene scene;
+    MainScene scene;
 
     public static void main(String[] args) {
         launch(args);

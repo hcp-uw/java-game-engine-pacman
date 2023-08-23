@@ -16,10 +16,10 @@ public class Main extends Application {
     stage.getIcons().add(icon);
 
 
-    Scene scene = new Scene();
-    stage.setScene(scene.gameScene);
+    MainScene mainScene = new MainScene();
+    stage.setScene(mainScene.gameScene);
     stage.setResizable(true);
     stage.show();
-    scene.startThread();
+    mainScene.startThread();
   }
 }

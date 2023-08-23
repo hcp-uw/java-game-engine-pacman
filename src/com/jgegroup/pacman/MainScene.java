@@ -4,13 +4,12 @@ import com.jgegroup.pacman.objects.Map;
 
 import com.jgegroup.pacman.objects.characters.Pac;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 
 
-public class Scene implements Runnable{
+public class MainScene implements Runnable{
   static long FPS = 60;
   static long targetTimePerFrame = 1000000000 / FPS;
   static long lastTime = System.nanoTime();
@@ -34,9 +33,12 @@ public class Scene implements Runnable{
   static GraphicsContext Layer_Lower_PaintComponent;
   static GraphicsContext Layer_Upper_PaintComponent;
   static Map map;
-
-
   private KeyHandler keyHandler;
+
+
+  Pac pac;
+
+
 
   static int x = 300;
   static int y = 300;
@@ -44,7 +46,7 @@ public class Scene implements Runnable{
 
   Thread gameThread;
 
-  Scene() {
+  MainScene() {
     map = Map.getMapInstance();
     map.createMap();
     stackPane = new StackPane();
@@ -57,6 +59,7 @@ public class Scene implements Runnable{
     addCanvasLayer(Layer_Upper);
     keyHandler = new KeyHandler();
     gameScene.setOnKeyPressed(keyHandler);
+    pac = new Pac(this, keyHandler);
   }
 
   // startThread() -> run -> update() & redraw()
@@ -68,54 +71,32 @@ public class Scene implements Runnable{
   }
 
   public void init() {
-
   }
 
   @Override
   public void run() {
+
     while (true) {
       update();
       redraw();
-      FPSControl();
+      controlFPS();
     }
+
   }
 
   public void update() {
-    switch (keyHandler.movement) {
-      case 0:
-        this.y += 1;
-        break;
-      case 1:
-        this.y -= 1;
-        break;
-      case 2:
-        this.x -= 1;
-        break;
-      case 3:
-        this.x += 1;
-        break;
-      default:
-        break;
-    }
-
-
-    System.out.println("Movement:" + keyHandler.movement);
+    pac.update();
   }
   public void redraw() {
-    Layer_Upper_PaintComponent.clearRect(x - 5 , y - 5, RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL);
-    Layer_Upper_PaintComponent.setFill(Color.WHITE);
-    Layer_Upper_PaintComponent.fillRect(x, y, 20, 20);
+    pac.redraw(Layer_Upper_PaintComponent);
   }
 
 
   // Functions
-
-  public void checkEat() {
-  }
   public void addCanvasLayer(Canvas canvas) {
     stackPane.getChildren().add(canvas);
   }
-  public void FPSControl() {
+  public void controlFPS() {
     currentTime = System.nanoTime();
     elapsedTime = currentTime - lastTime;
     lastTime = currentTime;
