@@ -30,15 +30,33 @@ public class CollisionChecker {
                 entity_top_row = (entity_top_worldY - entity.speed) / MainScene.TILE_SIZE;
                 tileNum1 = scene.map.mapArray2D[entity_left_col][entity_top_row];
                 tileNum2 = scene.map.mapArray2D[entity_right_col][entity_top_row];
-                if(scene.map.tileType[tileNum1].getCollisionOn() || scene.map.tileType[tileNum2].getCollisionOn()) {
+                if (scene.map.tileType[tileNum1].getCollisionOn() || scene.map.tileType[tileNum2].getCollisionOn()) {
                     entity.collisionDetected = true;
                 }
                 break;
             case "down":
+                entity_bottom_row = (entity_bottom_worldY + entity.speed) / MainScene.TILE_SIZE;
+                tileNum1 = scene.map.mapArray2D[entity_left_col][entity_bottom_row];
+                tileNum2 = scene.map.mapArray2D[entity_right_col][entity_bottom_row];
+                if (scene.map.tileType[tileNum1].getCollisionOn() || scene.map.tileType[tileNum2].getCollisionOn()) {
+                    entity.collisionDetected = true;
+                }
                 break;
             case "left":
+                entity_left_col = (entity_left_worldX - entity.speed) / MainScene.TILE_SIZE;
+                tileNum1 = scene.map.mapArray2D[entity_left_col][entity_top_row];
+                tileNum2 = scene.map.mapArray2D[entity_left_col][entity_bottom_row];
+                if (scene.map.tileType[tileNum1].getCollisionOn() || scene.map.tileType[tileNum2].getCollisionOn()) {
+                    entity.collisionDetected = true;
+                }
                 break;
             case "right":
+                entity_right_col = (entity_right_worldX + entity.speed) / MainScene.TILE_SIZE;
+                tileNum1 = scene.map.mapArray2D[entity_right_col][entity_top_row];
+                tileNum2 = scene.map.mapArray2D[entity_right_col][entity_bottom_row];
+                if (scene.map.tileType[tileNum1].getCollisionOn() || scene.map.tileType[tileNum2].getCollisionOn()) {
+                    entity.collisionDetected = true;
+                }
                 break;
             default:
                 break;

@@ -21,9 +21,9 @@ public class Pac extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 200;
+        x = 300;
         y = 200;
-        collision_range = new Rectangle(0, 0, 5, 5);
+        collision_range = new Rectangle(0, 0, 10, 10);
 
         speed = 1;
         direction = "not moving";
