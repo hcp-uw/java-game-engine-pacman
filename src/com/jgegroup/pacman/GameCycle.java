@@ -316,7 +316,7 @@ public class GameCycle extends Application {
             // else if game object is pacman
             } else if (gameObject instanceof Pacman) {
                 if (updates.get(gameObject).contains(Update.MOVED)) {
-                  map.drawPacman((Pacman) gameObject);
+//                  map.drawPacman((Pacman) gameObject);
                 }
             }
             // else if game object is Ghost

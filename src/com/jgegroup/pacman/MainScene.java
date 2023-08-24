@@ -18,11 +18,11 @@ public class MainScene implements Runnable{
   static long elapsedTime;
   static long sleepTime;
   public static final int TILE_SIZE = 32;
-  public static final int NUMBER_OF_TILE_WIDTH = 20;
-  public static final int NUMBER_OF_TILE_LENGTH = 28;
+  public static final int NUMBER_OF_TILE_COLUMN = 20;
+  public static final int NUMBER_OF_TILE_ROW = 28;
 
-  public static final int RESOLUTION_HORIZONTAL = TILE_SIZE * NUMBER_OF_TILE_WIDTH; // 768
-  public static final int RESOLUTION_VERTICAL = TILE_SIZE * NUMBER_OF_TILE_LENGTH; // 1024
+  public static final int RESOLUTION_HORIZONTAL = TILE_SIZE * NUMBER_OF_TILE_COLUMN; // 768
+  public static final int RESOLUTION_VERTICAL = TILE_SIZE * NUMBER_OF_TILE_ROW; // 1024
   public CollisionChecker collisionChecker = new CollisionChecker(this);
   javafx.scene.Scene mainScene;
 

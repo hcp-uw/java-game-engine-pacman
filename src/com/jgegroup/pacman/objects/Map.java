@@ -1,5 +1,6 @@
 package com.jgegroup.pacman.objects;
 
+import com.jgegroup.pacman.Main;
 import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.objects.immovable.*;
 import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
@@ -25,7 +26,7 @@ public class Map {
     private  Canvas canvas = new Canvas(MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
     public Tile[] tileType = new Tile[2]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
-    public  int[][] mapArray2D = new int[MainScene.NUMBER_OF_TILE_LENGTH][MainScene.NUMBER_OF_TILE_WIDTH];
+    public  int[][] mapArray2D = new int[MainScene.NUMBER_OF_TILE_COLUMN][MainScene.NUMBER_OF_TILE_ROW];
 
 
     public Map(/*Map Context*/){
@@ -99,17 +100,29 @@ public class Map {
 
        int column = 0;
        int row = 0;
-       while (row < MainScene.NUMBER_OF_TILE_LENGTH) {
-         String mapLine = br.readLine();
-         while (column < MainScene.NUMBER_OF_TILE_WIDTH) {
-           String numbers[] = mapLine.split(" "); // ["n"] from n n n
-           int num = Integer.parseInt(numbers[column]); // ["1"] --> to integer
-           tiles[row][column] = num;
-           column++;
-         }
-         column = 0;
-         row++;
+
+       while (column < MainScene.NUMBER_OF_TILE_COLUMN && row < MainScene.NUMBER_OF_TILE_ROW) {
+           String mapLine = br.readLine();
+           while (column < MainScene.NUMBER_OF_TILE_COLUMN) {
+               String numbers[] = mapLine.split(" ");
+               int num = Integer.parseInt(numbers[column]);
+               tiles[column][row] = num;
+               column++;
+           }
+           column = 0;
+           row++;
        }
+
+
+//         String mapLine = br.readLine();
+//         while (row < MainScene.NUMBER_OF_TILE_ROW) {
+//           String numbers[] = mapLine.split(" "); // ["n"] from n n n
+//           int num = Integer.parseInt(numbers[row]); // ["1"] --> to integer
+//           tiles[column][row] = num;
+//           row++;
+//         }
+//         row = 0;
+//         column++;
        br.close();
      } catch (Exception e) {
          System.err.println("Error occurred while reading in the map file");
@@ -126,48 +139,51 @@ public class Map {
    * Takes in tile types and tile positions
    */
    public void drawMap(Tile[] tileType, int[][] tilePositions){
-      int row = 0;
-      int column = 0;
-      int x = 0;
-      int y = 0;
-      while(row < tilePositions.length){
-        while(column < tilePositions[0].length){
-          graphicsContext.drawImage(tileType[tilePositions[row][column]].getImage(), x, y , MainScene.TILE_SIZE , MainScene.TILE_SIZE);
-          column++;
-          x+= MainScene.TILE_SIZE;
-        }
-        column = 0;
-        x=0;
-        row++;
-        y += MainScene.TILE_SIZE;
-      }
+       int row = 0;
+       int column = 0;
+       int x = 0;
+       int y = 0;
+
+       while (column < MainScene.NUMBER_OF_TILE_COLUMN && row < MainScene.NUMBER_OF_TILE_ROW) {
+           int tile_number = tilePositions[column][row]; // Use tilePositions to get the tile number
+           graphicsContext.drawImage(tileType[tile_number].getImage(), x, y, MainScene.TILE_SIZE , MainScene.TILE_SIZE);
+           column++;
+           x += MainScene.TILE_SIZE;
+
+           if (column == MainScene.NUMBER_OF_TILE_COLUMN) {
+               column = 0;
+               row++;
+               x = 0;
+               y += MainScene.TILE_SIZE;
+           }
+       }
+//      while(column < tilePositions[0].length){
+//        while(row < tilePositions.length){
+//          graphicsContext.drawImage(tileType[tilePositions[row][column]].getImage(), x, y , MainScene.TILE_SIZE , MainScene.TILE_SIZE);
+//          row++;
+//          x += MainScene.TILE_SIZE;
+//        }
+//        row = 0;
+//        x = 0;
+//        column++;
+//        y += MainScene.TILE_SIZE;
+//      }
    }
 
 
    public void drawDot() {
        int dotSize = 8;
        graphicsContext.setFill(Color.YELLOW);
-       for (int x = 0; x < MainScene.NUMBER_OF_TILE_LENGTH; x++) {
-           for (int y = 0; y < MainScene.NUMBER_OF_TILE_WIDTH; y++) {
+       for (int x = 0; x < MainScene.NUMBER_OF_TILE_COLUMN; x++) {
+           for (int y = 0; y < MainScene.NUMBER_OF_TILE_ROW; y++) {
                if (mapArray2D[x][y] == 0) {
-                   int xCoordinate = y * MainScene.TILE_SIZE + (MainScene.TILE_SIZE/2) - (dotSize/2);
-                   int yCoordinate = x * MainScene.TILE_SIZE + (MainScene.TILE_SIZE/2) - (dotSize/2);
+                   int xCoordinate = x * MainScene.TILE_SIZE + (MainScene.TILE_SIZE/2) - (dotSize/2);
+                   int yCoordinate = y * MainScene.TILE_SIZE + (MainScene.TILE_SIZE/2) - (dotSize/2);
                    graphicsContext.fillOval(xCoordinate, yCoordinate, dotSize, dotSize);
                }
            }
        }
    }
-
-
-
-   public void drawPacman(Pacman pacman){
-     graphicsContext.setFill(Color.RED);
-     Position pos = pacman.getPosition();
-     int x = pos.getX(), y = pos.getY();
-     graphicsContext.fillRect(x, y, 20, 20);
-   }
-
-
 
    public void extractMapToBoard(int[][] tiles, Tile[] tileTypes) {
        for (int x = 0; x < tiles.length; x++) {

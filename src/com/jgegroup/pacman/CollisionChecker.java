@@ -10,7 +10,6 @@ public class CollisionChecker {
     }
 
     public void checkTile(Entity entity) {
-        System.out.println("Collision range is x:" + entity.collision_range.getWidth() + " y: " + entity.collision_range.getHeight());
         int entity_left_worldX = entity.x + (int) entity.collision_range.getX();
         int entity_right_worldX = entity.x + (int) entity.collision_range.getX() + (int) entity.collision_range.getWidth();
         int entity_top_worldY = entity.y + (int) entity.collision_range.getY();
@@ -22,6 +21,9 @@ public class CollisionChecker {
         int entity_bottom_row = entity_bottom_worldY / MainScene.TILE_SIZE;
 
         int tileNum1, tileNum2;
+
+
+        System.out.println("current at col:" + entity_left_col + " row: " + entity_top_row);
 
         switch (entity.direction) {
             case "up":
