@@ -7,7 +7,6 @@ import com.jgegroup.pacman.objects.characters.Pacman;
 import com.jgegroup.pacman.objects.characters.Pink;
 import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
 import com.jgegroup.pacman.objects.immovable.consumables.Dot;
-import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Test;
 
 

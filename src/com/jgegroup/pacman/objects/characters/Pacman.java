@@ -2,12 +2,10 @@ package com.jgegroup.pacman.objects.characters;
 
 import com.jgegroup.pacman.objects.Enums;
 import com.jgegroup.pacman.objects.MovingObject;
-import com.jgegroup.pacman.objects.Position;
-import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.consumables.*;
 import com.jgegroup.pacman.objects.Enums.*;
+import javafx.scene.image.Image;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -29,6 +27,10 @@ public class Pacman extends MovingObject {
     private Queue<Consumable> consumed;
     // move container for next move
     public Direction nextMove;
+
+    public Image[] images;
+
+
     public Pacman(int spawnX, int spawnY, int superLength) {
         super(spawnX, spawnY);
         this.spawnX = spawnX;
@@ -144,11 +146,12 @@ public class Pacman extends MovingObject {
     /** @@Authors: Noah / Jesse
      * Examines the collision between Pacman and Object and handles it
      * @Throws no exceptions
-     * @Returns 1 if a collision happens, 0 else
+     * @Returns 100 if a collision with a ghost happened and this was not super, 101 if it was super, 102 if the
+     * other object was a pacman, 99 for all other cases
      * Takes in a GameObject as a parameter
     */
     @Override
-    protected int collisionHandle(MovingObject object) {
+    public int collisionHandle(MovingObject object) {
         if (object instanceof Ghost) {
             if (!this.isSuper()) {
                 return 100;
@@ -163,5 +166,11 @@ public class Pacman extends MovingObject {
         * */
         return 99;
     }
+
+//    public void loadImages() {
+//        images = new Image[4];
+//        images[0] = new Image("characters/Pacman.png");
+//        images[1] =
+//    }
 
 }
