@@ -1,5 +1,4 @@
 package com.jgegroup.pacman;
-import com.jgegroup.pacman.GameScene;
 import javafx.stage.Stage;
 import javafx.application.Application;
 import javafx.scene.image.Image;
@@ -17,10 +16,10 @@ public class Main extends Application {
     stage.getIcons().add(icon);
 
 
-    GameScene gameScene = new GameScene();
-    stage.setScene(gameScene.gameScene);
+    MainScene mainScene = new MainScene();
+    stage.setScene(mainScene.mainScene);
     stage.setResizable(true);
     stage.show();
-    gameScene.startThread();
+    mainScene.startThread();
   }
 }
