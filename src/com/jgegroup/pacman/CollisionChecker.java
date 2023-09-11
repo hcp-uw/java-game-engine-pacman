@@ -4,13 +4,13 @@ import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
 
 public class CollisionChecker {
-    MainScene scene;
+    private MainScene scene;
 
     public CollisionChecker(MainScene scene) {
         this.scene = scene;
     }
 
-    public void checkTile(Entity entity) {
+    public boolean checkTile(Entity entity) {
         int entity_left_worldX = entity.x + (int) entity.collision_range.getX();
         int entity_right_worldX = entity.x + (int) entity.collision_range.getX() + (int) entity.collision_range.getWidth();
         int entity_top_worldY = entity.y + (int) entity.collision_range.getY();
@@ -32,7 +32,7 @@ public class CollisionChecker {
                 tileNum1 = scene.map.mapArray2D[entity_left_col][entity_top_row];
                 tileNum2 = scene.map.mapArray2D[entity_right_col][entity_top_row];
                 if (scene.map.tileType[tileNum1].getCollisionOn() || scene.map.tileType[tileNum2].getCollisionOn()) {
-                    entity.collisionDetected = true;
+                    return true;
                 }
                 break;
             case DOWN:
@@ -40,7 +40,7 @@ public class CollisionChecker {
                 tileNum1 = scene.map.mapArray2D[entity_left_col][entity_bottom_row];
                 tileNum2 = scene.map.mapArray2D[entity_right_col][entity_bottom_row];
                 if (scene.map.tileType[tileNum1].getCollisionOn() || scene.map.tileType[tileNum2].getCollisionOn()) {
-                    entity.collisionDetected = true;
+                    return true;
                 }
                 break;
             case LEFT:
@@ -48,7 +48,7 @@ public class CollisionChecker {
                 tileNum1 = scene.map.mapArray2D[entity_left_col][entity_top_row];
                 tileNum2 = scene.map.mapArray2D[entity_left_col][entity_bottom_row];
                 if (scene.map.tileType[tileNum1].getCollisionOn() || scene.map.tileType[tileNum2].getCollisionOn()) {
-                    entity.collisionDetected = true;
+                    return true;
                 }
                 break;
             case RIGHT:
@@ -56,13 +56,12 @@ public class CollisionChecker {
                 tileNum1 = scene.map.mapArray2D[entity_right_col][entity_top_row];
                 tileNum2 = scene.map.mapArray2D[entity_right_col][entity_bottom_row];
                 if (scene.map.tileType[tileNum1].getCollisionOn() || scene.map.tileType[tileNum2].getCollisionOn()) {
-                    entity.collisionDetected = true;
+                    return true;
                 }
                 break;
             default:
                 break;
         }
-
-
+        return false;
     }
 }

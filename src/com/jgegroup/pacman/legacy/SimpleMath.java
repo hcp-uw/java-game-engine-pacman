@@ -1,6 +1,6 @@
-package com.jgegroup.pacman;
+package com.jgegroup.pacman.legacy;
 
-import com.jgegroup.pacman.objects.Position;
+import com.jgegroup.pacman.legacy.Position;
 
 public class SimpleMath {
     /** @@Author: Noah

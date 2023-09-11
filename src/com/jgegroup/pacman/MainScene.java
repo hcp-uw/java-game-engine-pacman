@@ -13,13 +13,13 @@ import java.util.Random;
 
 
 public class MainScene implements Runnable{
-  Thread gameThread;
-  static long FPS = 60;
-  static long targetTimePerFrame = 1000000000 / FPS;
-  static long lastTime = System.nanoTime();
-  static long currentTime;
-  static long elapsedTime;
-  static long sleepTime;
+  private Thread gameThread;
+  private static long FPS = 60;
+  private static long targetTimePerFrame = 1000000000 / FPS;
+  private static long lastTime = System.nanoTime();
+  private static long currentTime;
+  private static long elapsedTime;
+  private static long sleepTime;
   public static final int TILE_SIZE = 32;
   public static final int NUMBER_OF_TILE_COLUMN = 20;
   public static final int NUMBER_OF_TILE_ROW = 28;
@@ -27,31 +27,31 @@ public class MainScene implements Runnable{
   public static final int RESOLUTION_HORIZONTAL = TILE_SIZE * NUMBER_OF_TILE_COLUMN; // 768
   public static final int RESOLUTION_VERTICAL = TILE_SIZE * NUMBER_OF_TILE_ROW; // 1024
   public CollisionChecker collisionChecker = new CollisionChecker(this);
-  javafx.scene.Scene mainScene;
+  public javafx.scene.Scene mainScene;
 
-  StackPane stackPane;
+  private StackPane stackPane;
 
-  Canvas Layer_Lower;
-  Canvas Layer_Upper;
-  Canvas[] Layer_Ghosts;
+  private Canvas Layer_Lower;
+  private Canvas Layer_Upper;
+  private Canvas[] Layer_Ghosts;
 
-  static GraphicsContext Layer_Lower_PaintComponent;
-  static GraphicsContext Layer_Upper_PaintComponent;
-  static GraphicsContext[] Layer_Ghost_PaintComponents;
+  private static GraphicsContext Layer_Lower_PaintComponent;
+  private static GraphicsContext Layer_Upper_PaintComponent;
+  private static GraphicsContext[] Layer_Ghost_PaintComponents;
   public  Map map;
   private KeyHandler keyHandler;
-  Pac pac;
-  Ghost[] ghosts;
-  Color[] colors = {Color.RED, Color.BLUE, Color.BROWN, Color.GAINSBORO, Color.GHOSTWHITE};
+  private Pac pac;
+  private Ghost[] ghosts;
+  private Color[] colors = {Color.RED, Color.BLUE, Color.BROWN, Color.GAINSBORO, Color.GHOSTWHITE};
 
 
 
-  static int x = 300;
-  static int y = 300;
-  static int c = 0;
+  private static int x = 300;
+  private static int y = 300;
+  private static int c = 0;
 
 
-  MainScene(int ghostNumber) {
+  public MainScene(int ghostNumber) {
     map = Map.getMapInstance();
     map.createMap();
     stackPane = new StackPane();
@@ -76,7 +76,7 @@ public class MainScene implements Runnable{
     Random r = new Random();
     for (int i = 0; i < ghostNumber; i++) {
       int color_num = Math.abs(r.nextInt()) % colors.length;
-      ghosts[i] = new Ghost(10, this, colors[color_num]);
+      ghosts[i] = new Ghost(10, this, colors[color_num], pac);
     }
   }
 

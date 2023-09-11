@@ -1,4 +1,4 @@
-package com.jgegroup.pacman.objects;
+package com.jgegroup.pacman.legacy;
 public class Position {
     private int x;
     private int y;

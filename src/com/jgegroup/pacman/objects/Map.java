@@ -1,9 +1,10 @@
 package com.jgegroup.pacman.objects;
 
 import com.jgegroup.pacman.MainScene;
+import com.jgegroup.pacman.legacy.Position;
 import com.jgegroup.pacman.objects.immovable.Path;
 import com.jgegroup.pacman.objects.immovable.Tile;
-import com.jgegroup.pacman.objects.consumables.Consumable;
+//import com.jgegroup.pacman.legacy.consumables.Consumable;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +18,7 @@ import javafx.scene.image.Image;
 
 public class Map {
     private  HashMap<Position, Tile> tiles;
-    private  HashMap<Position, Consumable> objects;
+//    private  HashMap<Position, Consumable> objects;
     private static Map Map_Instance;
     private Position pacman_spawn_position = new Position(40, 40);
     private Position ghost_spawn_position = new Position(40, 900);
@@ -29,7 +30,7 @@ public class Map {
 
 
     public Map(/*Map Context*/){
-        objects = new HashMap<>();
+//        objects = new HashMap<>();
         tiles = new HashMap<>();
     }
 
@@ -62,7 +63,7 @@ public class Map {
      * @return map instance objects
      * Takes in nothing
      */
-    public HashMap<Position, Consumable> getObjects() { return Map_Instance.objects; }
+//    public HashMap<Position, Consumable> getObjects() { return Map_Instance.objects; }
 
 
     public void createMap(/*Map Context*/) {

@@ -10,8 +10,8 @@ import javafx.scene.shape.Rectangle;
 
 public class Pac extends Entity {
 
-    MainScene mainScene;
-    KeyHandler keyHandler;
+    private MainScene mainScene;
+    private KeyHandler keyHandler;
 
     public Pac(MainScene mainScene, KeyHandler keyHandler) {
         this.mainScene = mainScene;
@@ -24,7 +24,6 @@ public class Pac extends Entity {
         x = 300;
         y = 200;
         speed = 1;
-        direction = "not moving";
         collision_range = new Rectangle(0, 0, 31, 31);
         direction = Direction.STOP;
     }
@@ -36,8 +35,7 @@ public class Pac extends Entity {
     public void update() {
         setDefaultDirection(keyHandler.movement);
 
-        collisionDetected = false;
-        mainScene.collisionChecker.checkTile(this);
+        collisionDetected = mainScene.collisionChecker.checkTile(this);
         updatePosition(collisionDetected);
         System.out.println("Entity collisionDetected is " + collisionDetected);
     }
@@ -50,18 +48,18 @@ public class Pac extends Entity {
 //        painter.drawImage(up, x, y, 400, 100);
     }
 
-    public void setDefaultDirection(String key) {
+    public void setDefaultDirection(Direction key) {
         switch (key) {
-            case "up":
+            case UP:
                 direction = Direction.UP;
                 break;
-            case "down":
+            case DOWN:
                 direction = Direction.DOWN;
                 break;
-            case "left":
+            case LEFT:
                 direction = Direction.LEFT;
                 break;
-            case "right":
+            case RIGHT:
                 direction = Direction.RIGHT;
                 break;
             default:
@@ -72,33 +70,22 @@ public class Pac extends Entity {
     public void updatePosition(boolean collisionDetected) {
         if (collisionDetected == false) {
             switch (keyHandler.movement) {
-                case "up":
+                case UP:
                     this.y -= speed;
                     break;
-                case "down":
+                case DOWN:
                     this.y += speed;
                     break;
-                case "left":
+                case LEFT:
                     this.x -= speed;
                     break;
-                case "right":
+                case RIGHT:
                     this.x += speed;
                     break;
                 default:
                     break;
             }
         }
-    }
-
-    public void redraw(GraphicsContext painter) {
-        painter.clearRect(x - 5 , y - 5, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL );
-        painter.setFill(Color.WHITE);
-        painter.fillRect(x, y, mainScene.TILE_SIZE, mainScene.TILE_SIZE);
-//        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
-//        painter.drawImage(up, x, y, 400, 100);
-
-
-
     }
 
 

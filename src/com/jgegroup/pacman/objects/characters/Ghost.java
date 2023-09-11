@@ -28,6 +28,9 @@ public class Ghost extends Entity // implements GhostMovement
     // State container for the spook timer
     private int spookState;
 
+    private Pac pacman;
+    private GhostMovement gm;
+
 //
 //    public Ghost(int x, int y, int spookLength, Color color) {
 //        super(x,y);
@@ -43,11 +46,13 @@ public class Ghost extends Entity // implements GhostMovement
 
     MainScene mainScene;
     long lastTime;
-    public Ghost(int spookLength, MainScene mainScene, Color color) {
+    public Ghost(int spookLength, MainScene mainScene, Color color, Pac pacman) {
         this.spookLength = spookLength;
         this.mainScene = mainScene;
         lastTime = System.currentTimeMillis();
         this.base_color = color;
+        this.pacman = pacman;
+        gm = new GhostMovement(color, pacman);
         setDefaultValues();
         setGhostImage();
     }
@@ -55,7 +60,7 @@ public class Ghost extends Entity // implements GhostMovement
     public void setDefaultValues() {
         x = 300;
         y = 200;
-        collision_range = new Rectangle(0, 0, 28, 28);
+        collision_range = new Rectangle(0, 0, 31, 31);
 
         speed = 1;
         direction = Direction.STOP;
@@ -67,59 +72,64 @@ public class Ghost extends Entity // implements GhostMovement
 
     public void update() {
 
-        collisionDetected = false;
-        mainScene.collisionChecker.checkTile(this);
+        collisionDetected = mainScene.collisionChecker.checkTile(this);
 
-            Direction nextMove = Direction.STOP;
-            // figure out what ghost will do here
-            {
-                if (System.currentTimeMillis() - lastTime > 1000) {
-                    lastTime = System.currentTimeMillis();
-                    Random random = new Random();
-                    int decision = random.nextInt(128);
-                    decision = decision % 4;
-                    switch (decision) {
-                        case 0:
-                            nextMove = Direction.LEFT;
-                            break;
-                        case 1:
-                            nextMove = Direction.RIGHT;
-                            break;
-                        case 2:
-                            nextMove = Direction.DOWN;
-                            break;
-                        case 3:
-                            nextMove = Direction.UP;
-                            break;
-                        default:
-                            nextMove = Direction.STOP;
-                            break;
-                    }
-                }
-
-            }
-            if (nextMove != Direction.STOP) {
-                direction = nextMove;
-            }
-            if (!collisionDetected) {
-                switch (direction) {
-                    case UP:
-                        this.y -= speed;
-                        break;
-                    case DOWN:
-                        this.y += speed;
-                        break;
-                    case LEFT:
-                        this.x -= speed;
-                        break;
-                    case RIGHT:
-                        this.x += speed;
-                        break;
-                    default:
-                        break;
-                }
+        Direction nextMove = Direction.STOP;
+        // figure out what ghost will do here
+        {
+            if (System.currentTimeMillis() - lastTime > 1000) {
+                lastTime = System.currentTimeMillis();
+                nextMove = gm.nextMove(x, y);
+//                Random random = new Random();
+//                int decision = random.nextInt(128);
+//                decision = decision % 4;
+//                switch (decision) {
+//                    case 0:
+//                        nextMove = Direction.LEFT;
+//                        break;
+//                    case 1:
+//                        nextMove = Direction.RIGHT;
+//                        break;
+//                    case 2:
+//                        nextMove = Direction.DOWN;
+//                        break;
+//                    case 3:
+//                        nextMove = Direction.UP;
+//                        break;
+//                    default:
+//                        nextMove = Direction.STOP;
+//                        break;
+//                }
             }
 
+        }
+        if (nextMove != Direction.STOP) {
+            direction = nextMove;
+        }
+        if (!collisionDetected) {
+            switch (direction) {
+                case UP:
+                    this.y -= speed;
+                    break;
+                case DOWN:
+                    this.y += speed;
+                    break;
+                case LEFT:
+                    this.x -= speed;
+                    break;
+                case RIGHT:
+                    this.x += speed;
+                    break;
+                default:
+                    break;
+            }
+        }
+        collisionDetected = mainScene.collisionChecker.checkTile(this);
+        if (collisionDetected) {
+            Random random = new Random();
+            int decision = random.nextInt(128) % 4;
+            direction = Direction.values()[decision];
+        }
 
         System.out.println("Entity collisionDetected is " + collisionDetected);
     }
@@ -130,9 +140,6 @@ public class Ghost extends Entity // implements GhostMovement
         painter.fillRect(x, y, mainScene.TILE_SIZE, mainScene.TILE_SIZE);
 //        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
 //        painter.drawImage(up, x, y, 400, 100);
-
-
-
     }
 
 
