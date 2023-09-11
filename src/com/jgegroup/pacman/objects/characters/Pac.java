@@ -5,7 +5,6 @@ import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -24,18 +23,35 @@ public class Pac extends Entity {
     public void setDefaultValues() {
         x = 300;
         y = 200;
-        collision_range = new Rectangle(0, 0, 25, 25);
-
         speed = 1;
+        direction = "not moving";
+        collision_range = new Rectangle(0, 0, 31, 31);
         direction = Direction.STOP;
     }
 
     public void setPacImage() {
-//        up = new Image("characters/Pacman Up.png");
+        // TODO
     }
 
     public void update() {
-        switch (keyHandler.movement) {
+        setDefaultDirection(keyHandler.movement);
+
+        collisionDetected = false;
+        mainScene.collisionChecker.checkTile(this);
+        updatePosition(collisionDetected);
+        System.out.println("Entity collisionDetected is " + collisionDetected);
+    }
+
+    public void redraw(GraphicsContext painter) {
+        painter.clearRect(x - 5 , y - 5, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL );
+        painter.setFill(Color.WHITE);
+        painter.fillRect(x, y, 32, 32);
+//        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
+//        painter.drawImage(up, x, y, 400, 100);
+    }
+
+    public void setDefaultDirection(String key) {
+        switch (key) {
             case "up":
                 direction = Direction.UP;
                 break;
@@ -51,9 +67,9 @@ public class Pac extends Entity {
             default:
                 break;
         }
-        collisionDetected = false;
-        mainScene.collisionChecker.checkTile(this);
+    }
 
+    public void updatePosition(boolean collisionDetected) {
         if (collisionDetected == false) {
             switch (keyHandler.movement) {
                 case "up":
@@ -72,7 +88,6 @@ public class Pac extends Entity {
                     break;
             }
         }
-        System.out.println("Entity collisionDetected is " + collisionDetected);
     }
 
     public void redraw(GraphicsContext painter) {
