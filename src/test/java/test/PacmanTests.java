@@ -5,8 +5,8 @@ import com.jgegroup.pacman.objects.Position;
 import com.jgegroup.pacman.objects.characters.Ghost;
 import com.jgegroup.pacman.objects.characters.Pacman;
 import com.jgegroup.pacman.objects.characters.Pink;
-import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
-import com.jgegroup.pacman.objects.immovable.consumables.Dot;
+import com.jgegroup.pacman.objects.consumables.Consumable;
+import com.jgegroup.pacman.objects.consumables.Dot;
 import org.junit.jupiter.api.Test;
 
 

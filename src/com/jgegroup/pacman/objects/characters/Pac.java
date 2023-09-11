@@ -3,6 +3,7 @@ package com.jgegroup.pacman.objects.characters;
 import com.jgegroup.pacman.KeyHandler;
 import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.objects.Entity;
+import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -23,29 +24,29 @@ public class Pac extends Entity {
     public void setDefaultValues() {
         x = 300;
         y = 200;
-        collision_range = new Rectangle(0, 0, 10, 10);
+        collision_range = new Rectangle(0, 0, 25, 25);
 
         speed = 1;
-        direction = "not moving";
+        direction = Direction.STOP;
     }
 
     public void setPacImage() {
-        up = new Image("characters/Pacman Up.png");
+//        up = new Image("characters/Pacman Up.png");
     }
 
     public void update() {
         switch (keyHandler.movement) {
             case "up":
-                direction = "up";
+                direction = Direction.UP;
                 break;
             case "down":
-                direction = "down";
+                direction = Direction.DOWN;
                 break;
             case "left":
-                direction = "left";
+                direction = Direction.LEFT;
                 break;
             case "right":
-                direction = "right";
+                direction = Direction.RIGHT;
                 break;
             default:
                 break;
@@ -77,7 +78,7 @@ public class Pac extends Entity {
     public void redraw(GraphicsContext painter) {
         painter.clearRect(x - 5 , y - 5, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL );
         painter.setFill(Color.WHITE);
-        painter.fillRect(x, y, 20, 20);
+        painter.fillRect(x, y, mainScene.TILE_SIZE, mainScene.TILE_SIZE);
 //        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
 //        painter.drawImage(up, x, y, 400, 100);
 

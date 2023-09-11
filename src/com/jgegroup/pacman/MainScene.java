@@ -2,11 +2,14 @@ package com.jgegroup.pacman;
 
 import com.jgegroup.pacman.objects.Map;
 
+import com.jgegroup.pacman.objects.characters.Ghost;
 import com.jgegroup.pacman.objects.characters.Pac;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
+
+import java.util.Random;
 
 
 public class MainScene implements Runnable{
@@ -30,12 +33,16 @@ public class MainScene implements Runnable{
 
   Canvas Layer_Lower;
   Canvas Layer_Upper;
+  Canvas[] Layer_Ghosts;
 
   static GraphicsContext Layer_Lower_PaintComponent;
   static GraphicsContext Layer_Upper_PaintComponent;
+  static GraphicsContext[] Layer_Ghost_PaintComponents;
   public  Map map;
   private KeyHandler keyHandler;
   Pac pac;
+  Ghost[] ghosts;
+  Color[] colors = {Color.RED, Color.BLUE, Color.BROWN, Color.GAINSBORO, Color.GHOSTWHITE};
 
 
 
@@ -44,7 +51,7 @@ public class MainScene implements Runnable{
   static int c = 0;
 
 
-  MainScene() {
+  MainScene(int ghostNumber) {
     map = Map.getMapInstance();
     map.createMap();
     stackPane = new StackPane();
@@ -54,10 +61,23 @@ public class MainScene implements Runnable{
     Layer_Lower_PaintComponent = Layer_Lower.getGraphicsContext2D();
     Layer_Upper_PaintComponent = Layer_Upper.getGraphicsContext2D();
     addCanvasLayer(Layer_Lower);
+    Layer_Ghosts = new Canvas[ghostNumber];
+    Layer_Ghost_PaintComponents = new GraphicsContext[ghostNumber];
+    for (int i=0;i<ghostNumber;i++) {
+      Layer_Ghosts[i] = new Canvas(RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL);
+      Layer_Ghost_PaintComponents[i] = Layer_Ghosts[i].getGraphicsContext2D();
+      addCanvasLayer(Layer_Ghosts[i]);
+    }
     addCanvasLayer(Layer_Upper);
     keyHandler = new KeyHandler();
     mainScene.setOnKeyPressed(keyHandler);
     pac = new Pac(this, keyHandler);
+    ghosts = new Ghost[ghostNumber];
+    Random r = new Random();
+    for (int i = 0; i < ghostNumber; i++) {
+      int color_num = Math.abs(r.nextInt()) % colors.length;
+      ghosts[i] = new Ghost(10, this, colors[color_num]);
+    }
   }
 
   // startThread() -> run -> update() & redraw()
@@ -84,9 +104,15 @@ public class MainScene implements Runnable{
 
   public void update() {
     pac.update();
+    for (Ghost g : ghosts) {
+      g.update();
+    }
   }
   public void redraw() {
     pac.redraw(Layer_Upper_PaintComponent);
+    for (int i = 0; i < ghosts.length; i++) {
+      ghosts[i].redraw(Layer_Ghost_PaintComponents[i]);
+    }
   }
 
 

@@ -1,9 +1,9 @@
 package com.jgegroup.pacman.objects;
 
-import com.jgegroup.pacman.Main;
 import com.jgegroup.pacman.MainScene;
-import com.jgegroup.pacman.objects.immovable.*;
-import com.jgegroup.pacman.objects.immovable.consumables.Consumable;
+import com.jgegroup.pacman.objects.immovable.Path;
+import com.jgegroup.pacman.objects.immovable.Tile;
+import com.jgegroup.pacman.objects.consumables.Consumable;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,7 +13,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import com.jgegroup.pacman.objects.characters.Pacman;
 
 
 public class Map {

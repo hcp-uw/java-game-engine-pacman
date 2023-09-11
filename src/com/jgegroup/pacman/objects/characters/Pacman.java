@@ -1,8 +1,8 @@
 package com.jgegroup.pacman.objects.characters;
 
+import com.jgegroup.pacman.objects.consumables.Consumable;
 import com.jgegroup.pacman.objects.Enums;
 import com.jgegroup.pacman.objects.MovingObject;
-import com.jgegroup.pacman.objects.immovable.consumables.*;
 import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.image.Image;
 
@@ -143,6 +143,11 @@ public class Pacman extends MovingObject {
      */
     public int getLives() { return this.lives; }
 
+    @Override
+    protected int collisionHandle(MovingObject object) {
+        return 0;
+    }
+
     /** @@Authors: Noah / Jesse
      * Examines the collision between Pacman and Object and handles it
      * @Throws no exceptions
@@ -150,22 +155,22 @@ public class Pacman extends MovingObject {
      * other object was a pacman, 99 for all other cases
      * Takes in a GameObject as a parameter
     */
-    @Override
-    public int collisionHandle(MovingObject object) {
-        if (object instanceof Ghost) {
-            if (!this.isSuper()) {
-                return 100;
-            }
-            return 101;
-        } else if (object instanceof Pacman) {
-            return 102;
-        }
-        /*For Pacman, collisionHandle should be and only should be execute
-        * when they hit a ghost or a pacman
-        * Collision with immovable will be handled separately
-        * */
-        return 99;
-    }
+//    @Override
+//    public int collisionHandle(MovingObject object) {
+//        if (object instanceof Ghost) {
+//            if (!this.isSuper()) {
+//                return 100;
+//            }
+//            return 101;
+//        } else if (object instanceof Pacman) {
+//            return 102;
+//        }
+//        /*For Pacman, collisionHandle should be and only should be execute
+//        * when they hit a ghost or a pacman
+//        * Collision with immovable will be handled separately
+//        * */
+//        return 99;
+//    }
 
 //    public void loadImages() {
 //        images = new Image[4];

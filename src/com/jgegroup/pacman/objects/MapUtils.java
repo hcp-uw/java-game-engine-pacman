@@ -3,7 +3,6 @@ package com.jgegroup.pacman.objects;
 import java.util.HashMap;
 import com.jgegroup.pacman.objects.Enums.*;
 import com.jgegroup.pacman.objects.characters.Pacman;
-import com.jgegroup.pacman.objects.immovable.Path;
 import com.jgegroup.pacman.objects.immovable.Tile;
 import com.jgegroup.pacman.objects.immovable.Wall;
 

@@ -1,6 +1,7 @@
 package com.jgegroup.pacman;
 
 import com.jgegroup.pacman.objects.Entity;
+import com.jgegroup.pacman.objects.Enums.*;
 
 public class CollisionChecker {
     MainScene scene;
@@ -26,7 +27,7 @@ public class CollisionChecker {
         System.out.println("current at col:" + entity_left_col + " row: " + entity_top_row);
 
         switch (entity.direction) {
-            case "up":
+            case UP:
                 entity_top_row = (entity_top_worldY - entity.speed) / MainScene.TILE_SIZE;
                 tileNum1 = scene.map.mapArray2D[entity_left_col][entity_top_row];
                 tileNum2 = scene.map.mapArray2D[entity_right_col][entity_top_row];
@@ -34,7 +35,7 @@ public class CollisionChecker {
                     entity.collisionDetected = true;
                 }
                 break;
-            case "down":
+            case DOWN:
                 entity_bottom_row = (entity_bottom_worldY + entity.speed) / MainScene.TILE_SIZE;
                 tileNum1 = scene.map.mapArray2D[entity_left_col][entity_bottom_row];
                 tileNum2 = scene.map.mapArray2D[entity_right_col][entity_bottom_row];
@@ -42,7 +43,7 @@ public class CollisionChecker {
                     entity.collisionDetected = true;
                 }
                 break;
-            case "left":
+            case LEFT:
                 entity_left_col = (entity_left_worldX - entity.speed) / MainScene.TILE_SIZE;
                 tileNum1 = scene.map.mapArray2D[entity_left_col][entity_top_row];
                 tileNum2 = scene.map.mapArray2D[entity_left_col][entity_bottom_row];
@@ -50,7 +51,7 @@ public class CollisionChecker {
                     entity.collisionDetected = true;
                 }
                 break;
-            case "right":
+            case RIGHT:
                 entity_right_col = (entity_right_worldX + entity.speed) / MainScene.TILE_SIZE;
                 tileNum1 = scene.map.mapArray2D[entity_right_col][entity_top_row];
                 tileNum2 = scene.map.mapArray2D[entity_right_col][entity_bottom_row];

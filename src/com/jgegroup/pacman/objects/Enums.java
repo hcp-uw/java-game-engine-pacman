@@ -9,11 +9,7 @@ public class Enums {
         UP, DOWN, LEFT, RIGHT, STOP
     }
 
-    /** @Author: Noah
-     *  Enum for updates
-     *  Contains update types
-     */
     public enum Update {
-        DEATH, MOVED, SUPER, SCARED, EATEN, RESPAWN
+
     }
 }

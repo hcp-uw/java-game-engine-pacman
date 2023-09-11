@@ -1,4 +1,4 @@
-package com.jgegroup.pacman.objects.immovable.consumables;
+package com.jgegroup.pacman.objects.consumables;
 
 import com.jgegroup.pacman.objects.Position;
 
