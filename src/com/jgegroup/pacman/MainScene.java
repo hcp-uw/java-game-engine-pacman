@@ -109,6 +109,7 @@ public class MainScene implements Runnable{
     }
   }
   public void redraw() {
+    map.drawDot(Layer_Lower_PaintComponent);
     pac.redraw(Layer_Upper_PaintComponent);
     for (int i = 0; i < ghosts.length; i++) {
       ghosts[i].redraw(Layer_Ghost_PaintComponents[i]);

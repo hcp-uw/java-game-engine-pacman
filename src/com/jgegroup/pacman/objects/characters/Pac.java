@@ -37,16 +37,16 @@ public class Pac extends Entity {
 
         collisionDetected = mainScene.collisionChecker.checkTile(this);
         updatePosition(collisionDetected);
-        System.out.println("Entity collisionDetected is " + collisionDetected);
     }
 
-    public void redraw(GraphicsContext painter) {
-        painter.clearRect(x - 5 , y - 5, mainScene.RESOLUTION_VERTICAL, mainScene.RESOLUTION_HORIZONTAL );
-        painter.setFill(Color.WHITE);
-        painter.fillRect(x, y, 32, 32);
-//        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
-//        painter.drawImage(up, x, y, 400, 100);
+  public void redraw(GraphicsContext painter) {
+    if (painter != null) {
+      painter.clearRect(x - 5, y - 5, mainScene.RESOLUTION_VERTICAL, mainScene.RESOLUTION_HORIZONTAL);
+      painter.setFill(Color.WHITE);
+      painter.fillRect(x, y, 32, 32);
     }
+  }
+
 
     public void setDefaultDirection(Direction key) {
         switch (key) {

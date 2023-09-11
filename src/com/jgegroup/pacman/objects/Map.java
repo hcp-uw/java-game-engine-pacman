@@ -5,6 +5,7 @@ import com.jgegroup.pacman.legacy.Position;
 import com.jgegroup.pacman.objects.immovable.Path;
 import com.jgegroup.pacman.objects.immovable.Tile;
 //import com.jgegroup.pacman.legacy.consumables.Consumable;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -70,13 +71,13 @@ public class Map {
         loadTileImage(tileType);
         getMap(mapArray2D);
         drawMap(tileType, mapArray2D);
-        drawDot();
+        //drawDot();
         extractMapToBoard(mapArray2D, tileType);
     }
 
     public  void loadTileImage(Tile[] tile) {
       Image floor = new Image("tiles/floor.png");
-      tile[0]  = new Path(floor);
+      tile[0]  = new Tile(floor);
       tile[0].setCollisionOn(false);
 
       Image wall = new Image("tiles/wall.png");
@@ -171,19 +172,20 @@ public class Map {
    }
 
 
-   public void drawDot() {
-       int dotSize = 8;
-       graphicsContext.setFill(Color.YELLOW);
-       for (int x = 0; x < MainScene.NUMBER_OF_TILE_COLUMN; x++) {
-           for (int y = 0; y < MainScene.NUMBER_OF_TILE_ROW; y++) {
-               if (mapArray2D[x][y] == 0) {
-                   int xCoordinate = x * MainScene.TILE_SIZE + (MainScene.TILE_SIZE/2) - (dotSize/2);
-                   int yCoordinate = y * MainScene.TILE_SIZE + (MainScene.TILE_SIZE/2) - (dotSize/2);
-                   graphicsContext.fillOval(xCoordinate, yCoordinate, dotSize, dotSize);
-               }
-           }
-       }
-   }
+  public void drawDot(GraphicsContext graphicsContext) {
+    int dotSize = 8;
+    graphicsContext.setFill(Color.YELLOW);
+    for (int x = 0; x < MainScene.NUMBER_OF_TILE_COLUMN; x++) {
+      for (int y = 0; y < MainScene.NUMBER_OF_TILE_ROW; y++) {
+        if (mapArray2D[x][y] == 0) {
+          int xCoordinate = x * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize / 2);
+          int yCoordinate = y * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize / 2);
+          graphicsContext.fillOval(xCoordinate, yCoordinate, dotSize, dotSize);
+        }
+      }
+    }
+  }
+
 
    public void extractMapToBoard(int[][] tiles, Tile[] tileTypes) {
        for (int x = 0; x < tiles.length; x++) {
