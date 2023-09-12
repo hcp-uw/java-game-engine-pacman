@@ -4,6 +4,7 @@ import com.jgegroup.pacman.objects.Map;
 
 import com.jgegroup.pacman.objects.characters.Ghost;
 import com.jgegroup.pacman.objects.characters.Pac;
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -109,11 +110,19 @@ public class MainScene implements Runnable{
     }
   }
   public void redraw() {
-    map.drawDot(Layer_Lower_PaintComponent);
-    pac.redraw(Layer_Upper_PaintComponent);
-    for (int i = 0; i < ghosts.length; i++) {
-      ghosts[i].redraw(Layer_Ghost_PaintComponents[i]);
-    }
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        map.drawDot(Layer_Lower_PaintComponent);
+        pac.redraw(Layer_Upper_PaintComponent);
+        for (int i = 0; i < ghosts.length; i++) {
+          ghosts[i].redraw(Layer_Ghost_PaintComponents[i]);
+
+
+
+        }
+      }
+    });
   }
 
 

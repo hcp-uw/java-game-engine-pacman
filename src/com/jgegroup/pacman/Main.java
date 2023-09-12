@@ -16,7 +16,7 @@ public class Main extends Application {
     stage.getIcons().add(icon);
 
 
-    MainScene mainScene = new MainScene(0);
+    MainScene mainScene = new MainScene(4);
     stage.setScene(mainScene.mainScene);
     stage.setResizable(true);
     stage.show();
