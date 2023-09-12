@@ -4,6 +4,7 @@ import com.jgegroup.pacman.KeyHandler;
 import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -33,8 +34,8 @@ public class Pac extends Entity {
     }
 
     public void update() {
+        eatDot();
         setDefaultDirection(keyHandler.movement);
-
         collisionDetected = mainScene.collisionChecker.checkTile(this);
         updatePosition(collisionDetected);
     }
@@ -45,6 +46,15 @@ public class Pac extends Entity {
       painter.setFill(Color.WHITE);
       painter.fillRect(x, y, 32, 32);
     }
+  }
+
+  public void eatDot() {
+      int current_column = x / MainScene.TILE_SIZE;
+      int current_row = y / MainScene.TILE_SIZE;
+
+      if (mainScene.map.mapArray2D[current_column][current_row] == 0) {
+        mainScene.map.mapArray2D[current_column][current_row] = 2;
+      }
   }
 
 

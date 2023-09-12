@@ -26,7 +26,7 @@ public class Map {
 
     private  Canvas canvas = new Canvas(MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
-    public Tile[] tileType = new Tile[2]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
+    public Tile[] tileType = new Tile[3]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
     public  int[][] mapArray2D = new int[MainScene.NUMBER_OF_TILE_COLUMN][MainScene.NUMBER_OF_TILE_ROW];
 
 
@@ -68,21 +68,22 @@ public class Map {
 
 
     public void createMap(/*Map Context*/) {
-        loadTileImage(tileType);
-        getMap(mapArray2D);
-        drawMap(tileType, mapArray2D);
-        //drawDot();
+        loadTileImage();
+        getMap();
         extractMapToBoard(mapArray2D, tileType);
     }
 
-    public  void loadTileImage(Tile[] tile) {
+    public  void loadTileImage() {
       Image floor = new Image("tiles/floor.png");
-      tile[0]  = new Tile(floor);
-      tile[0].setCollisionOn(false);
+      tileType[0]  = new Tile(floor);
+      tileType[0].setCollisionOn(false);
 
       Image wall = new Image("tiles/wall.png");
-      tile[1] = new Tile(wall);
-      tile[1].setCollisionOn(true);
+      tileType[1] = new Tile(wall);
+      tileType[1].setCollisionOn(true);
+
+      tileType[2] = new Tile(floor);
+      tileType[2].setCollisionOn(false);
    }
 
 
@@ -94,7 +95,7 @@ public class Map {
    * @write tile position to 2D array.
    * Takes in tile positions
    */
-   public void getMap(int[][] tiles) {
+   public void getMap() {
      try {
        InputStream is = getClass().getResourceAsStream("/maps/map1.txt");
        BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -107,23 +108,12 @@ public class Map {
            while (column < MainScene.NUMBER_OF_TILE_COLUMN) {
                String numbers[] = mapLine.split(" ");
                int num = Integer.parseInt(numbers[column]);
-               tiles[column][row] = num;
+               mapArray2D[column][row] = num;
                column++;
            }
            column = 0;
            row++;
        }
-
-
-//         String mapLine = br.readLine();
-//         while (row < MainScene.NUMBER_OF_TILE_ROW) {
-//           String numbers[] = mapLine.split(" "); // ["n"] from n n n
-//           int num = Integer.parseInt(numbers[row]); // ["1"] --> to integer
-//           tiles[column][row] = num;
-//           row++;
-//         }
-//         row = 0;
-//         column++;
        br.close();
      } catch (Exception e) {
          System.err.println("Error occurred while reading in the map file");
@@ -139,14 +129,14 @@ public class Map {
    * @return nothing
    * Takes in tile types and tile positions
    */
-   public void drawMap(Tile[] tileType, int[][] tilePositions){
+   public void drawMap(){
        int row = 0;
        int column = 0;
        int x = 0;
        int y = 0;
 
        while (column < MainScene.NUMBER_OF_TILE_COLUMN && row < MainScene.NUMBER_OF_TILE_ROW) {
-           int tile_number = tilePositions[column][row]; // Use tilePositions to get the tile number
+           int tile_number = mapArray2D[column][row]; // Use tilePositions to get the tile number
            graphicsContext.drawImage(tileType[tile_number].getImage(), x, y, MainScene.TILE_SIZE , MainScene.TILE_SIZE);
            column++;
            x += MainScene.TILE_SIZE;
@@ -158,21 +148,10 @@ public class Map {
                y += MainScene.TILE_SIZE;
            }
        }
-//      while(column < tilePositions[0].length){
-//        while(row < tilePositions.length){
-//          graphicsContext.drawImage(tileType[tilePositions[row][column]].getImage(), x, y , MainScene.TILE_SIZE , MainScene.TILE_SIZE);
-//          row++;
-//          x += MainScene.TILE_SIZE;
-//        }
-//        row = 0;
-//        x = 0;
-//        column++;
-//        y += MainScene.TILE_SIZE;
-//      }
    }
 
 
-  public void drawDot(GraphicsContext graphicsContext) {
+  public void drawDot() {
     int dotSize = 8;
     graphicsContext.setFill(Color.YELLOW);
     for (int x = 0; x < MainScene.NUMBER_OF_TILE_COLUMN; x++) {

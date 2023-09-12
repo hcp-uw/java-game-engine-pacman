@@ -113,12 +113,11 @@ public class MainScene implements Runnable{
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
-        map.drawDot(Layer_Lower_PaintComponent);
+        map.drawMap();
+        map.drawDot();
         pac.redraw(Layer_Upper_PaintComponent);
         for (int i = 0; i < ghosts.length; i++) {
           ghosts[i].redraw(Layer_Ghost_PaintComponents[i]);
-
-
 
         }
       }
