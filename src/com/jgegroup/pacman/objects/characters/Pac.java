@@ -4,7 +4,6 @@ import com.jgegroup.pacman.KeyHandler;
 import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
-import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -37,9 +36,8 @@ public class Pac extends Entity {
     public void update() {
         eatDot();
         setNewDirection(keyHandler.movement);
-        System.out.println("Current dir: " + direction + " next dir: " + newDirection);
         setCurrentDirection(newDirection);
-        collisionDetected = mainScene.collisionChecker.checkTile(this);
+        collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
         updatePosition(collisionDetected);
     }
 
@@ -80,7 +78,7 @@ public class Pac extends Entity {
         }
     }
     public void setCurrentDirection(Direction newDirection) {
-      if (!mainScene.collisionChecker.checkNewDirection(this)) {
+      if (!mainScene.collisionChecker.isValidDirection(this, newDirection)) {
         direction = newDirection;
       }
     }

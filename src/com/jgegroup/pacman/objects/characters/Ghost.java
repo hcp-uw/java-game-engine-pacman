@@ -3,13 +3,11 @@ package com.jgegroup.pacman.objects.characters;
 
 import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.objects.Entity;
-import com.jgegroup.pacman.objects.immovable.Tile;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.shape.Rectangle;
 
-import java.util.HashMap;
 import java.util.Random;
 
 
@@ -72,7 +70,7 @@ public class Ghost extends Entity // implements GhostMovement
 
     public void update() {
 
-        collisionDetected = mainScene.collisionChecker.checkTile(this);
+        collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
 
         Direction nextMove = Direction.STOP;
         // figure out what ghost will do here
@@ -124,7 +122,7 @@ public class Ghost extends Entity // implements GhostMovement
                     break;
             }
         }
-        collisionDetected = mainScene.collisionChecker.checkTile(this);
+        collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
         if (collisionDetected) {
             Random random = new Random();
             int decision = random.nextInt(128) % 4;
