@@ -6,6 +6,7 @@ import com.jgegroup.pacman.objects.Enums.*;
 
 public class Entity {
     public int x, y;
+    public Direction newDirection;
     public Direction direction = Direction.STOP;
     public int speed;
     public Image up, down, left, right;

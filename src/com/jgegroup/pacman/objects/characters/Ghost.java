@@ -130,8 +130,6 @@ public class Ghost extends Entity // implements GhostMovement
             int decision = random.nextInt(128) % 4;
             direction = Direction.values()[decision];
         }
-
-        System.out.println("Entity collisionDetected is " + collisionDetected);
     }
 
     public void redraw(GraphicsContext painter) {

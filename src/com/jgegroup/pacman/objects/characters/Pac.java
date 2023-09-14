@@ -22,11 +22,12 @@ public class Pac extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 300;
-        y = 200;
+        x = 32;
+        y = 32;
         speed = 1;
         collision_range = new Rectangle(0, 0, 31, 31);
         direction = Direction.STOP;
+        newDirection = Direction.STOP;
     }
 
     public void setPacImage() {
@@ -35,7 +36,9 @@ public class Pac extends Entity {
 
     public void update() {
         eatDot();
-        setDefaultDirection(keyHandler.movement);
+        setNewDirection(keyHandler.movement);
+        System.out.println("Current dir: " + direction + " next dir: " + newDirection);
+        setCurrentDirection(newDirection);
         collisionDetected = mainScene.collisionChecker.checkTile(this);
         updatePosition(collisionDetected);
     }
@@ -58,28 +61,33 @@ public class Pac extends Entity {
   }
 
 
-    public void setDefaultDirection(Direction key) {
+    public void setNewDirection(Direction key) {
         switch (key) {
             case UP:
-                direction = Direction.UP;
+                newDirection = Direction.UP;
                 break;
             case DOWN:
-                direction = Direction.DOWN;
+                newDirection = Direction.DOWN;
                 break;
             case LEFT:
-                direction = Direction.LEFT;
+                newDirection = Direction.LEFT;
                 break;
             case RIGHT:
-                direction = Direction.RIGHT;
+                newDirection = Direction.RIGHT;
                 break;
             default:
                 break;
         }
     }
+    public void setCurrentDirection(Direction newDirection) {
+      if (!mainScene.collisionChecker.checkNewDirection(this)) {
+        direction = newDirection;
+      }
+    }
 
     public void updatePosition(boolean collisionDetected) {
-        if (collisionDetected == false) {
-            switch (keyHandler.movement) {
+        if (!collisionDetected) {
+            switch (direction) {
                 case UP:
                     this.y -= speed;
                     break;
@@ -97,7 +105,4 @@ public class Pac extends Entity {
             }
         }
     }
-
-
-
 }
