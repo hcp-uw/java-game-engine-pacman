@@ -21,9 +21,6 @@ public class Map {
     private  HashMap<Position, Tile> tiles;
 //    private  HashMap<Position, Consumable> objects;
     private static Map Map_Instance;
-    private Position pacman_spawn_position = new Position(40, 40);
-    private Position ghost_spawn_position = new Position(40, 900);
-
     private  Canvas canvas = new Canvas(MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
     public Tile[] tileType = new Tile[3]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
@@ -176,12 +173,5 @@ public class Map {
        }
    }
 
-   public Position getPacmanSpawn() {
-       return pacman_spawn_position;
-   }
-
-   public Position getGhostSpawn() {
-       return ghost_spawn_position;
-   }
 }
 
