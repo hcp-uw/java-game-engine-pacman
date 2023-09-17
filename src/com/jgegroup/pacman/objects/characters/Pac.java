@@ -5,6 +5,7 @@ import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -30,22 +31,22 @@ public class Pac extends Entity {
     }
 
     public void setPacImage() {
-        // TODO
+        right = new Image("characters/pac_right1.png");
     }
 
     public void update() {
-        eatDot();
         setNewDirection(keyHandler.movement);
         setCurrentDirection(newDirection);
         collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
         updatePosition(collisionDetected);
+        eatDot();
     }
 
   public void redraw(GraphicsContext painter) {
     if (painter != null) {
       painter.clearRect(x - 5, y - 5, mainScene.RESOLUTION_VERTICAL, mainScene.RESOLUTION_HORIZONTAL);
       painter.setFill(Color.WHITE);
-      painter.fillRect(x, y, 32, 32);
+      painter.drawImage(right, x, y, 32, 32);
     }
   }
 
