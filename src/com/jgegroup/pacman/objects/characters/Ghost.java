@@ -2,6 +2,7 @@ package com.jgegroup.pacman.objects.characters;
 
 
 import com.jgegroup.pacman.MainScene;
+import com.jgegroup.pacman.PathFinder;
 import com.jgegroup.pacman.objects.Entity;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -42,8 +43,10 @@ public class Ghost extends Entity // implements GhostMovement
 
 
 
-    MainScene mainScene;
-    long lastTime;
+    private MainScene mainScene;
+    private long lastTime;
+    private long moveCounter = 0;
+    private PathFinder pf;
     public Ghost(int spookLength, MainScene mainScene, Color color, Pac pacman) {
         this.spookLength = spookLength;
         this.mainScene = mainScene;
@@ -51,13 +54,14 @@ public class Ghost extends Entity // implements GhostMovement
         this.base_color = color;
         this.pacman = pacman;
         gm = new GhostMovement(color, pacman);
+        pf = new PathFinder(mainScene.map);
         setDefaultValues();
         setGhostImage();
     }
 
     public void setDefaultValues() {
-        x = 300;
-        y = 200;
+        x = 32 * 18;
+        y = 32 * 19;
         collision_range = new Rectangle(0, 0, 31, 31);
 
         speed = 1;
@@ -71,39 +75,43 @@ public class Ghost extends Entity // implements GhostMovement
     public void update() {
 
         collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
+        if (moveCounter % MainScene.TILE_SIZE == 0 && !collisionDetected)
+            direction = pf.chase(this.x, this.y, pacman.x, pacman.y);
+        moveCounter++;
+        System.out.println("collided: " + collisionDetected);
+        System.out.println("Direction: " + direction);
 
-        Direction nextMove = Direction.STOP;
         // figure out what ghost will do here
-        {
-            if (System.currentTimeMillis() - lastTime > 1000) {
-                lastTime = System.currentTimeMillis();
-                nextMove = gm.nextMove(x, y);
-//                Random random = new Random();
-//                int decision = random.nextInt(128);
-//                decision = decision % 4;
-//                switch (decision) {
-//                    case 0:
-//                        nextMove = Direction.LEFT;
-//                        break;
-//                    case 1:
-//                        nextMove = Direction.RIGHT;
-//                        break;
-//                    case 2:
-//                        nextMove = Direction.DOWN;
-//                        break;
-//                    case 3:
-//                        nextMove = Direction.UP;
-//                        break;
-//                    default:
-//                        nextMove = Direction.STOP;
-//                        break;
-//                }
-            }
-
-        }
-        if (nextMove != Direction.STOP) {
-            direction = nextMove;
-        }
+//        {
+//            if (System.currentTimeMillis() - lastTime > 1000) {
+//                lastTime = System.currentTimeMillis();
+//                nextMove = gm.nextMove(x, y);
+////                Random random = new Random();
+////                int decision = random.nextInt(128);
+////                decision = decision % 4;
+////                switch (decision) {
+////                    case 0:
+////                        nextMove = Direction.LEFT;
+////                        break;
+////                    case 1:
+////                        nextMove = Direction.RIGHT;
+////                        break;
+////                    case 2:
+////                        nextMove = Direction.DOWN;
+////                        break;
+////                    case 3:
+////                        nextMove = Direction.UP;
+////                        break;
+////                    default:
+////                        nextMove = Direction.STOP;
+////                        break;
+////                }
+//            }
+//
+//        }
+//        if (nextMove != Direction.STOP) {
+//            direction = nextMove;
+//        }
         if (!collisionDetected) {
             switch (direction) {
                 case UP:
@@ -122,12 +130,9 @@ public class Ghost extends Entity // implements GhostMovement
                     break;
             }
         }
-        collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
-        if (collisionDetected) {
-            Random random = new Random();
-            int decision = random.nextInt(128) % 4;
-            direction = Direction.values()[decision];
-        }
+        // possible solution to fix ghost have seizure
+        // return list instead of Direction, check each one if its
+        // valid, take the valid one
     }
 
     public void redraw(GraphicsContext painter) {

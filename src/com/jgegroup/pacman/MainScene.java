@@ -27,7 +27,7 @@ public class MainScene implements Runnable{
 
   public static final int RESOLUTION_HORIZONTAL = TILE_SIZE * NUMBER_OF_TILE_COLUMN; // 768
   public static final int RESOLUTION_VERTICAL = TILE_SIZE * NUMBER_OF_TILE_ROW; // 1024
-  public CollisionChecker collisionChecker = new CollisionChecker(this);
+  public CollisionChecker collisionChecker;
   public javafx.scene.Scene mainScene;
 
   private StackPane stackPane;
@@ -55,6 +55,7 @@ public class MainScene implements Runnable{
   public MainScene(int ghostNumber) {
     map = Map.getMapInstance();
     map.createMap();
+    collisionChecker = new CollisionChecker(map);
     stackPane = new StackPane();
     mainScene = new javafx.scene.Scene(stackPane, RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL, Color.BLACK);
     Layer_Lower = map.getCanvas() ;
