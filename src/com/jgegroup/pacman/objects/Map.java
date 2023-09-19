@@ -24,7 +24,7 @@ public class Map {
     private  Canvas canvas = new Canvas(MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
     public Tile[] tileType = new Tile[3]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
-    public  int[][] mapArray2D = new int[MainScene.NUMBER_OF_TILE_COLUMN][MainScene.NUMBER_OF_TILE_ROW];
+    public int[][] mapArray2D = new int[MainScene.NUMBER_OF_TILE_COLUMN][MainScene.NUMBER_OF_TILE_ROW];
 
 
     public Map(/*Map Context*/){
@@ -70,7 +70,7 @@ public class Map {
         extractMapToBoard(mapArray2D, tileType);
     }
 
-    public  void loadTileImage() {
+    public void loadTileImage() {
       Image floor = new Image("tiles/floor.png");
       tileType[0]  = new Tile(floor);
       tileType[0].setCollisionOn(false);

@@ -9,7 +9,9 @@ import javafx.scene.paint.Color;
 import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.shape.Rectangle;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 
 // Note: Death and respawning will be handled by the game cycle by the reassignment of the ghost to
@@ -28,7 +30,6 @@ public class Ghost extends Entity // implements GhostMovement
     private int spookState;
 
     private Pac pacman;
-    private GhostMovement gm;
 
 //
 //    public Ghost(int x, int y, int spookLength, Color color) {
@@ -52,8 +53,8 @@ public class Ghost extends Entity // implements GhostMovement
         this.mainScene = mainScene;
         lastTime = System.currentTimeMillis();
         this.base_color = color;
+        this.current_color = color;
         this.pacman = pacman;
-        gm = new GhostMovement(color, pacman);
         pf = new PathFinder(mainScene.map);
         setDefaultValues();
         setGhostImage();
@@ -61,7 +62,7 @@ public class Ghost extends Entity // implements GhostMovement
 
     public void setDefaultValues() {
         x = 32 * 18;
-        y = 32 * 19;
+        y = 32 * 18;
         collision_range = new Rectangle(0, 0, 31, 31);
 
         speed = 1;
@@ -75,43 +76,27 @@ public class Ghost extends Entity // implements GhostMovement
     public void update() {
 
         collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
-        if (moveCounter % MainScene.TILE_SIZE == 0 && !collisionDetected)
-            direction = pf.chase(this.x, this.y, pacman.x, pacman.y);
+        Set<Direction> restrictions = new HashSet<>();
+        if (direction.equals(Direction.DOWN)) {
+            restrictions.add(Direction.UP);
+        } else if (direction.equals(Direction.UP)) {
+            restrictions.add(Direction.DOWN);
+        } else if (direction.equals(Direction.RIGHT)) {
+            restrictions.add(Direction.LEFT);
+        } else if (direction.equals(Direction.LEFT)) {
+            restrictions.add(Direction.RIGHT);
+        }
+        if (moveCounter == 32) {
+            direction = pf.chase(this.x, this.y, pacman.x, pacman.y, restrictions);
+            collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
+            while (collisionDetected) {
+                restrictions.add(direction);
+                direction = pf.chase(this.x, this.y, pacman.x, pacman.y, restrictions);
+                collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
+            }
+            moveCounter = 0;
+        }
         moveCounter++;
-        System.out.println("collided: " + collisionDetected);
-        System.out.println("Direction: " + direction);
-
-        // figure out what ghost will do here
-//        {
-//            if (System.currentTimeMillis() - lastTime > 1000) {
-//                lastTime = System.currentTimeMillis();
-//                nextMove = gm.nextMove(x, y);
-////                Random random = new Random();
-////                int decision = random.nextInt(128);
-////                decision = decision % 4;
-////                switch (decision) {
-////                    case 0:
-////                        nextMove = Direction.LEFT;
-////                        break;
-////                    case 1:
-////                        nextMove = Direction.RIGHT;
-////                        break;
-////                    case 2:
-////                        nextMove = Direction.DOWN;
-////                        break;
-////                    case 3:
-////                        nextMove = Direction.UP;
-////                        break;
-////                    default:
-////                        nextMove = Direction.STOP;
-////                        break;
-////                }
-//            }
-//
-//        }
-//        if (nextMove != Direction.STOP) {
-//            direction = nextMove;
-//        }
         if (!collisionDetected) {
             switch (direction) {
                 case UP:
@@ -130,19 +115,40 @@ public class Ghost extends Entity // implements GhostMovement
                     break;
             }
         }
-        // possible solution to fix ghost have seizure
-        // return list instead of Direction, check each one if its
-        // valid, take the valid one
     }
 
     public void redraw(GraphicsContext painter) {
         painter.clearRect(x - 5, y - 5, MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL);
-        painter.setFill(base_color);
+        painter.setFill(current_color);
         painter.fillRect(x, y, mainScene.TILE_SIZE, mainScene.TILE_SIZE);
 //        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
 //        painter.drawImage(up, x, y, 400, 100);
     }
 
+    public boolean pacmanCollision() {
+        int pacman_min_x = pacman.x, pacman_min_y = pacman.y;
+        Rectangle pacman_collision_range = pacman.collision_range;
+
+        int pacman_max_x = pacman_min_x + (int) pacman_collision_range.getWidth();
+        int pacman_max_y = pacman_min_y + (int) pacman_collision_range.getHeight();
+
+        int ghost_min_x = this.x, ghost_min_y = this.y;
+        Rectangle ghost_collision_range = this.collision_range;
+
+        int ghost_max_x = ghost_min_x + (int) ghost_collision_range.getWidth();
+        int ghost_max_y = ghost_min_y + (int) ghost_collision_range.getHeight();
+
+        // max > min
+
+        if (ghost_max_x - pacman_min_x >= 0 && ghost_max_x - pacman_min_x <= 64
+            && ghost_max_y - pacman_min_y <= 64 && ghost_max_y - pacman_min_y >= 0) {
+            this.current_color = Color.PURPLE;
+            return true;
+        }
+        this.current_color = base_color;
+        return false;
+
+    }
 
 
     /** @@Authors: Noah / Nikola

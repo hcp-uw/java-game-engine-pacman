@@ -57,6 +57,8 @@ public class CollisionChecker {
           return true;
         }
         break;
+      case STOP:
+
       default:
         break;
     }
