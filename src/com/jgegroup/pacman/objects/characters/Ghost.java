@@ -78,6 +78,7 @@ public class Ghost extends Entity // implements GhostMovement
         if (moveCounter % MainScene.TILE_SIZE == 0 && !collisionDetected)
             direction = pf.chase(this.x, this.y, pacman.x, pacman.y);
         moveCounter++;
+        eatPacman();
         System.out.println("collided: " + collisionDetected);
         System.out.println("Direction: " + direction);
 
@@ -264,5 +265,15 @@ public class Ghost extends Entity // implements GhostMovement
 //        // this is when you do not have any overlap that could be possible in any direction
 //        return 0;
 //    }
+           public void eatPacman() {
+             int pacmanX = pacman.x + (int) pacman.collision_range.getX();
+             int pacmanY = pacman.y + (int) pacman.collision_range.getY();
 
+             int ghostX = x + (int) collision_range.getX();
+             int ghostY = y + (int) collision_range.getY();
+
+             if (pacmanX == ghostX && pacmanY == ghostY) {
+               pacman.collidedGhost = true;
+             }
+           }
 }

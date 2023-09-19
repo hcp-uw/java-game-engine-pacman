@@ -13,6 +13,10 @@ public class Pac extends Entity {
 
     private MainScene mainScene;
     private KeyHandler keyHandler;
+    int life;
+    int point;
+    boolean collidedGhost;
+
 
     public Pac(MainScene mainScene, KeyHandler keyHandler) {
         this.mainScene = mainScene;
@@ -22,12 +26,15 @@ public class Pac extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 32;
-        y = 32;
-        speed = 1;
-        collision_range = new Rectangle(0, 0, 31, 31);
-        direction = Direction.STOP;
-        newDirection = Direction.STOP;
+      life = 3;
+      point = 0;
+      collidedGhost = false;
+      x = 32;
+      y = 32;
+      speed = 1;
+      collision_range = new Rectangle(0, 0, 31, 31);
+      direction = Direction.STOP;
+      newDirection = Direction.STOP;
     }
 
     public void setPacImage() {
@@ -40,6 +47,7 @@ public class Pac extends Entity {
         collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
         updatePosition(collisionDetected);
         eatDot();
+        checkGhostCollision();
     }
 
   public void redraw(GraphicsContext painter) {
@@ -58,7 +66,18 @@ public class Pac extends Entity {
         mainScene.map.mapArray2D[current_column][current_row] = 2;
       }
   }
+  public void checkGhostCollision () {
+      if (collidedGhost) {
+        respawn();
+        life--;
+        collidedGhost = false;
+      }
+  }
 
+    public void respawn() {
+      x = 32;
+      y = 32;
+    }
 
     public void setNewDirection(Direction key) {
         switch (key) {
@@ -83,6 +102,7 @@ public class Pac extends Entity {
         direction = newDirection;
       }
     }
+
 
     public void updatePosition(boolean collisionDetected) {
         if (!collisionDetected) {

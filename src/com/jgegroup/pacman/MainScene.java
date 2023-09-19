@@ -106,9 +106,10 @@ public class MainScene implements Runnable{
 
   public void update() {
     pac.update();
-    for (Ghost g : ghosts) {
-      g.update();
+    for (Ghost ghost : ghosts) {
+      ghost.update();
     }
+
   }
   public void redraw() {
     Platform.runLater(new Runnable() {
