@@ -1,6 +1,7 @@
 package com.jgegroup.pacman;
 
 import com.jgegroup.pacman.objects.Enums.*;
+import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -10,6 +11,8 @@ public class KeyHandler implements javafx.event.EventHandler<javafx.scene.input.
     public void handle(javafx.scene.input.KeyEvent  keyEvent) {
         KeyCode keyCode = keyEvent.getCode();
         switch (keyCode) {
+            case ESCAPE:
+              Platform.exit();
             case UP:
                 this.movement = Direction.UP;
                 break;

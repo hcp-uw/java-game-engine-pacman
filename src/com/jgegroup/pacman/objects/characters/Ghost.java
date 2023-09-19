@@ -30,6 +30,7 @@ public class Ghost extends Entity // implements GhostMovement
     private int spookState;
 
     private Pac pacman;
+    private GhostMovement gm;
 
 //
 //    public Ghost(int x, int y, int spookLength, Color color) {
@@ -53,8 +54,8 @@ public class Ghost extends Entity // implements GhostMovement
         this.mainScene = mainScene;
         lastTime = System.currentTimeMillis();
         this.base_color = color;
-        this.current_color = color;
         this.pacman = pacman;
+        gm = new GhostMovement(color, pacman);
         pf = new PathFinder(mainScene.map);
         setDefaultValues();
         setGhostImage();
@@ -62,7 +63,7 @@ public class Ghost extends Entity // implements GhostMovement
 
     public void setDefaultValues() {
         x = 32 * 18;
-        y = 32 * 18;
+        y = 32 * 19;
         collision_range = new Rectangle(0, 0, 31, 31);
 
         speed = 1;
@@ -97,6 +98,41 @@ public class Ghost extends Entity // implements GhostMovement
             moveCounter = 0;
         }
         moveCounter++;
+        eatPacman();
+        System.out.println("collided: " + collisionDetected);
+        System.out.println("Direction: " + direction);
+
+        // figure out what ghost will do here
+//        {
+//            if (System.currentTimeMillis() - lastTime > 1000) {
+//                lastTime = System.currentTimeMillis();
+//                nextMove = gm.nextMove(x, y);
+////                Random random = new Random();
+////                int decision = random.nextInt(128);
+////                decision = decision % 4;
+////                switch (decision) {
+////                    case 0:
+////                        nextMove = Direction.LEFT;
+////                        break;
+////                    case 1:
+////                        nextMove = Direction.RIGHT;
+////                        break;
+////                    case 2:
+////                        nextMove = Direction.DOWN;
+////                        break;
+////                    case 3:
+////                        nextMove = Direction.UP;
+////                        break;
+////                    default:
+////                        nextMove = Direction.STOP;
+////                        break;
+////                }
+//            }
+//
+//        }
+//        if (nextMove != Direction.STOP) {
+//            direction = nextMove;
+//        }
         if (!collisionDetected) {
             switch (direction) {
                 case UP:
@@ -119,7 +155,7 @@ public class Ghost extends Entity // implements GhostMovement
 
     public void redraw(GraphicsContext painter) {
         painter.clearRect(x - 5, y - 5, MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL);
-        painter.setFill(current_color);
+        painter.setFill(base_color);
         painter.fillRect(x, y, mainScene.TILE_SIZE, mainScene.TILE_SIZE);
 //        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
 //        painter.drawImage(up, x, y, 400, 100);
@@ -270,5 +306,15 @@ public class Ghost extends Entity // implements GhostMovement
 //        // this is when you do not have any overlap that could be possible in any direction
 //        return 0;
 //    }
+           public void eatPacman() {
+             int pacmanX = pacman.x + (int) pacman.collision_range.getX();
+             int pacmanY = pacman.y + (int) pacman.collision_range.getY();
 
+             int ghostX = x + (int) collision_range.getX();
+             int ghostY = y + (int) collision_range.getY();
+
+             if (pacmanX == ghostX && pacmanY == ghostY) {
+               pacman.collidedGhost = true;
+             }
+           }
 }
