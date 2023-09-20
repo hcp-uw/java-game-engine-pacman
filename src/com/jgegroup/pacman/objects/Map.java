@@ -23,7 +23,7 @@ public class Map {
     private static Map Map_Instance;
     private  Canvas canvas = new Canvas(MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
-    public Tile[] tileType = new Tile[3]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
+    public Tile[] tileType = new Tile[4]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
     public int[][] mapArray2D = new int[MainScene.NUMBER_OF_TILE_COLUMN][MainScene.NUMBER_OF_TILE_ROW];
 
 
@@ -81,6 +81,9 @@ public class Map {
 
       tileType[2] = new Tile(floor);
       tileType[2].setCollisionOn(false);
+
+      tileType[3] = new Tile(floor);
+      tileType[3].setCollisionOn(false);
    }
 
 
@@ -157,6 +160,10 @@ public class Map {
           int xCoordinate = x * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize / 2);
           int yCoordinate = y * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize / 2);
           graphicsContext.fillOval(xCoordinate, yCoordinate, dotSize, dotSize);
+        } else if (mapArray2D[x][y] == 3) {
+            int xCoordinate = x * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize);
+            int yCoordinate = y * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize);
+            graphicsContext.fillOval(xCoordinate, yCoordinate, dotSize * 2, dotSize * 2);
         }
       }
     }

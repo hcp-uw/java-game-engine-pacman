@@ -9,7 +9,7 @@ public class Entity {
     public Direction newDirection;
     public Direction direction = Direction.STOP;
     public int speed;
-    public Image up, down, left, right;
+    public Image[] images;
 
     public boolean collisionDetected;
     public Rectangle collision_range;

@@ -1,6 +1,7 @@
 package com.jgegroup.pacman.objects.characters;
 
 import com.jgegroup.pacman.KeyHandler;
+import com.jgegroup.pacman.Main;
 import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
@@ -16,29 +17,43 @@ public class Pac extends Entity {
     int life;
     int point;
     boolean collidedGhost;
+    int Super;
+    int superLength;
+    int pacman_spawn_x;
+    int pacman_spawn_y;
+    long last_time;
 
 
     public Pac(MainScene mainScene, KeyHandler keyHandler) {
         this.mainScene = mainScene;
         this.keyHandler = keyHandler;
-        setDefaultValues();
+        last_time = System.currentTimeMillis();
+        Super = -1;
+        superLength = 20;
+        initialize();
         setPacImage();
     }
 
-    public void setDefaultValues() {
+    public void initialize() {
       life = 3;
       point = 0;
       collidedGhost = false;
-      x = 32;
-      y = 32;
+      pacman_spawn_x = MainScene.TILE_SIZE;
+      pacman_spawn_y = MainScene.TILE_SIZE;
+      x = pacman_spawn_x;
+      y = pacman_spawn_y;
       speed = 1;
-      collision_range = new Rectangle(0, 0, 31, 31);
+      images = new Image[4];
+      collision_range = new Rectangle(0, 0, MainScene.TILE_SIZE - 1, MainScene.TILE_SIZE - 1);
       direction = Direction.STOP;
       newDirection = Direction.STOP;
     }
 
     public void setPacImage() {
-        right = new Image("characters/pac_right1.png");
+        images[0] = new Image("characters/pac_up1.png");
+        images[1] = new Image("characters/pac_down1.png");
+        images[2] = new Image("characters/pac_left1.png");
+        images[3] = new Image("characters/pac_right1.png");
     }
 
     public void update() {
@@ -47,36 +62,101 @@ public class Pac extends Entity {
         collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
         updatePosition(collisionDetected);
         eatDot();
-        checkGhostCollision();
+        if (System.currentTimeMillis() >= last_time + 1000) {
+            updateSuper();
+            last_time = System.currentTimeMillis();
+        }
     }
 
   public void redraw(GraphicsContext painter) {
     if (painter != null) {
-      painter.clearRect(x - 5, y - 5, mainScene.RESOLUTION_VERTICAL, mainScene.RESOLUTION_HORIZONTAL);
+      painter.clearRect(0, 0, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
       painter.setFill(Color.WHITE);
-      painter.drawImage(right, x, y, 32, 32);
+      painter.drawImage(images[
+              this.direction == Direction.UP ? 0 :
+              this.direction == Direction.DOWN ? 1 :
+              this.direction == Direction.LEFT ? 2 :
+              this.direction == Direction.RIGHT ? 3 : 0
+              ], x, y, MainScene.TILE_SIZE, MainScene.TILE_SIZE);
     }
   }
 
   public void eatDot() {
       int current_column = x / MainScene.TILE_SIZE;
       int current_row = y / MainScene.TILE_SIZE;
-
       if (mainScene.map.mapArray2D[current_column][current_row] == 0) {
         mainScene.map.mapArray2D[current_column][current_row] = 2;
+        point += 10;
+      } else if (mainScene.map.mapArray2D[current_column][current_row] == 3) {
+          mainScene.map.mapArray2D[current_column][current_row] = 2;
+          point += 100;
+          setSuper();
       }
   }
-  public void checkGhostCollision () {
-      if (collidedGhost) {
-        respawn();
-        life--;
-        collidedGhost = false;
-      }
-  }
+    /** @@Author Noah
+     * Sets the super state
+     * @Throws no exceptions
+     * @Returns nothing
+     * Takes in no parameters
+     **/
+    public void setSuper() {
+        setSuper(superLength);
+    }
 
-    public void respawn() {
-      x = 32;
-      y = 32;
+    public void setSuper(int length) {
+        if (this.Super <= 0)
+            this.Super = length;
+        else
+            this.Super += length;
+    }
+
+    /** @@Author: Noah
+     * Updates the super state
+     * @Throws no exceptions
+     * @Returns true if the pacman is super, else false
+     * Takes in no parameters
+     **/
+    public boolean updateSuper() {
+        if (this.Super >= 0) {
+            this.Super--;
+            return true;
+        }
+        return false;
+    }
+
+    /** @@Author: Noah
+     * Checks to see if Pacman is super
+     * @Throws no exceptions
+     * @Returns true if super state container is greater than or equal to 0, else false
+     * Takes in no parameters
+     */
+    public boolean isSuper() { return this.Super >= 0; }
+
+    /** @@Author: Noah
+     * Gets the remaining super cycles
+     * Throws no exceptions
+     * @return Integer denoting how many super cycles are left
+     * Takes in no parameters
+     */
+    public int getSuper() { return this.Super; }
+
+    /** @@Author: Noah
+     * Gets num of lives left
+     * @Throws no exceptions
+     * @Returns number of lives left
+     * Takes in no parameters
+     */
+    public int getLives() { return this.life; }
+
+    public synchronized void death() {
+        spawn();
+        life--;
+        setSuper(3);
+        System.out.println("life: " + life);
+    }
+    public void spawn() {
+      x = pacman_spawn_x;
+      y = pacman_spawn_y;
     }
 
     public void setNewDirection(Direction key) {

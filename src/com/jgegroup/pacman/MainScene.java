@@ -96,7 +96,7 @@ public class MainScene implements Runnable{
   @Override
   public void run() {
 
-    while (true) {
+    while (pac.getLives() >= 0) {
       update();
       redraw();
       controlFPS();
