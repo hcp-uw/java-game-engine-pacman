@@ -35,6 +35,9 @@ public class Pac extends Entity {
     }
 
     public void initialize() {
+      setPacImage();
+      spriteImage = pacZero;
+      spriteNumber = 1;
       life = 3;
       point = 0;
       collidedGhost = false;
@@ -43,17 +46,21 @@ public class Pac extends Entity {
       x = pacman_spawn_x;
       y = pacman_spawn_y;
       speed = 1;
-      images = new Image[4];
       collision_range = new Rectangle(0, 0, MainScene.TILE_SIZE - 1, MainScene.TILE_SIZE - 1);
       direction = Direction.STOP;
       newDirection = Direction.STOP;
     }
 
     public void setPacImage() {
-        images[0] = new Image("characters/pac_up1.png");
-        images[1] = new Image("characters/pac_down1.png");
-        images[2] = new Image("characters/pac_left1.png");
-        images[3] = new Image("characters/pac_right1.png");
+      pacZero = new Image("pac/pacman_0.png");
+      up1 = new Image("pac/pacman_up1.png");
+      up2 = new Image("pac/pacman_up2.png");
+      down1 = new Image("pac/pacman_down1.png");
+      down2 = new Image("pac/pacman_down2.png");
+      left1 = new Image("pac/pacman_left1.png");
+      left2 = new Image("pac/pacman_left2.png");
+      right1 = new Image("pac/pacman_right1.png");
+      right2 = new Image("pac/pacman_right2.png");
     }
 
     public void update() {
@@ -66,18 +73,20 @@ public class Pac extends Entity {
             updateSuper();
             last_time = System.currentTimeMillis();
         }
+
+        spriteCounter++;
+        if (spriteCounter > 10) {
+          this.spriteNumber = spriteNumber == 1 ? 2: 1;
+
+          spriteCounter = 0;
+      }
     }
 
   public void redraw(GraphicsContext painter) {
     if (painter != null) {
       painter.clearRect(0, 0, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
-      painter.setFill(Color.WHITE);
-      painter.drawImage(images[
-              this.direction == Direction.UP ? 0 :
-              this.direction == Direction.DOWN ? 1 :
-              this.direction == Direction.LEFT ? 2 :
-              this.direction == Direction.RIGHT ? 3 : 0
-              ], x, y, MainScene.TILE_SIZE, MainScene.TILE_SIZE);
+      setImage();
+      painter.drawImage(spriteImage, x, y, MainScene.TILE_SIZE, MainScene.TILE_SIZE);
     }
   }
 
@@ -203,5 +212,23 @@ public class Pac extends Entity {
                     break;
             }
         }
+    }
+    public void setImage () {
+      switch (direction) {
+        case UP:
+          this.spriteImage = this.spriteNumber == 1 ? up1: up2;
+          break;
+        case DOWN:
+          this.spriteImage = this.spriteNumber == 1 ? down1: down2;
+          break;
+        case LEFT:
+          this.spriteImage = this.spriteNumber == 1 ? left1: left2;
+          break;
+        case RIGHT:
+          this.spriteImage = this.spriteNumber == 1 ? right1: right2;
+          break;
+        default:
+          break;
+      }
     }
 }
