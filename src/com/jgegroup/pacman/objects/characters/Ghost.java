@@ -5,6 +5,7 @@ import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.PathFinder;
 import com.jgegroup.pacman.objects.Entity;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.shape.Rectangle;
@@ -57,12 +58,15 @@ public class Ghost extends Entity // implements GhostMovement
         this.pacman = pacman;
         gm = new GhostMovement(color, pacman);
         pf = new PathFinder(mainScene.map);
-        setDefaultValues();
         setGhostImage();
+        setDefaultValues();
         last_time = System.currentTimeMillis();
     }
 
     public void setDefaultValues() {
+        spriteImage = up1;
+        spriteNumber = 0;
+        spriteCounter = 0;
         x = 32 * 11;
         y = 32 * 13;
         collision_range = new Rectangle(0, 0, 31, 31);
@@ -71,9 +75,6 @@ public class Ghost extends Entity // implements GhostMovement
         direction = Direction.STOP;
     }
 
-    public void setGhostImage() {
-//        up = new Image("characters/Pacman Up.png");
-    }
 
     public void update() {
 
@@ -127,12 +128,17 @@ public class Ghost extends Entity // implements GhostMovement
                     break;
             }
         }
+      spriteCounter++;
+      if (spriteCounter > 10) {
+        this.spriteNumber = spriteNumber == 1 ? 2: 1;
+        spriteCounter = 0;
+      }
     }
 
     public void redraw(GraphicsContext painter) {
         painter.clearRect(0, 0, MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL);
-        painter.setFill(current_color);
-        painter.fillRect(x, y, mainScene.TILE_SIZE, mainScene.TILE_SIZE);
+        setImage();
+        painter.drawImage(spriteImage, x, y, mainScene.TILE_SIZE, mainScene.TILE_SIZE);
 //        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
 //        painter.drawImage(up, x, y, 400, 100);
     }
@@ -157,7 +163,6 @@ public class Ghost extends Entity // implements GhostMovement
             return true;
         }
         return false;
-
     }
 
 
@@ -202,7 +207,38 @@ public class Ghost extends Entity // implements GhostMovement
      * Returns true if spookState container is greater than or equal to 0, else false
      * Takes in no paramters
     */
-    public boolean isSpooked() { return spookState >= 0; }
+    public boolean isSpooked() { return spookState >= 0;
+    }
+    public void setImage () {
+      switch (direction) {
+        case UP: this.spriteImage = this.spriteNumber == 1 ? up1: up2; break;
+          case DOWN: this.spriteImage = this.spriteNumber == 1 ? down1: down2; break;
+          case LEFT: this.spriteImage = this.spriteNumber == 1 ? left1: left2; break;
+          case RIGHT: this.spriteImage = this.spriteNumber == 1 ? right1: right2; break;
+          default: break;
+      }
+    }
+    public void setGhostImage() {
+      if (base_color.equals(Color.RED)) {
+        up1 = new Image("ghosts/red_up1.png");
+        up2 = new Image("ghosts/red_up2.png");
+        down1 = new Image("ghosts/red_down1.png");
+        down2 = new Image("ghosts/red_down2.png");
+        left1 = new Image("ghosts/red_left1.png");
+        left2 = new Image("ghosts/red_left2.png");
+        right1 = new Image("ghosts/red_right1.png");
+        right2 = new Image("ghosts/red_right2.png");
+      } else if (base_color.equals(Color.BLUE)) {
+        up1 = new Image("ghosts/blue_up1.png");
+        up2 = new Image("ghosts/blue_up2.png");
+        down1 = new Image("ghosts/blue_down1.png");
+        down2 = new Image("ghosts/blue_down2.png");
+        left1 = new Image("ghosts/blue_left1.png");
+        left2 = new Image("ghosts/blue_left2.png");
+        right1 = new Image("ghosts/blue_right1.png");
+        right2 = new Image("ghosts/blue_right2.png");
+      }
+    }
 
     /** @@Authors: Jesse / Noah / Davin
      * Determines if the object has collided with something or not
