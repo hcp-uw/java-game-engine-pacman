@@ -23,6 +23,6 @@ public class Main extends Application {
     mainScene.startThread();
 
 
-    // Comment
+    // Change git message 
   }
 }
