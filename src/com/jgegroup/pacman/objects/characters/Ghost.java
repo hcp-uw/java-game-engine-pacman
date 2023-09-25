@@ -184,7 +184,6 @@ public class Ghost extends Entity // implements GhostMovement
     }
 
     public void updateSpookedImage() {
-      System.out.println("length" + spookLength);
       System.out.println("state" + spookState);
       this.spriteImage = this.spriteNumber == 1 ? white1 : white2;
       if (spookState % 2 == 0) {

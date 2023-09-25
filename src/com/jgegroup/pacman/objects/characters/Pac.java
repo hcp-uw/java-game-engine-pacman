@@ -1,13 +1,11 @@
 package com.jgegroup.pacman.objects.characters;
 
 import com.jgegroup.pacman.KeyHandler;
-import com.jgegroup.pacman.Main;
 import com.jgegroup.pacman.MainScene;
 import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Pac extends Entity {
@@ -58,10 +56,11 @@ public class Pac extends Entity {
         collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
         updatePosition(collisionDetected);
         eatDot();
-        if (System.currentTimeMillis() >= last_time + 1000) {
-            updateSuper();
-            last_time = System.currentTimeMillis();
-        }
+        updateSuper();
+//        if (System.currentTimeMillis() >= last_time + 1000) {
+//            updateSuper();
+//            last_time = System.currentTimeMillis();
+//        }
 
         spriteCounter++;
         if (spriteCounter > 10) {
@@ -74,7 +73,7 @@ public class Pac extends Entity {
   public void redraw(GraphicsContext painter) {
     if (painter != null) {
       painter.clearRect(0, 0, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
-      setImage();
+      updateImage();
       painter.drawImage(spriteImage, x, y, MainScene.TILE_SIZE, MainScene.TILE_SIZE);
     }
   }
@@ -149,7 +148,7 @@ public class Pac extends Entity {
     public synchronized void death() {
         spawn();
         life--;
-        setSuper(3);
+        //setSuper(3);
         System.out.println("life: " + life);
     }
     public void spawn() {
@@ -202,7 +201,7 @@ public class Pac extends Entity {
             }
         }
     }
-    public void setImage () {
+    public void updateImage() {
       switch (direction) {
         case UP:
           this.spriteImage = this.spriteNumber == 1 ? up1: up2;

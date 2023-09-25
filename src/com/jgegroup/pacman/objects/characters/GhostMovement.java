@@ -30,6 +30,7 @@ public class GhostMovement {
         return Direction.STOP;
     }
 
+
     private Direction redMove(int x, int y) {
         int dx = pac.x - x;
         int dy = pac.y - y;
