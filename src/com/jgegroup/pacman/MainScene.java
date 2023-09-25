@@ -43,7 +43,7 @@ public class MainScene implements Runnable{
   private KeyHandler keyHandler;
   private Pac pac;
   private Ghost[] ghosts;
-  private Color[] colors = {Color.RED, Color.BLUE, Color.BROWN, Color.GAINSBORO, Color.GHOSTWHITE};
+  private Color[] colors = {Color.RED, Color.BLUE, Color.YELLOW, Color.PINK};
 
 
 
@@ -65,7 +65,7 @@ public class MainScene implements Runnable{
     addCanvasLayer(Layer_Lower);
     Layer_Ghosts = new Canvas[ghostNumber];
     Layer_Ghost_PaintComponents = new GraphicsContext[ghostNumber];
-    for (int i=0;i<ghostNumber;i++) {
+    for (int i=0; i<ghostNumber; i++) {
       Layer_Ghosts[i] = new Canvas(RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL);
       Layer_Ghost_PaintComponents[i] = Layer_Ghosts[i].getGraphicsContext2D();
       addCanvasLayer(Layer_Ghosts[i]);
@@ -75,10 +75,9 @@ public class MainScene implements Runnable{
     mainScene.setOnKeyPressed(keyHandler);
     pac = new Pac(this, keyHandler);
     ghosts = new Ghost[ghostNumber];
-    Random r = new Random();
+
     for (int i = 0; i < ghostNumber; i++) {
-      int color_num = Math.abs(r.nextInt()) % colors.length;
-      ghosts[i] = new Ghost(10, this, colors[color_num], pac);
+      ghosts[i] = new Ghost(10, this, colors[i], pac);
     }
   }
 

@@ -9,7 +9,7 @@ public class Entity {
     public Direction newDirection;
     public Direction direction = Direction.STOP;
     public int speed;
-    public Image pacZero,  up1, up2, down1, down2, left1, left2, right1, right2;
+    public Image pacZero,  up1, up2, down1, down2, left1, left2, right1, right2, blue1, blue2, white1, white2;
 
     public int spriteNumber;
     public int spriteCounter;
@@ -19,4 +19,5 @@ public class Entity {
 
     public boolean collisionDetected;
     public Rectangle collision_range;
+
 }

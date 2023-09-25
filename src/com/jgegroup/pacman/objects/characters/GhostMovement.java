@@ -20,9 +20,9 @@ public class GhostMovement {
             return redMove(x, y);
         } else if (color.equals(Color.BLUE)) {
             return blueMove(x, y);
-        } else if (color.equals(Color.BROWN)) {
-            return brownMove(x, y);
-        } else if (color.equals(Color.GAINSBORO)) {
+        } else if (color.equals(Color.YELLOW)) {
+            return yellowMove(x, y);
+        } else if (color.equals(Color.PINK)) {
             return gainMove(x, y);
         } else if (color.equals(Color.GHOSTWHITE)) {
             return ghostMove(x, y);
@@ -66,7 +66,7 @@ public class GhostMovement {
         return Direction.STOP;
     }
 
-    private Direction brownMove(int x, int y) {
+    private Direction yellowMove(int x, int y) {
         int dx = pac.x - x;
         int dy = pac.y - y;
         if (Math.abs(dx) > Math.abs(dy)) {

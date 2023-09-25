@@ -51,17 +51,6 @@ public class Pac extends Entity {
       newDirection = Direction.STOP;
     }
 
-    public void setPacImage() {
-      pacZero = new Image("pac/pacman_0.png");
-      up1 = new Image("pac/pacman_up1.png");
-      up2 = new Image("pac/pacman_up2.png");
-      down1 = new Image("pac/pacman_down1.png");
-      down2 = new Image("pac/pacman_down2.png");
-      left1 = new Image("pac/pacman_left1.png");
-      left2 = new Image("pac/pacman_left2.png");
-      right1 = new Image("pac/pacman_right1.png");
-      right2 = new Image("pac/pacman_right2.png");
-    }
 
     public void update() {
         setNewDirection(keyHandler.movement);
@@ -230,5 +219,16 @@ public class Pac extends Entity {
         default:
           break;
       }
+    }
+    public void setPacImage() {
+      pacZero = new Image("pac/pacman_0.png");
+      up1 = new Image("pac/pacman_up1.png");
+      up2 = new Image("pac/pacman_up2.png");
+      down1 = new Image("pac/pacman_down1.png");
+      down2 = new Image("pac/pacman_down2.png");
+      left1 = new Image("pac/pacman_left1.png");
+      left2 = new Image("pac/pacman_left2.png");
+      right1 = new Image("pac/pacman_right1.png");
+      right2 = new Image("pac/pacman_right2.png");
     }
 }

@@ -50,7 +50,7 @@ public class Ghost extends Entity // implements GhostMovement
     private long moveCounter = 0;
     private PathFinder pf;
     public Ghost(int spookLength, MainScene mainScene, Color color, Pac pacman) {
-        this.spookLength = 20;
+        this.spookLength = 5;
         this.mainScene = mainScene;
         last_time = System.currentTimeMillis();
         this.base_color = color;
@@ -59,11 +59,12 @@ public class Ghost extends Entity // implements GhostMovement
         gm = new GhostMovement(color, pacman);
         pf = new PathFinder(mainScene.map);
         setGhostImage();
-        setDefaultValues();
+        setWhiteGhostImage();
+        initialize();
         last_time = System.currentTimeMillis();
     }
 
-    public void setDefaultValues() {
+    public void initialize() {
         spriteImage = up1;
         spriteNumber = 0;
         spriteCounter = 0;
@@ -77,7 +78,6 @@ public class Ghost extends Entity // implements GhostMovement
 
 
     public void update() {
-
         collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
         Set<Direction> restrictions = new HashSet<>();
         if (direction.equals(Direction.DOWN)) {
@@ -104,6 +104,7 @@ public class Ghost extends Entity // implements GhostMovement
         moveCounter++;
         pacmanCollision();
         if (pacman.isSuper() && !isSpooked()) {
+            System.out.println("Pacman is luffy");
             setSpooked();
         }
         if (System.currentTimeMillis() >= last_time + 1000) {
@@ -137,7 +138,11 @@ public class Ghost extends Entity // implements GhostMovement
 
     public void redraw(GraphicsContext painter) {
         painter.clearRect(0, 0, MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL);
-        setImage();
+        if (isSpooked()) {
+          updateSpookedImage();
+        } else {
+          updateNormalImage();
+        }
         painter.drawImage(spriteImage, x, y, mainScene.TILE_SIZE, mainScene.TILE_SIZE);
 //        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
 //        painter.drawImage(up, x, y, 400, 100);
@@ -158,7 +163,7 @@ public class Ghost extends Entity // implements GhostMovement
             if (!pacman.isSuper()) {
                 pacman.death();
             } else {
-                this.setDefaultValues();
+                this.initialize();
             }
             return true;
         }
@@ -173,7 +178,19 @@ public class Ghost extends Entity // implements GhostMovement
      * Returns nothing
      * Takes no parameters
     */
-    public void setSpooked() { spookState += spookLength; }
+    public void setSpooked() {
+      spookState += spookLength;
+      spriteImage = white1;
+    }
+
+    public void updateSpookedImage() {
+      System.out.println("length" + spookLength);
+      System.out.println("state" + spookState);
+      this.spriteImage = this.spriteNumber == 1 ? white1 : white2;
+      if (spookState % 2 == 0) {
+        this.spriteImage = this.spriteNumber == 1 ? blue1 : blue2;
+      }
+    }
 
     /** @@Authors: Noah / Nikola
      * Updatess the spook state, if the state is even it will change the color of the ghost
@@ -184,22 +201,12 @@ public class Ghost extends Entity // implements GhostMovement
     */
     public boolean updateSpooked() {
         if (spookState >= 0) {
-            if (spookState % 2 == 0) {
-                System.out.println("Color updated");
-                if (this.current_color == Color.WHITE) {
-                    this.current_color = Color.BLUE;
-                } else {
-                    this.current_color = Color.WHITE;
-                }
-            }
             spookState--;
-            if (spookState < 0) {
-                this.current_color = base_color;
-            }
             return true;
         }
         return false;
     }
+
 
     /** @@Author: Noah
      * Checks to see if the ghost is spooked
@@ -209,7 +216,7 @@ public class Ghost extends Entity // implements GhostMovement
     */
     public boolean isSpooked() { return spookState >= 0;
     }
-    public void setImage () {
+    public void updateNormalImage() {
       switch (direction) {
         case UP: this.spriteImage = this.spriteNumber == 1 ? up1: up2; break;
           case DOWN: this.spriteImage = this.spriteNumber == 1 ? down1: down2; break;
@@ -220,6 +227,7 @@ public class Ghost extends Entity // implements GhostMovement
     }
     public void setGhostImage() {
       if (base_color.equals(Color.RED)) {
+        System.out.println("RED");
         up1 = new Image("ghosts/red_up1.png");
         up2 = new Image("ghosts/red_up2.png");
         down1 = new Image("ghosts/red_down1.png");
@@ -229,6 +237,7 @@ public class Ghost extends Entity // implements GhostMovement
         right1 = new Image("ghosts/red_right1.png");
         right2 = new Image("ghosts/red_right2.png");
       } else if (base_color.equals(Color.BLUE)) {
+        System.out.println("BLUE");
         up1 = new Image("ghosts/blue_up1.png");
         up2 = new Image("ghosts/blue_up2.png");
         down1 = new Image("ghosts/blue_down1.png");
@@ -237,7 +246,33 @@ public class Ghost extends Entity // implements GhostMovement
         left2 = new Image("ghosts/blue_left2.png");
         right1 = new Image("ghosts/blue_right1.png");
         right2 = new Image("ghosts/blue_right2.png");
+      } else if (base_color.equals(Color.YELLOW)) {
+        System.out.println("YELLOW");
+        up1 = new Image("ghosts/yellow_up1.png");
+        up2 = new Image("ghosts/yellow_up2.png");
+        down1 = new Image("ghosts/yellow_down1.png");
+        down2 = new Image("ghosts/yellow_down2.png");
+        left1 = new Image("ghosts/yellow_left1.png");
+        left2 = new Image("ghosts/yellow_left2.png");
+        right1 = new Image("ghosts/yellow_right1.png");
+        right2 = new Image("ghosts/yellow_right2.png");
+      } else if (base_color.equals(Color.PINK)) {
+        System.out.println("PINK");
+        up1 = new Image("ghosts/pink_up1.png");
+        up2 = new Image("ghosts/pink_up2.png");
+        down1 = new Image("ghosts/pink_down1.png");
+        down2 = new Image("ghosts/pink_down2.png");
+        left1 = new Image("ghosts/pink_left1.png");
+        left2 = new Image("ghosts/pink_left2.png");
+        right1 = new Image("ghosts/pink_right1.png");
+        right2 = new Image("ghosts/pink_right2.png");
       }
+    }
+    public void setWhiteGhostImage() {
+      blue1 = new Image("ghosts/spook1.png");
+      blue2 = new Image("ghosts/spook2.png");
+      white1 = new Image("ghosts/spook3.png");
+      white2 = new Image("ghosts/spook4.png");
     }
 
     /** @@Authors: Jesse / Noah / Davin
