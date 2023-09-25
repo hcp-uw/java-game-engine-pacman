@@ -39,8 +39,8 @@ public class Pac extends Entity {
       life = 3;
       point = 0;
       collidedGhost = false;
-      pacman_spawn_x = MainScene.TILE_SIZE;
-      pacman_spawn_y = MainScene.TILE_SIZE;
+      pacman_spawn_x = 32 * 13;
+      pacman_spawn_y = 32 * 15;
       x = pacman_spawn_x;
       y = pacman_spawn_y;
       speed = 1;
@@ -144,6 +144,10 @@ public class Pac extends Entity {
      * Takes in no parameters
      */
     public int getLives() { return this.life; }
+
+    public int getPoint() {
+      return point;
+    }
 
     public synchronized void death() {
         spawn();

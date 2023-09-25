@@ -2,6 +2,7 @@ package com.jgegroup.pacman;
 
 import com.jgegroup.pacman.objects.Map;
 
+import com.jgegroup.pacman.objects.UI;
 import com.jgegroup.pacman.objects.characters.Ghost;
 import com.jgegroup.pacman.objects.characters.Pac;
 import javafx.application.Platform;
@@ -14,6 +15,7 @@ import java.util.Random;
 
 
 public class MainScene implements Runnable{
+  public static boolean gameFinished;
   private Thread gameThread;
   private static long FPS = 60;
   private static long targetTimePerFrame = 1000000000 / FPS;
@@ -34,16 +36,20 @@ public class MainScene implements Runnable{
 
   private Canvas Layer_Lower;
   private Canvas Layer_Upper;
+  private Canvas Layer_UI;
   private Canvas[] Layer_Ghosts;
 
   private static GraphicsContext Layer_Lower_PaintComponent;
   private static GraphicsContext Layer_Upper_PaintComponent;
+  private static GraphicsContext Layer_UI_PaintComponent;
   private static GraphicsContext[] Layer_Ghost_PaintComponents;
   public  Map map;
   private KeyHandler keyHandler;
   private Pac pac;
   private Ghost[] ghosts;
   private Color[] colors = {Color.RED, Color.BLUE, Color.YELLOW, Color.PINK};
+
+  public UI ui;
 
 
 
@@ -53,16 +59,26 @@ public class MainScene implements Runnable{
 
 
   public MainScene(int ghostNumber) {
+    gameFinished = false;
+    ui = new UI(this);
     map = Map.getMapInstance();
     map.createMap();
     collisionChecker = new CollisionChecker(map);
     stackPane = new StackPane();
     mainScene = new javafx.scene.Scene(stackPane, RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL, Color.BLACK);
+
     Layer_Lower = map.getCanvas() ;
     Layer_Upper = new Canvas(RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL);
+    Layer_UI = new Canvas(RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL);
+
     Layer_Lower_PaintComponent = Layer_Lower.getGraphicsContext2D();
     Layer_Upper_PaintComponent = Layer_Upper.getGraphicsContext2D();
+    Layer_UI_PaintComponent = Layer_UI.getGraphicsContext2D();
+
     addCanvasLayer(Layer_Lower);
+    addCanvasLayer(Layer_Upper);
+    addCanvasLayer(Layer_UI);
+
     Layer_Ghosts = new Canvas[ghostNumber];
     Layer_Ghost_PaintComponents = new GraphicsContext[ghostNumber];
     for (int i=0; i<ghostNumber; i++) {
@@ -70,7 +86,6 @@ public class MainScene implements Runnable{
       Layer_Ghost_PaintComponents[i] = Layer_Ghosts[i].getGraphicsContext2D();
       addCanvasLayer(Layer_Ghosts[i]);
     }
-    addCanvasLayer(Layer_Upper);
     keyHandler = new KeyHandler();
     mainScene.setOnKeyPressed(keyHandler);
     pac = new Pac(this, keyHandler);
@@ -78,6 +93,7 @@ public class MainScene implements Runnable{
 
     for (int i = 0; i < ghostNumber; i++) {
       ghosts[i] = new Ghost(10, this, colors[i], pac);
+      ghosts[i].setSpawnPosition(i);
     }
   }
 
@@ -94,13 +110,12 @@ public class MainScene implements Runnable{
 
   @Override
   public void run() {
-
     while (pac.getLives() >= 0) {
       update();
       redraw();
       controlFPS();
     }
-
+    ui.displayGameFinish(Layer_UI_PaintComponent);
   }
 
   public void update() {
@@ -119,14 +134,16 @@ public class MainScene implements Runnable{
         pac.redraw(Layer_Upper_PaintComponent);
         for (int i = 0; i < ghosts.length; i++) {
           ghosts[i].redraw(Layer_Ghost_PaintComponents[i]);
-
         }
+        ui.redraw(Layer_UI_PaintComponent);
       }
     });
   }
 
 
   // Functions
+
+  // Add canvas to the main StackPane aka the game panel.
   public void addCanvasLayer(Canvas canvas) {
     stackPane.getChildren().add(canvas);
   }
@@ -142,6 +159,12 @@ public class MainScene implements Runnable{
         e.printStackTrace();
       }
     }
+  }
+  public int getPacLives() {
+    return pac.getLives();
+  }
+  public int getPoints() {
+    return pac.getPoint();
   }
 }
 

@@ -68,8 +68,6 @@ public class Ghost extends Entity // implements GhostMovement
         spriteImage = up1;
         spriteNumber = 0;
         spriteCounter = 0;
-        x = 32 * 11;
-        y = 32 * 13;
         collision_range = new Rectangle(0, 0, 31, 31);
         spookState = -1;
         speed = 1;
@@ -272,6 +270,10 @@ public class Ghost extends Entity // implements GhostMovement
       blue2 = new Image("ghosts/spook2.png");
       white1 = new Image("ghosts/spook3.png");
       white2 = new Image("ghosts/spook4.png");
+    }
+    public void setSpawnPosition (int i) {
+      x = 32 * (10 + i);
+      y = 32 * 13;
     }
 
     /** @@Authors: Jesse / Noah / Davin
