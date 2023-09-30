@@ -50,6 +50,9 @@ public class Pac extends Entity {
     }
 
 
+  /** @@Author: Tung
+   * Pacman update(), update movement, direction, collision, and events.
+   */
     public void update() {
         setNewDirection(keyHandler.movement);
         setCurrentDirection(newDirection);
@@ -65,19 +68,23 @@ public class Pac extends Entity {
         spriteCounter++;
         if (spriteCounter > 10) {
           this.spriteNumber = spriteNumber == 1 ? 2: 1;
-
           spriteCounter = 0;
       }
     }
 
+  /** @@Author: Tung
+   * Pacman's redraw(), draw Pac image.
+   */
   public void redraw(GraphicsContext painter) {
     if (painter != null) {
-      //painter.clearRect(0, 0, gameScene.RESOLUTION_HORIZONTAL, gameScene.RESOLUTION_VERTICAL);
       updateImage();
       painter.drawImage(spriteImage, x, y, GameScene.TILE_SIZE, GameScene.TILE_SIZE);
     }
   }
 
+  /** @@Author: Tung, Noah
+   * Check Pacman & Dot collision.
+   */
   public void eatDot() {
       int current_column = x / GameScene.TILE_SIZE;
       int current_row = y / GameScene.TILE_SIZE;
@@ -154,11 +161,18 @@ public class Pac extends Entity {
         life--;
         //setSuper(3);
     }
+
+  /** @@Author: Tung
+   * Set pacman's position back to spawn position.
+   */
     public void spawn() {
       x = pacman_spawn_x;
       y = pacman_spawn_y;
     }
 
+  /** @@Author: Tung, Iman
+   * Set new (next) key input from keyboard. See setCurrentDirection()
+   */
     public void setNewDirection(Direction key) {
         switch (key) {
             case UP:
@@ -177,13 +191,19 @@ public class Pac extends Entity {
                 break;
         }
     }
+
+  /** @@Author: Tung, Iman
+   * Check newDirection repeatedly in update(). Change direction(currentDirection) to newDirection whenever newDirection is valid to change.
+   */
     public void setCurrentDirection(Direction newDirection) {
       if (!gameScene.collisionChecker.isValidDirection(this, newDirection)) {
         direction = newDirection;
       }
     }
 
-
+  /** @@Author: Tung
+   * Change pacman position accordingly to currentDirection, depend on speed.
+   */
     public void updatePosition(boolean collisionDetected) {
         if (!collisionDetected) {
             switch (direction) {
@@ -204,6 +224,10 @@ public class Pac extends Entity {
             }
         }
     }
+
+  /** @@Author: Tung
+   * Change pacman's spriteImage accordingly to spriteNum.
+   */
     public void updateImage() {
       switch (direction) {
         case UP:
@@ -222,6 +246,10 @@ public class Pac extends Entity {
           break;
       }
     }
+
+  /** @@Author: Tung
+   * Load sprite image for Pacman.
+   */
     public void setPacImage() {
       pacZero = new Image("pac/pacman_0.png");
       up1 = new Image("pac/pacman_up1.png");

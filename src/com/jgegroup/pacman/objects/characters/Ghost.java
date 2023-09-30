@@ -134,15 +134,12 @@ public class Ghost extends Entity // implements GhostMovement
     }
 
     public void redraw(GraphicsContext painter) {
-        painter.clearRect(0, 0, GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL);
         if (isSpooked()) {
           updateSpookedImage();
         } else {
           updateNormalImage();
         }
         painter.drawImage(spriteImage, x, y, gameScene.TILE_SIZE, gameScene.TILE_SIZE);
-//        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
-//        painter.drawImage(up, x, y, 400, 100);
     }
 
     public boolean pacmanCollision() {

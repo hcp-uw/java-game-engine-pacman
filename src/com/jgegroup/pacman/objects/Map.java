@@ -65,6 +65,12 @@ public class Map {
         extractMapToBoard(mapArray2D, tileType);
     }
 
+  /** @@Author: Tung
+   * Load image for Map
+   * Throws no exception
+   * @return nothing
+   * Takes in nothing
+   */
     public void loadTileImage() {
       Image floor = new Image("tiles/floor.png");
       tileType[0]  = new Tile(floor);
@@ -121,8 +127,6 @@ public class Map {
   /** @@Author: Tung, Noah
    * A function draw map
    * Throws no exception
-   * @return nothing
-   * Takes in tile types and tile positions
    */
    public void drawMap(GraphicsContext gamePainter){
        int row = 0;
@@ -144,11 +148,10 @@ public class Map {
            }
        }
    }
+
   /** @@Author: Yuzhen, Tung
    * Draw dots
    * Throws no exception
-   * @return nothing
-   * Takes in tile types and tile positions
    */
   public void drawDot(GraphicsContext gamePainter) {
     int dotSize = 8;

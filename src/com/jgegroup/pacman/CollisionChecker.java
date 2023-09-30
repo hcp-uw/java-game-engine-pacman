@@ -11,6 +11,10 @@ public class CollisionChecker {
     this.map = map;
   }
 
+  /** @@Author: Tung, Noah
+   * Check for validDirection (Collision)
+   * @return a boolean
+   */
   public boolean isValidDirection(Entity entity, Direction direction) {
     int entity_left_worldX = entity.x + (int) entity.collision_range.getX();
     int entity_right_worldX = entity.x + (int) entity.collision_range.getX() + (int) entity.collision_range.getWidth();
