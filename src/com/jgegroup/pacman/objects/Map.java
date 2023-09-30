@@ -1,11 +1,9 @@
 package com.jgegroup.pacman.objects;
 
-import com.jgegroup.pacman.MainScene;
+import com.jgegroup.pacman.GameScene;
 import com.jgegroup.pacman.legacy.Position;
-import com.jgegroup.pacman.objects.immovable.Path;
 import com.jgegroup.pacman.objects.immovable.Tile;
 //import com.jgegroup.pacman.legacy.consumables.Consumable;
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,10 +19,10 @@ public class Map {
     private  HashMap<Position, Tile> tiles;
 //    private  HashMap<Position, Consumable> objects;
     private static Map Map_Instance;
-    private  Canvas canvas = new Canvas(MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL); // tool
+    private  Canvas canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
     public Tile[] tileType = new Tile[4]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
-    public int[][] mapArray2D = new int[MainScene.NUMBER_OF_TILE_COLUMN][MainScene.NUMBER_OF_TILE_ROW];
+    public int[][] mapArray2D = new int[GameScene.NUMBER_OF_TILE_COLUMN][GameScene.NUMBER_OF_TILE_ROW];
 
 
     public Map(/*Map Context*/){
@@ -55,18 +53,15 @@ public class Map {
 
     public Canvas getCanvas() { return Map_Instance.canvas; }
 
-    /** @@Author: Noah
-     * Gets the objects that are on the map
+    /** @@Author: Noah, Tung
+     * Load tile image for map, read map from txt file, and extract map to board
      * Throws no exceptions
      * @return map instance objects
      * Takes in nothing
      */
-//    public HashMap<Position, Consumable> getObjects() { return Map_Instance.objects; }
-
-
     public void createMap(/*Map Context*/) {
         loadTileImage();
-        getMap();
+        readMap();
         extractMapToBoard(mapArray2D, tileType);
     }
 
@@ -95,7 +90,7 @@ public class Map {
    * @write tile position to 2D array.
    * Takes in tile positions
    */
-   public void getMap() {
+   public void readMap() {
      try {
        InputStream is = getClass().getResourceAsStream("/maps/map1.txt");
        BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -103,9 +98,9 @@ public class Map {
        int column = 0;
        int row = 0;
 
-       while (column < MainScene.NUMBER_OF_TILE_COLUMN && row < MainScene.NUMBER_OF_TILE_ROW) {
+       while (column < GameScene.NUMBER_OF_TILE_COLUMN && row < GameScene.NUMBER_OF_TILE_ROW) {
            String mapLine = br.readLine();
-           while (column < MainScene.NUMBER_OF_TILE_COLUMN) {
+           while (column < GameScene.NUMBER_OF_TILE_COLUMN) {
                String numbers[] = mapLine.split(" ");
                int num = Integer.parseInt(numbers[column]);
                mapArray2D[column][row] = num;
@@ -129,41 +124,45 @@ public class Map {
    * @return nothing
    * Takes in tile types and tile positions
    */
-   public void drawMap(){
+   public void drawMap(GraphicsContext gamePainter){
        int row = 0;
        int column = 0;
        int x = 0;
        int y = 0;
 
-       while (column < MainScene.NUMBER_OF_TILE_COLUMN && row < MainScene.NUMBER_OF_TILE_ROW) {
+       while (column < GameScene.NUMBER_OF_TILE_COLUMN && row < GameScene.NUMBER_OF_TILE_ROW) {
            int tile_number = mapArray2D[column][row]; // Use tilePositions to get the tile number
-           graphicsContext.drawImage(tileType[tile_number].getImage(), x, y, MainScene.TILE_SIZE , MainScene.TILE_SIZE);
+         gamePainter.drawImage(tileType[tile_number].getImage(), x, y, GameScene.TILE_SIZE , GameScene.TILE_SIZE);
            column++;
-           x += MainScene.TILE_SIZE;
+           x += GameScene.TILE_SIZE;
 
-           if (column == MainScene.NUMBER_OF_TILE_COLUMN) {
+           if (column == GameScene.NUMBER_OF_TILE_COLUMN) {
                column = 0;
                row++;
                x = 0;
-               y += MainScene.TILE_SIZE;
+               y += GameScene.TILE_SIZE;
            }
        }
    }
-
-
-  public void drawDot() {
+  /** @@Author: Yuzhen, Tung
+   * Draw dots
+   * Throws no exception
+   * @return nothing
+   * Takes in tile types and tile positions
+   */
+  public void drawDot(GraphicsContext gamePainter) {
     int dotSize = 8;
-    graphicsContext.setFill(Color.YELLOW);
-    for (int x = 0; x < MainScene.NUMBER_OF_TILE_COLUMN; x++) {
-      for (int y = 0; y < MainScene.NUMBER_OF_TILE_ROW; y++) {
+    gamePainter.setFill(Color.YELLOW);
+    for (int x = 0; x < GameScene.NUMBER_OF_TILE_COLUMN; x++) {
+      for (int y = 0; y < GameScene.NUMBER_OF_TILE_ROW; y++) {
         if (mapArray2D[x][y] == 0) {
-          int xCoordinate = x * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize / 2);
-          int yCoordinate = y * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize / 2);
-          graphicsContext.fillOval(xCoordinate, yCoordinate, dotSize, dotSize);
+          int xCoordinate = x * GameScene.TILE_SIZE + (GameScene.TILE_SIZE / 2) - (dotSize / 2);
+          int yCoordinate = y * GameScene.TILE_SIZE + (GameScene.TILE_SIZE / 2) - (dotSize / 2);
+          gamePainter.fillOval(xCoordinate, yCoordinate, dotSize, dotSize);
         } else if (mapArray2D[x][y] == 3) {
-            int xCoordinate = x * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize);
-            int yCoordinate = y * MainScene.TILE_SIZE + (MainScene.TILE_SIZE / 2) - (dotSize);
-            graphicsContext.fillOval(xCoordinate, yCoordinate, dotSize * 2, dotSize * 2);
+            int xCoordinate = x * GameScene.TILE_SIZE + (GameScene.TILE_SIZE / 2) - (dotSize);
+            int yCoordinate = y * GameScene.TILE_SIZE + (GameScene.TILE_SIZE / 2) - (dotSize);
+          gamePainter.fillOval(xCoordinate, yCoordinate, dotSize * 2, dotSize * 2);
         }
       }
     }

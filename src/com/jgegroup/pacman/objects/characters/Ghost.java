@@ -1,7 +1,7 @@
 package com.jgegroup.pacman.objects.characters;
 
 
-import com.jgegroup.pacman.MainScene;
+import com.jgegroup.pacman.GameScene;
 import com.jgegroup.pacman.PathFinder;
 import com.jgegroup.pacman.objects.Entity;
 import javafx.scene.canvas.GraphicsContext;
@@ -45,19 +45,19 @@ public class Ghost extends Entity // implements GhostMovement
 
 
 
-    private MainScene mainScene;
+    private GameScene gameScene;
     private long last_time;
     private long moveCounter = 0;
     private PathFinder pf;
-    public Ghost(int spookLength, MainScene mainScene, Color color, Pac pacman) {
+    public Ghost(int spookLength, GameScene gameScene, Color color, Pac pacman) {
         this.spookLength = 5;
-        this.mainScene = mainScene;
+        this.gameScene = gameScene;
         last_time = System.currentTimeMillis();
         this.base_color = color;
         this.current_color = color;
         this.pacman = pacman;
         gm = new GhostMovement(color, pacman);
-        pf = new PathFinder(mainScene.map);
+        pf = new PathFinder(gameScene.map);
         setGhostImage();
         setWhiteGhostImage();
         initialize();
@@ -76,7 +76,7 @@ public class Ghost extends Entity // implements GhostMovement
 
 
     public void update() {
-        collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
+        collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
         Set<Direction> restrictions = new HashSet<>();
         if (direction.equals(Direction.DOWN)) {
             restrictions.add(Direction.UP);
@@ -90,19 +90,18 @@ public class Ghost extends Entity // implements GhostMovement
         if (moveCounter == 32) {
             direction = isSpooked() ? pf.scatter(this.x, this.y, pacman.x, pacman.y, restrictions) :
             pf.chase(this.x, this.y, pacman.x, pacman.y, restrictions);
-            collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
+            collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
             while (collisionDetected) {
                 restrictions.add(direction);
                 direction = isSpooked() ? pf.scatter(this.x, this.y, pacman.x, pacman.y, restrictions) :
                         pf.chase(this.x, this.y, pacman.x, pacman.y, restrictions);
-                collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
+                collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
             }
             moveCounter = 0;
         }
         moveCounter++;
         pacmanCollision();
         if (pacman.isSuper() && !isSpooked()) {
-            System.out.println("Pacman is luffy");
             setSpooked();
         }
         if (System.currentTimeMillis() >= last_time + 1000) {
@@ -135,13 +134,13 @@ public class Ghost extends Entity // implements GhostMovement
     }
 
     public void redraw(GraphicsContext painter) {
-        painter.clearRect(0, 0, MainScene.RESOLUTION_HORIZONTAL, MainScene.RESOLUTION_VERTICAL);
+        painter.clearRect(0, 0, GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL);
         if (isSpooked()) {
           updateSpookedImage();
         } else {
           updateNormalImage();
         }
-        painter.drawImage(spriteImage, x, y, mainScene.TILE_SIZE, mainScene.TILE_SIZE);
+        painter.drawImage(spriteImage, x, y, gameScene.TILE_SIZE, gameScene.TILE_SIZE);
 //        painter.clearRect(x - speed, y - speed, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
 //        painter.drawImage(up, x, y, 400, 100);
     }
@@ -156,8 +155,8 @@ public class Ghost extends Entity // implements GhostMovement
 
         // max > min
 
-        if (ghost_max_x - pacman_min_x >= 0 && ghost_max_x - pacman_min_x <= 2 * MainScene.TILE_SIZE
-            && ghost_max_y - pacman_min_y <= 2 * MainScene.TILE_SIZE && ghost_max_y - pacman_min_y >= 0) {
+        if (ghost_max_x - pacman_min_x >= 0 && ghost_max_x - pacman_min_x <= 2 * GameScene.TILE_SIZE
+            && ghost_max_y - pacman_min_y <= 2 * GameScene.TILE_SIZE && ghost_max_y - pacman_min_y >= 0) {
             if (!pacman.isSuper()) {
                 pacman.death();
             } else {
@@ -182,7 +181,6 @@ public class Ghost extends Entity // implements GhostMovement
     }
 
     public void updateSpookedImage() {
-      System.out.println("state" + spookState);
       this.spriteImage = this.spriteNumber == 1 ? white1 : white2;
       if (spookState % 2 == 0) {
         this.spriteImage = this.spriteNumber == 1 ? blue1 : blue2;

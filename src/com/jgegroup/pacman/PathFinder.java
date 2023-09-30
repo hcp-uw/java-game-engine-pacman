@@ -20,11 +20,11 @@ public class PathFinder {
             double pac_y,
             Set<Direction> restriction
         ) {
-        int ghost_map_x = (int) Math.round(ghost_x / MainScene.TILE_SIZE);
-        int ghost_map_y = (int) Math.round(ghost_y / MainScene.TILE_SIZE);
+        int ghost_map_x = (int) Math.round(ghost_x / GameScene.TILE_SIZE);
+        int ghost_map_y = (int) Math.round(ghost_y / GameScene.TILE_SIZE);
 
-        int pac_map_x = (int) Math.ceil(pac_x / MainScene.TILE_SIZE);
-        int pac_map_y = (int) Math.ceil(pac_y / MainScene.TILE_SIZE);
+        int pac_map_x = (int) Math.ceil(pac_x / GameScene.TILE_SIZE);
+        int pac_map_y = (int) Math.ceil(pac_y / GameScene.TILE_SIZE);
 
         Random r = new Random();
         // select if we modify x, y, or neither
@@ -85,11 +85,11 @@ public class PathFinder {
             double pac_y,
             Set<Direction> restriction
     ) {
-        int ghost_map_x = (int) Math.round(ghost_x / MainScene.TILE_SIZE);
-        int ghost_map_y = (int) Math.round(ghost_y / MainScene.TILE_SIZE);
+        int ghost_map_x = (int) Math.round(ghost_x / GameScene.TILE_SIZE);
+        int ghost_map_y = (int) Math.round(ghost_y / GameScene.TILE_SIZE);
 
-        int pac_map_x = (int) Math.ceil(pac_x / MainScene.TILE_SIZE);
-        int pac_map_y = (int) Math.ceil(pac_y / MainScene.TILE_SIZE);
+        int pac_map_x = (int) Math.ceil(pac_x / GameScene.TILE_SIZE);
+        int pac_map_y = (int) Math.ceil(pac_y / GameScene.TILE_SIZE);
 
         Random r = new Random();
         // select if we modify x, y, or neither
