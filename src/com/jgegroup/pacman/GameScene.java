@@ -1,5 +1,4 @@
 package com.jgegroup.pacman;
-
 import com.jgegroup.pacman.objects.Map;
 
 import com.jgegroup.pacman.objects.UI;
