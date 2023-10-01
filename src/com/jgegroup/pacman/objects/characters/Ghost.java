@@ -152,8 +152,8 @@ public class Ghost extends Entity // implements GhostMovement
 
         // max > min
 
-        if (ghost_max_x - pacman_min_x >= 0 && ghost_max_x - pacman_min_x <= 2 * GameScene.TILE_SIZE
-            && ghost_max_y - pacman_min_y <= 2 * GameScene.TILE_SIZE && ghost_max_y - pacman_min_y >= 0) {
+        if (ghost_max_x - pacman_min_x >= 0.5 * GameScene.TILE_SIZE && ghost_max_x - pacman_min_x <= 1.5 * GameScene.TILE_SIZE
+            && ghost_max_y - pacman_min_y <= 1.5 * GameScene.TILE_SIZE && ghost_max_y - pacman_min_y >= 0.5 * GameScene.TILE_SIZE) {
             if (!pacman.isSuper()) {
                 pacman.death();
             } else {
