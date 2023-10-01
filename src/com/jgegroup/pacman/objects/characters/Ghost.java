@@ -142,6 +142,11 @@ public class Ghost extends Entity // implements GhostMovement
         painter.drawImage(spriteImage, x, y, gameScene.TILE_SIZE, gameScene.TILE_SIZE);
     }
 
+    /**
+    * Checks whether a ghost has collided with Pacman. If Pacman is super, the ghost dies and the player is awarded 500 points,
+     * otherwise Pacman dies and the player loses a life
+    * @return True if a collision occured, False otherwise
+    */
     public boolean pacmanCollision() {
         int pacman_min_x = pacman.x, pacman_min_y = pacman.y;
         int ghost_min_x = this.x, ghost_min_y = this.y;
