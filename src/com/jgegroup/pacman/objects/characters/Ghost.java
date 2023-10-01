@@ -48,7 +48,6 @@ public class Ghost extends Entity // implements GhostMovement
     private GameScene gameScene;
     private long last_time;
     private long moveCounter = 0;
-    private PathFinder pf;
     public Ghost(int spookLength, GameScene gameScene, Color color, Pac pacman) {
         this.spookLength = pacman.superLength;
         this.gameScene = gameScene;
@@ -56,8 +55,7 @@ public class Ghost extends Entity // implements GhostMovement
         this.base_color = color;
         this.current_color = color;
         this.pacman = pacman;
-        gm = new GhostMovement(color, pacman);
-        pf = new PathFinder(gameScene.map);
+        gm = new GhostMovement(color, pacman, this);
         setGhostImage();
         setWhiteGhostImage();
         initialize();
@@ -88,13 +86,11 @@ public class Ghost extends Entity // implements GhostMovement
             restrictions.add(Direction.RIGHT);
         }
         if (moveCounter == 32) {
-            direction = isSpooked() ? pf.scatter(this.x, this.y, pacman.x, pacman.y, restrictions) :
-            pf.chase(this.x, this.y, pacman.x, pacman.y, restrictions);
+            direction = isSpooked() ? gm.spooked(restrictions) : gm.chase(restrictions);
             collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
             while (collisionDetected) {
                 restrictions.add(direction);
-                direction = isSpooked() ? pf.scatter(this.x, this.y, pacman.x, pacman.y, restrictions) :
-                        pf.chase(this.x, this.y, pacman.x, pacman.y, restrictions);
+                direction = isSpooked() ? gm.spooked(restrictions) : gm.chase(restrictions);
                 collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
             }
             moveCounter = 0;
