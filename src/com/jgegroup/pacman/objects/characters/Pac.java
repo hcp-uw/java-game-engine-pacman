@@ -248,6 +248,10 @@ public class Pac extends Entity {
       }
     }
 
+    public void setSpeed(int newSpeed)  {
+      speed = newSpeed;
+    }
+
   /** @@Author: Tung
    * Load sprite image for Pacman.
    */
