@@ -15,6 +15,12 @@ public class GhostMovement {
         random = new Random();
     }
 
+    /**
+     * Gets the next move of a ghost
+     * @param x current x position
+     * @param y current y position
+     * @return direction of the ghost's next move
+     */
     public Direction nextMove(int x, int y) {
         if (color.equals(Color.RED)) {
             return redMove(x, y);
