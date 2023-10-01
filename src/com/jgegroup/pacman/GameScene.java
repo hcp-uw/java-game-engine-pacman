@@ -7,9 +7,13 @@ import com.jgegroup.pacman.objects.characters.Ghost;
 import com.jgegroup.pacman.objects.characters.Pac;
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
+import javafx.geometry.Pos;
+
 
 
 public class GameScene implements Runnable{
@@ -32,7 +36,7 @@ public class GameScene implements Runnable{
 
   private StackPane stackPane;
 
-  private Canvas gameCanvas;
+  Canvas gameCanvas;
   private GraphicsContext gamePainter;
 
   public  Map map;
@@ -43,13 +47,11 @@ public class GameScene implements Runnable{
 
   private int ghostNumber;
 
+  private Slider speedSlider;
+
   public UI ui;
 
 
-
-  private static int x = 300;
-  private static int y = 300;
-  private static int c = 0;
 
 
   public GameScene(int ghostNumber) {
@@ -64,6 +66,33 @@ public class GameScene implements Runnable{
     gameScene.setOnKeyPressed(keyHandler);
     this.ghostNumber = ghostNumber;
 
+
+    // New Stuff
+    VBox vbox = new VBox();
+    vbox.setSpacing(10);
+
+    speedSlider = new Slider();
+    speedSlider.setMin(1);
+    speedSlider.setMax(3);
+    speedSlider.setValue(1);
+    speedSlider.setFocusTraversable(false);
+    speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+      int newSpeed = newValue.intValue();
+      pac.setSpeed(newSpeed);
+    });
+
+    vbox.getChildren().add(speedSlider);
+    StackPane.setAlignment(vbox, Pos.TOP_RIGHT);
+    stackPane.getChildren().addAll(vbox);
+
+    // Fix scene focus set on slider.
+    speedSlider.setOnMouseClicked(event -> {
+      gameCanvas.requestFocus();
+    });
+
+    speedSlider.setOnMouseDragged(event -> {
+      gameCanvas.requestFocus();
+    });
   }
 
 
@@ -81,6 +110,8 @@ public class GameScene implements Runnable{
     init();
     gameThread.start();
   }
+
+
   /** @@Author: Tung
    * Init the game before run the game.
    */
@@ -92,6 +123,7 @@ public class GameScene implements Runnable{
     pac = new Pac(this, keyHandler);
 
     ghosts = new Ghost[ghostNumber];
+
     for (int i = 0; i < ghostNumber; i++) {
       ghosts[i] = new Ghost(10, this, colors[i], pac);
       ghosts[i].setSpawnPosition(i);
