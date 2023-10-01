@@ -50,7 +50,7 @@ public class Ghost extends Entity // implements GhostMovement
     private long moveCounter = 0;
     private PathFinder pf;
     public Ghost(int spookLength, GameScene gameScene, Color color, Pac pacman) {
-        this.spookLength = 5;
+        this.spookLength = pacman.superLength;
         this.gameScene = gameScene;
         last_time = System.currentTimeMillis();
         this.base_color = color;
@@ -157,7 +157,9 @@ public class Ghost extends Entity // implements GhostMovement
             if (!pacman.isSuper()) {
                 pacman.death();
             } else {
-                this.initialize();
+                this.setSpawnPosition(0);
+                this.spookState = -1;
+                pacman.point += 500;
             }
             return true;
         }

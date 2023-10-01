@@ -11,6 +11,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import java.io.File;
+
 
 public class GameScene implements Runnable{
   public static boolean gameFinished;
@@ -103,6 +108,10 @@ public class GameScene implements Runnable{
    */
   @Override
   public void run() {
+    Media media = new Media(new File("res/sounds/du hast.mp3").toURI().toString());
+    MediaPlayer mp = new MediaPlayer(media);
+    mp.setVolume(0.25f);
+    mp.play();
     while (pac.getLives() >= 0) {
       update();
       redraw();
