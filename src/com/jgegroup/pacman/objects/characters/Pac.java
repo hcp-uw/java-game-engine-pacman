@@ -1,7 +1,7 @@
 package com.jgegroup.pacman.objects.characters;
 
 import com.jgegroup.pacman.KeyHandler;
-import com.jgegroup.pacman.MainScene;
+import com.jgegroup.pacman.GameScene;
 import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Pac extends Entity {
 
-    private MainScene mainScene;
+    private GameScene gameScene;
     private KeyHandler keyHandler;
     int life;
     int point;
@@ -22,8 +22,9 @@ public class Pac extends Entity {
     long last_time;
 
 
-    public Pac(MainScene mainScene, KeyHandler keyHandler) {
-        this.mainScene = mainScene;
+
+    public Pac(GameScene gameScene, KeyHandler keyHandler) {
+        this.gameScene = gameScene;
         this.keyHandler = keyHandler;
         last_time = System.currentTimeMillis();
         Super = -1;
@@ -44,48 +45,55 @@ public class Pac extends Entity {
       x = pacman_spawn_x;
       y = pacman_spawn_y;
       speed = 1;
-      collision_range = new Rectangle(0, 0, MainScene.TILE_SIZE - 1, MainScene.TILE_SIZE - 1);
+      collision_range = new Rectangle(0, 0, GameScene.TILE_SIZE - 1, GameScene.TILE_SIZE - 1);
       direction = Direction.STOP;
       newDirection = Direction.STOP;
     }
 
 
+  /** @@Author: Tung
+   * Pacman update(), update movement, direction, collision, and events.
+   */
     public void update() {
         setNewDirection(keyHandler.movement);
         setCurrentDirection(newDirection);
-        collisionDetected = mainScene.collisionChecker.isValidDirection(this, direction);
+        collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
         updatePosition(collisionDetected);
         eatDot();
-        updateSuper();
-//        if (System.currentTimeMillis() >= last_time + 1000) {
-//            updateSuper();
-//            last_time = System.currentTimeMillis();
-//        }
+//        updateSuper();
+        if (System.currentTimeMillis() >= last_time + 1000) {
+            updateSuper();
+            last_time = System.currentTimeMillis();
+        }
 
         spriteCounter++;
         if (spriteCounter > 10) {
           this.spriteNumber = spriteNumber == 1 ? 2: 1;
-
           spriteCounter = 0;
       }
     }
 
+  /** @@Author: Tung
+   * Pacman's redraw(), draw Pac image.
+   */
   public void redraw(GraphicsContext painter) {
     if (painter != null) {
-      painter.clearRect(0, 0, mainScene.RESOLUTION_HORIZONTAL, mainScene.RESOLUTION_VERTICAL);
       updateImage();
-      painter.drawImage(spriteImage, x, y, MainScene.TILE_SIZE, MainScene.TILE_SIZE);
+      painter.drawImage(spriteImage, x, y, GameScene.TILE_SIZE, GameScene.TILE_SIZE);
     }
   }
 
+  /** @@Author: Tung, Noah
+   * Check Pacman & Dot collision.
+   */
   public void eatDot() {
-      int current_column = x / MainScene.TILE_SIZE;
-      int current_row = y / MainScene.TILE_SIZE;
-      if (mainScene.map.mapArray2D[current_column][current_row] == 0) {
-        mainScene.map.mapArray2D[current_column][current_row] = 2;
+      int current_column = x / GameScene.TILE_SIZE;
+      int current_row = y / GameScene.TILE_SIZE;
+      if (gameScene.map.mapArray2D[current_column][current_row] == 0) {
+        gameScene.map.mapArray2D[current_column][current_row] = 2;
         point += 10;
-      } else if (mainScene.map.mapArray2D[current_column][current_row] == 3) {
-          mainScene.map.mapArray2D[current_column][current_row] = 2;
+      } else if (gameScene.map.mapArray2D[current_column][current_row] == 3) {
+          gameScene.map.mapArray2D[current_column][current_row] = 2;
           point += 100;
           setSuper();
       }
@@ -153,13 +161,19 @@ public class Pac extends Entity {
         spawn();
         life--;
         //setSuper(3);
-        System.out.println("life: " + life);
     }
+
+  /** @@Author: Tung
+   * Set pacman's position back to spawn position.
+   */
     public void spawn() {
       x = pacman_spawn_x;
       y = pacman_spawn_y;
     }
 
+  /** @@Author: Tung, Iman
+   * Set new (next) key input from keyboard. See setCurrentDirection()
+   */
     public void setNewDirection(Direction key) {
         switch (key) {
             case UP:
@@ -178,13 +192,19 @@ public class Pac extends Entity {
                 break;
         }
     }
+
+  /** @@Author: Tung, Iman
+   * Check newDirection repeatedly in update(). Change direction(currentDirection) to newDirection whenever newDirection is valid to change.
+   */
     public void setCurrentDirection(Direction newDirection) {
-      if (!mainScene.collisionChecker.isValidDirection(this, newDirection)) {
+      if (!gameScene.collisionChecker.isValidDirection(this, newDirection)) {
         direction = newDirection;
       }
     }
 
-
+  /** @@Author: Tung
+   * Change pacman position accordingly to currentDirection, depend on speed.
+   */
     public void updatePosition(boolean collisionDetected) {
         if (!collisionDetected) {
             switch (direction) {
@@ -205,6 +225,10 @@ public class Pac extends Entity {
             }
         }
     }
+
+  /** @@Author: Tung
+   * Change pacman's spriteImage accordingly to spriteNum.
+   */
     public void updateImage() {
       switch (direction) {
         case UP:
@@ -223,6 +247,14 @@ public class Pac extends Entity {
           break;
       }
     }
+
+    public void setSpeed(int newSpeed)  {
+      speed = newSpeed;
+    }
+
+  /** @@Author: Tung
+   * Load sprite image for Pacman.
+   */
     public void setPacImage() {
       pacZero = new Image("pac/pacman_0.png");
       up1 = new Image("pac/pacman_up1.png");

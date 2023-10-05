@@ -16,11 +16,11 @@ public class Main extends Application {
     stage.getIcons().add(icon);
 
 
-    MainScene mainScene = new MainScene(4);
-    stage.setScene(mainScene.mainScene);
+    GameScene gameScene = new GameScene(4);
+    stage.setScene(gameScene.gameScene);
     stage.setResizable(true);
     stage.show();
-    mainScene.startThread();
+    gameScene.startThread();
 
 
     // Change git message
