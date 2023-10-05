@@ -155,10 +155,11 @@ public class GameScene implements Runnable{
       redraw();
       controlFPS(); // DANGER!!!  REMOVE THIS CAUSE ATOMIC EXPLOSION
     }
-    ui.displayGameFinish(getGamePainter());
     mp2.play();
     mp3.play();
     mp.setVolume(0.10f);
+    ui.displayGameFinish(getGamePainter());
+
   }
 
   /** @@Author: Tung, Noah, Jesse
