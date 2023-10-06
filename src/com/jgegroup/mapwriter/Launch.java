@@ -2,6 +2,7 @@ package com.jgegroup.mapwriter;
 
 import com.jgegroup.mapwriter.config.Config;
 import com.jgegroup.mapwriter.config.ConfigBuilder;
+import com.jgegroup.pacman.GameScene;
 import javafx.application.Application;
 import javafx.geometry.Side;
 import javafx.scene.Group;
@@ -9,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.io.*;
 
 public class Launch extends Application {
 
@@ -52,6 +55,8 @@ public class Launch extends Application {
         root.getChildren().addAll(label, textField, button);
 
         Map map1 = new Map("map2", 10, 10);
+        String content = readMap(map1.getPath());
+        System.out.println(content);
         return root;
     }
 
@@ -67,6 +72,24 @@ public class Launch extends Application {
         return root;
     }
 
+    public String readMap (String path) {
+      try {
+        InputStream inputStream = new FileInputStream(path);
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder map_content = new StringBuilder();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+          map_content.append(line).append("\n");
+        }
+        bufferedReader.close();
+        return map_content.toString();
+      } catch (IOException e) {
+        e.printStackTrace();
+        return "";
+      }
+    }
+
 
     public void app(Stage stage) {
         Scene scene = stage.getScene();
@@ -78,7 +101,4 @@ public class Launch extends Application {
         ConfigBuilder cb = new ConfigBuilder();
         return cb.build();
     }
-
-
-
 }
