@@ -25,7 +25,6 @@ public class Launch extends Application {
         tab1.setClosable(false);
         tab2.setClosable(false);
         tabPane.getTabs().addAll(tab1, tab2);
-
         // CONTENT ADDED TO TABS HAVE TO BE NODES: SINGLE CONTROL, GROUP OF CONTROLS WRAPPED IN PANE OBJECT, ETC.
         tab1.setContent(GameSettingsContent());
         tab2.setContent(MapWriterContent());
@@ -51,6 +50,8 @@ public class Launch extends Application {
         Button button = new Button ("Button");
         button.relocate(275,30);
         root.getChildren().addAll(label, textField, button);
+
+        Map map1 = new Map("map2", 10, 10);
         return root;
     }
 
@@ -75,8 +76,9 @@ public class Launch extends Application {
 
     private Config initialize(Scene scene) {
         ConfigBuilder cb = new ConfigBuilder();
-
-
         return cb.build();
     }
+
+
+
 }
