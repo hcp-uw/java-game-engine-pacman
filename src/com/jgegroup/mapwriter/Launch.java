@@ -9,6 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -44,21 +45,6 @@ public class Launch extends Application {
         app(stage);
     }
 
-    public Pane MapWriterContent() {
-        Pane root = new Pane();
-        Label label = new Label ("Map Writer");
-        label.relocate(150, 10);
-        TextField textField = new TextField();
-        textField.relocate(100, 30);
-        Button button = new Button ("Button");
-        button.relocate(275,30);
-        root.getChildren().addAll(label, textField, button);
-
-        Map map1 = new Map("map2", 10, 10);
-        String content = readMap(map1.getPath());
-        System.out.println(content);
-        return root;
-    }
 
     public Pane GameSettingsContent() {
         Pane root = new Pane();
@@ -72,6 +58,23 @@ public class Launch extends Application {
         return root;
     }
 
+    public Pane MapWriterContent() {
+        Pane root = new Pane();
+        Label label = new Label ("Map Writer");
+        label.relocate(150, 10);
+        TextField textField = new TextField();
+        textField.relocate(150, 30);
+        Button button = new Button ("Button");
+        button.relocate(275,30);
+        root.getChildren().addAll(label, textField, button);
+
+        Map map1 = new Map("map2", 10, 10);
+        String content = readMap(map1.getPath());
+        Text map_content = new Text();
+        map_content.setText(content);
+        root.getChildren().add(map_content);
+        return root;
+    }
     public String readMap (String path) {
       try {
         InputStream inputStream = new FileInputStream(path);
