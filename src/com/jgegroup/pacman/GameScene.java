@@ -141,7 +141,7 @@ public class GameScene implements Runnable{
   public void run() {
     Media media = new Media(new File("res/sounds/du hast.mp3").toURI().toString());
     MediaPlayer mp = new MediaPlayer(media);
-    mp.setVolume(0.25f);
+    mp.setVolume(0.1f);
     mp.play();
     while (pac.getLives() >= 0) {
       update();

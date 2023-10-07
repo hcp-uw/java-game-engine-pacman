@@ -28,7 +28,7 @@ public class Pac extends Entity {
         this.keyHandler = keyHandler;
         last_time = System.currentTimeMillis();
         Super = -1;
-        superLength = 20;
+        superLength = 10;
         initialize();
         setPacImage();
     }
@@ -60,7 +60,6 @@ public class Pac extends Entity {
         collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
         updatePosition(collisionDetected);
         eatDot();
-//        updateSuper();
         if (System.currentTimeMillis() >= last_time + 1000) {
             updateSuper();
             last_time = System.currentTimeMillis();
