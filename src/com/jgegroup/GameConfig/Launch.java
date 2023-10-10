@@ -1,7 +1,7 @@
-package com.jgegroup.mapwriter;
+package com.jgegroup.GameConfig;
 
-import com.jgegroup.mapwriter.config.Config;
-import com.jgegroup.mapwriter.config.ConfigBuilder;
+import com.jgegroup.GameConfig.config.Config;
+import com.jgegroup.GameConfig.config.ConfigBuilder;
 import com.jgegroup.pacman.GameLaunch;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -9,6 +9,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -18,6 +20,10 @@ import javafx.scene.control.Slider;
 import java.io.*;
 
 public class Launch extends Application {
+
+    public String newMapName; // For it to work with lambda ex
+    public int horizontal_length; // For it to work with lambda ex
+    public int vertical_length; // For it to work with lambda ex
 
     public static void main(String[] args) {
         launch(args);
@@ -129,17 +135,61 @@ public class Launch extends Application {
     public GameLaunch gameLaunch;
     public Pane MapWriterContent() {
         Pane root = new Pane();
-        Label label = new Label ("Map Writer");
-        label.relocate(150, 10);
+        Map current_map = null;
 
-        root.getChildren().addAll(label);
 
-        Map map1 = new Map("map2", 10, 10);
-        String content = readMap(map1.getPath());
-        Text map_content = new Text();
-        map_content.setText(content);
-        root.getChildren().add(map_content);
-        return root;
+        Canvas mapWriterCanvas = new Canvas(400, 400);
+        GraphicsContext mapPainter = mapWriterCanvas.getGraphicsContext2D();
+        root.getChildren().add(mapWriterCanvas);
+
+        // Save map button
+        Button saveMapButton = new Button("Save Map");
+        saveMapButton.relocate(200, 0);
+        saveMapButton.setOnAction(event -> {
+          try {
+            if (current_map == null) {
+              throw new NullPointerException();
+            }
+            current_map.saveMap();
+          } catch (NullPointerException e) {
+            Text errText = new Text();
+            errText.setText("Not working with a map!");
+            errText.relocate(200, 25);
+            root.getChildren().add(errText);
+          }
+        });
+
+
+      // Show Map button
+        Button showMapButton = new Button("Show map");
+        showMapButton.relocate(200, 100);
+        Text map_text = new Text();
+        showMapButton.setOnAction(event -> {
+          try {
+            String content = readMap(current_map.getPath());
+            root.getChildren().remove(map_text);
+            map_text.setText(content);
+            root.getChildren().add(map_text);
+
+            throw new NullPointerException();
+          } catch (NullPointerException e) {
+            Text errText = new Text();
+            errText.setText("Not working with a map!");
+            errText.relocate(200, 125);
+            root.getChildren().add(errText);
+          }
+        });
+
+        // Create new map button
+      Button createNewMapButton = new Button("Create New Map");
+      createNewMapButton.relocate(200, 200);
+      createNewMapButton.setOnAction(event -> {
+        getMapInfo();
+        });
+
+      //
+      root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton);
+      return root;
     }
     public String readMap (String path) {
       try {
@@ -159,7 +209,6 @@ public class Launch extends Application {
       }
     }
 
-
     public void app(Stage stage) {
         Scene scene = stage.getScene();
 
@@ -169,5 +218,45 @@ public class Launch extends Application {
     private Config initialize(Scene scene) {
         ConfigBuilder cb = new ConfigBuilder();
         return cb.build();
+    }
+
+
+    public void getMapInfo() {
+      String map_name;
+      TextInputDialog nameDialog = new TextInputDialog();
+      nameDialog.setTitle("Create New Map");
+      nameDialog.setHeaderText(null);
+      nameDialog.setContentText("Enter Map Name:");
+
+      nameDialog.showAndWait().ifPresent(name -> {
+
+        this.newMapName = name;
+
+        TextInputDialog horizontaLengthDialog = new TextInputDialog();
+        horizontaLengthDialog.setTitle("Create New Map");
+        horizontaLengthDialog.setHeaderText(null);
+        horizontaLengthDialog.setContentText("Enter number of tile horizontal");
+        horizontaLengthDialog.showAndWait().ifPresent(horizontal_length -> {
+          try {
+
+          this.horizontal_length = Integer.parseInt(horizontal_length);
+
+          TextInputDialog verticalLengthDialog = new TextInputDialog();
+          verticalLengthDialog.setTitle("Create New Map");
+          verticalLengthDialog.setHeaderText(null);
+          verticalLengthDialog.setContentText("Enter number of tile vertical");
+          verticalLengthDialog.showAndWait().ifPresent(vertical_length -> {
+            try {
+              this.vertical_length = Integer.parseInt(vertical_length);
+
+            } catch (NumberFormatException e) {
+              System.out.println("Invalid number");
+            }
+          });
+          } catch (NumberFormatException e) {
+            System.out.println("Invalid number");
+          }
+        });
+      });
     }
 }
