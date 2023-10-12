@@ -1,4 +1,4 @@
-package com.jgegroup.mapwriter.config;
+package com.jgegroup.GameConfig.config;
 
 public class Config {
     // Items wanting to use
