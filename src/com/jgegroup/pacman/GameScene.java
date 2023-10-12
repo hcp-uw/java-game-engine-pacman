@@ -149,16 +149,19 @@ public class GameScene implements Runnable{
     MediaPlayer mp2 = new MediaPlayer(m2);
     MediaPlayer mp3 = new MediaPlayer(m3);
     mp.setVolume(0.25f);
+    mp2.setVolume(0.25f);
+    mp3.setVolume(0.25f);
     mp.play();
     while (pac.getLives() >= 0) {
       update();
       redraw();
       controlFPS(); // DANGER!!!  REMOVE THIS CAUSE ATOMIC EXPLOSION
     }
-    ui.displayGameFinish(getGamePainter());
     mp2.play();
     mp3.play();
     mp.setVolume(0.10f);
+    ui.displayGameFinish(getGamePainter());
+
   }
 
   /** @@Author: Tung, Noah, Jesse

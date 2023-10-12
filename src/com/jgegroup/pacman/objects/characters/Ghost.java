@@ -32,21 +32,13 @@ public class Ghost extends Entity // implements GhostMovement
     private Pac pacman;
     private GhostMovement gm;
 
-//
-//    public Ghost(int x, int y, int spookLength, Color color) {
-//        super(x,y);
-//        this.spookLength = spookLength;
-//        this.base_color = color;
-//        this.current_color = color;
-//        // this indicates that it is not spooked, -1 <- no spook. > 0 <- yes spook
-//        this.spookState = -1;
-//        this.direction = Direction.STOP;
-//    }
+    public enum State {
+        SPAWN, CHASE, SCATTER, SCARED, DEATH
+    }
 
-
-
+    public State state;
     private GameScene gameScene;
-    private long last_time;
+    private long last_time, state_base_time;
     private long moveCounter = 0;
     public Ghost(int spookLength, GameScene gameScene, Color color, Pac pacman) {
         this.spookLength = pacman.superLength;
@@ -59,7 +51,7 @@ public class Ghost extends Entity // implements GhostMovement
         setGhostImage();
         setWhiteGhostImage();
         initialize();
-        last_time = System.currentTimeMillis();
+        last_time = state_base_time = System.currentTimeMillis();
     }
 
     public void initialize() {
@@ -70,8 +62,52 @@ public class Ghost extends Entity // implements GhostMovement
         spookState = -1;
         speed = 1;
         direction = Direction.STOP;
+        state = State.SPAWN;
     }
 
+    public void updateState() {
+        long elapsed_time = System.currentTimeMillis() - state_base_time;
+        switch(state) {
+            case SPAWN, SCATTER -> {
+                if (pacman.isSuper()) {
+                    state = State.SCARED;
+                    this.setSpooked();
+                    state_base_time = System.currentTimeMillis();
+                } else if (elapsed_time > 10000) {
+                    state = State.CHASE;
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+            case CHASE -> {
+                if (pacman.isSuper()) {
+                    state = State.SCARED;
+                    this.setSpooked();
+                    state_base_time = System.currentTimeMillis();
+                } else if (elapsed_time > 20000) {
+                    state = State.SCATTER;
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+            case SCARED -> {
+                if (elapsed_time > 10000) {
+                    if (!this.updateSpooked())  {
+                        state = State.CHASE;
+                    }
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+            case DEATH -> {
+                if (elapsed_time > 3000) {
+                    state = State.SPAWN;
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+
+            default -> System.out.println("Weird thing occurred");
+        }
+
+
+    }
 
     public void update() {
         collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
