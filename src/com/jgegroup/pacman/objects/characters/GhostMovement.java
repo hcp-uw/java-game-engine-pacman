@@ -53,6 +53,6 @@ public class GhostMovement {
     }
 
     public Direction spawn(Set<Direction> restrictions) {
-        return pf.scatter(ghost.x, ghost.y, 384, 480, restrictions);
+        return pf.scatter(ghost.x, ghost.y, 384, 352, restrictions);
     }
 }

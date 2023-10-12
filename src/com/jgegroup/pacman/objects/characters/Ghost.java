@@ -212,7 +212,7 @@ public class Ghost extends Entity // implements GhostMovement
                 pacman.death();
             } else {
                 this.setSpawnPosition(0);
-                this.spookState = -1;
+                state = State.DEATH;
                 pacman.point += 500;
             }
             return true;
