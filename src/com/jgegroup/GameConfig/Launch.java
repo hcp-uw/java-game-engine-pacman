@@ -109,15 +109,15 @@ public class Launch extends Application {
                 System.out.println("Our speed for pacman is " + pacmanSpeed);
                 // How do I launch the game from here?
 
-                // We're experimenting with this :)
+                // Exports to settings.txt in setting directory
                 try {
-                    String folderName = "gameSettings";
-                    String fileName = "GUIsettings.txt";
-                    File folder = new File(folderName);
-                    FileWriter file = new FileWriter(fileName);
-                    file.write("this worked");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("res/settings/settings.txt"));
+                    writer.write("pacman lives: " + pacmanLives);
+                    writer.write("\nghost speed : " + ghostSpeed);
+                    writer.write("\npacman speed: " + pacmanSpeed);
+                    writer.close();
+                } catch (IOException c) {
+                    throw new RuntimeException(c);
                 }
             }
         };
