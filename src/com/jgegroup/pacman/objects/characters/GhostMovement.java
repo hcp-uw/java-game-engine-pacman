@@ -51,4 +51,8 @@ public class GhostMovement {
     public Direction spooked(Set<Direction> restrictions) {
         return pf.spook(ghost.x, ghost.y, pac.x, pac.y, restrictions);
     }
+
+    public Direction spawn(Set<Direction> restrictions) {
+        return pf.scatter(ghost.x, ghost.y, 384, 480, restrictions);
+    }
 }

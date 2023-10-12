@@ -111,6 +111,7 @@ public class Ghost extends Entity // implements GhostMovement
 
     public void update() {
         collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
+        updateState();
         Set<Direction> restrictions = new HashSet<>();
         if (direction.equals(Direction.DOWN)) {
             restrictions.add(Direction.UP);
@@ -121,17 +122,31 @@ public class Ghost extends Entity // implements GhostMovement
         } else if (direction.equals(Direction.LEFT)) {
             restrictions.add(Direction.RIGHT);
         }
-        if (moveCounter == 32) {
-            direction = isSpooked() ? gm.spooked(restrictions) : gm.chase(restrictions);
-            collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
-            while (collisionDetected) {
-                restrictions.add(direction);
-                direction = isSpooked() ? gm.spooked(restrictions) : gm.chase(restrictions);
+        if (state != State.DEATH) {
+            if (moveCounter == 32) {
+                switch (state) {
+                    case SCARED -> direction = gm.spooked(restrictions);
+                    case SCATTER -> direction = gm.scatter(restrictions);
+                    case CHASE -> direction = gm.chase(restrictions);
+                    case SPAWN -> direction = gm.spawn(restrictions);
+                }
                 collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
+                while (collisionDetected) {
+                    restrictions.add(direction);
+                    switch (state) {
+                        case SCARED -> direction = gm.spooked(restrictions);
+                        case SCATTER -> direction = gm.scatter(restrictions);
+                        case CHASE -> direction = gm.chase(restrictions);
+                        case SPAWN -> direction = gm.spawn(restrictions);
+                    }
+                    collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
+                }
+                moveCounter = 0;
             }
+            moveCounter++;
+        } else {
             moveCounter = 0;
         }
-        moveCounter++;
         pacmanCollision();
         if (pacman.isSuper() && !isSpooked()) {
             setSpooked();
@@ -166,10 +181,12 @@ public class Ghost extends Entity // implements GhostMovement
     }
 
     public void redraw(GraphicsContext painter) {
-        if (isSpooked()) {
-          updateSpookedImage();
-        } else {
-          updateNormalImage();
+        if (state != State.DEATH) {
+            if (state == State.SCARED) {
+                updateSpookedImage();
+            } else {
+                updateNormalImage();
+            }
         }
         painter.drawImage(spriteImage, x, y, gameScene.TILE_SIZE, gameScene.TILE_SIZE);
     }
