@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Map implements MapWriter {
 
-  private String map_name;
+  private String current_map;
 
   private String path;
   private int horizontal_length;
@@ -21,7 +21,7 @@ public class Map implements MapWriter {
 
 
   public Map(String map_name, int horizontal_length, int vertical_length) {
-    this.map_name = map_name;
+    this.current_map= map_name;
     this.path = "res/maps/" + map_name;
     this.horizontal_length = horizontal_length;
     this.vertical_length = vertical_length;

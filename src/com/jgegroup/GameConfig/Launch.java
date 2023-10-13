@@ -21,10 +21,11 @@ import java.io.*;
 
 public class Launch extends Application {
 
+    public GameLaunch gameLaunch;
     public String newMapName; // For it to work with lambda ex
     public int horizontal_length; // For it to work with lambda ex
     public int vertical_length; // For it to work with lambda ex
-
+    public Map current_map;
     public static void main(String[] args) {
         launch(args);
     }
@@ -132,66 +133,90 @@ public class Launch extends Application {
         return root;
     }
 
-    public GameLaunch gameLaunch;
     public Pane MapWriterContent() {
-        Pane root = new Pane();
-        Map current_map = null;
+      Pane root = new Pane();
+      Map current_map = null;
 
 
-        Canvas mapWriterCanvas = new Canvas(400, 400);
-        GraphicsContext mapPainter = mapWriterCanvas.getGraphicsContext2D();
-        root.getChildren().add(mapWriterCanvas);
+      Canvas mapWriterCanvas = new Canvas(400, 400);
+      GraphicsContext mapPainter = mapWriterCanvas.getGraphicsContext2D();
+      root.getChildren().add(mapWriterCanvas);
 
-        // Save map button
-        Button saveMapButton = new Button("Save Map");
-        saveMapButton.relocate(200, 0);
-        saveMapButton.setOnAction(event -> {
-          try {
-            if (current_map == null) {
-              throw new NullPointerException();
-            }
-            current_map.saveMap();
-          } catch (NullPointerException e) {
-            Text errText = new Text();
-            errText.setText("Not working with a map!");
-            errText.relocate(200, 25);
-            root.getChildren().add(errText);
+      // Save map button
+      Button saveMapButton = new Button("Save Map");
+      saveMapButton.relocate(200, 0);
+      saveMapButton.setOnAction(event -> {
+        try {
+          if (current_map == null) {
+            throw new NullPointerException();
           }
-        });
+          current_map.saveMap();
+        } catch (NullPointerException e) {
+          Text errText = new Text();
+          errText.setText("Not working with a map!");
+          errText.relocate(200, 25);
+          root.getChildren().add(errText);
+        }
+      });
 
 
       // Show Map button
-        Button showMapButton = new Button("Show map");
-        showMapButton.relocate(200, 100);
-        Text map_text = new Text();
-        showMapButton.setOnAction(event -> {
-          try {
-            String content = readMap(current_map.getPath());
-            root.getChildren().remove(map_text);
-            map_text.setText(content);
-            root.getChildren().add(map_text);
+      Button showMapButton = new Button("Show map");
+      showMapButton.relocate(200, 100);
+      Text map_text = new Text();
+      showMapButton.setOnAction(event -> {
+        try {
+          String content = readMap(current_map.getPath());
+          root.getChildren().remove(map_text);
+          map_text.setText(content);
+          root.getChildren().add(map_text);
 
-            throw new NullPointerException();
-          } catch (NullPointerException e) {
-            Text errText = new Text();
-            errText.setText("Not working with a map!");
-            errText.relocate(200, 125);
-            root.getChildren().add(errText);
-          }
-        });
+          throw new NullPointerException();
+        } catch (NullPointerException e) {
+          Text errText = new Text();
+          errText.setText("Not working with a map!");
+          errText.relocate(200, 125);
+          root.getChildren().add(errText);
+        }
+      });
 
-        // Create new map button
+      // Create new map button
       Button createNewMapButton = new Button("Create New Map");
       createNewMapButton.relocate(200, 200);
       createNewMapButton.setOnAction(event -> {
         getMapInfo();
-        });
+      });
 
       //
       root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton);
+
+      addMapDropBox(root);
+      // Create a ComboBox to list map files
+
       return root;
     }
-    public String readMap (String path) {
+
+  private static void addMapDropBox(Pane root) {
+    ComboBox<String> comboBox = new ComboBox<>();
+    comboBox.relocate(0, 0);
+    File directory = new File("res/maps");
+    File[] maps = directory.listFiles();
+    if (maps != null) {
+      for (File map : maps) {
+          comboBox.getItems().add(map.getName());
+      }
+    }
+    comboBox.setOnAction(event -> {
+      String selectedMap = comboBox.getValue();
+      if (selectedMap != null) {
+        System.out.println("selecting map: " + selectedMap);
+      }
+    });
+    root.getChildren().addAll(comboBox);
+  }
+
+
+  public String readMap (String path) {
       try {
         InputStream inputStream = new FileInputStream(path);
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -219,7 +244,6 @@ public class Launch extends Application {
         ConfigBuilder cb = new ConfigBuilder();
         return cb.build();
     }
-
 
     public void getMapInfo() {
       String map_name;
