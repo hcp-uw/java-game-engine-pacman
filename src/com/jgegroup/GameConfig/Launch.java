@@ -25,7 +25,7 @@ public class Launch extends Application {
     public String newMapName; // For it to work with lambda ex
     public int horizontal_length; // For it to work with lambda ex
     public int vertical_length; // For it to work with lambda ex
-    public Map current_map;
+    public static Map current_map;
     public static void main(String[] args) {
         launch(args);
     }
@@ -187,16 +187,16 @@ public class Launch extends Application {
         getMapInfo();
       });
 
-      //
+
       root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton);
 
       addMapDropBox(root);
-      // Create a ComboBox to list map files
+
 
       return root;
     }
 
-  private static void addMapDropBox(Pane root) {
+  public void addMapDropBox(Pane root) {
     ComboBox<String> comboBox = new ComboBox<>();
     comboBox.relocate(0, 0);
     File directory = new File("res/maps");
@@ -210,9 +210,18 @@ public class Launch extends Application {
       String selectedMap = comboBox.getValue();
       if (selectedMap != null) {
         System.out.println("selecting map: " + selectedMap);
+        try {
+          openMap(selectedMap);
+        } catch (FileNotFoundException e) {
+          throw new RuntimeException(e);
+        }
       }
     });
     root.getChildren().addAll(comboBox);
+  }
+
+  public void openMap (String map_name) throws FileNotFoundException {
+      current_map = new Map(map_name);
   }
 
 

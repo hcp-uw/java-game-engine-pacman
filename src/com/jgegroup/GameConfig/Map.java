@@ -2,15 +2,13 @@ package com.jgegroup.GameConfig;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
-import java.awt.*;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.Scanner;
+import java.io.*;
 
 
 public class Map implements MapWriter {
 
-  private String current_map;
+  private String map_name;
 
   private String path;
   private int horizontal_length;
@@ -19,17 +17,38 @@ public class Map implements MapWriter {
   private int ArrayMap [][];
 
 
-
+  //New MAP
   public Map(String map_name, int horizontal_length, int vertical_length) {
-    this.current_map= map_name;
+    this.map_name = map_name;
     this.path = "res/maps/" + map_name;
     this.horizontal_length = horizontal_length;
     this.vertical_length = vertical_length;
     this.ArrayMap = new int[horizontal_length][vertical_length];
   }
-  public String getPath() {
-    return path;
+  //Existing MAP
+  public Map(String map_name) throws FileNotFoundException {
+    this.map_name = map_name;
+    this.path = "res/maps/" + map_name;
+    // SCAN and get size of map.
+    try (Scanner scanner = new Scanner(new File(path))) {
+      int rowCount = 0;
+      // Count column. Require pointer to be at first row, therefore rowCount++.
+      String firstLine = scanner.nextLine();
+      String[] columns = firstLine.split(" ");
+      rowCount++;
+      // Count row
+      while (scanner.hasNextLine()) {
+        scanner.nextLine();
+        rowCount++;
+      }
+      this.horizontal_length = columns.length;
+      this.vertical_length = rowCount;
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    System.out.println("x: " + horizontal_length + "y: " + vertical_length);
   }
+
 
 
   @Override
@@ -39,11 +58,6 @@ public class Map implements MapWriter {
         ArrayMap[i][j] = 0;
       }
     }
-  }
-
-  @Override
-  public void readMap() {
-
   }
 
   @Override
@@ -96,5 +110,8 @@ public class Map implements MapWriter {
   @Override
   public void changeTileHorizontally() {
 
+  }
+  public String getPath() {
+    return path;
   }
 }
