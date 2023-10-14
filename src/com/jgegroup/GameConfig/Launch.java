@@ -45,14 +45,13 @@ public class Launch extends Application {
 
         // Set up
         Group root = new Group(); // No longer used - Gabriel Sison
-        Scene scene = new Scene(tabPane, 400, 400);
+        Scene scene = new Scene(tabPane, 1000, 800);
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setTitle("JGE Settings");
         stage.centerOnScreen();
 
         stage.show();
-        app(stage);
     }
 
 
@@ -135,26 +134,20 @@ public class Launch extends Application {
 
     public Pane MapWriterContent() {
       Pane root = new Pane();
-      Map current_map = null;
-
-
       Canvas mapWriterCanvas = new Canvas(400, 400);
       GraphicsContext mapPainter = mapWriterCanvas.getGraphicsContext2D();
       root.getChildren().add(mapWriterCanvas);
 
       // Save map button
       Button saveMapButton = new Button("Save Map");
-      saveMapButton.relocate(200, 0);
+      saveMapButton.relocate(210, 0);
       saveMapButton.setOnAction(event -> {
         try {
-          if (current_map == null) {
-            throw new NullPointerException();
-          }
           current_map.saveMap();
         } catch (NullPointerException e) {
           Text errText = new Text();
           errText.setText("Not working with a map!");
-          errText.relocate(200, 25);
+          errText.relocate(300, 5);
           root.getChildren().add(errText);
         }
       });
@@ -162,34 +155,31 @@ public class Launch extends Application {
 
       // Show Map button
       Button showMapButton = new Button("Show map");
-      showMapButton.relocate(200, 100);
+      showMapButton.relocate(210, 25);
       Text map_text = new Text();
       showMapButton.setOnAction(event -> {
         try {
-          String content = readMap(current_map.getPath());
+          String content = current_map.showMapContent();
           root.getChildren().remove(map_text);
           map_text.setText(content);
           root.getChildren().add(map_text);
-
-          throw new NullPointerException();
         } catch (NullPointerException e) {
           Text errText = new Text();
           errText.setText("Not working with a map!");
-          errText.relocate(200, 125);
+          errText.relocate(300, 30);
           root.getChildren().add(errText);
         }
       });
 
       // Create new map button
       Button createNewMapButton = new Button("Create New Map");
-      createNewMapButton.relocate(200, 200);
+      createNewMapButton.relocate(100, 0);
       createNewMapButton.setOnAction(event -> {
         getMapInfo();
       });
 
 
       root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton);
-
       addMapDropBox(root);
 
 
@@ -211,7 +201,7 @@ public class Launch extends Application {
       if (selectedMap != null) {
         System.out.println("selecting map: " + selectedMap);
         try {
-          openMap(selectedMap);
+          current_map = new Map(selectedMap);
         } catch (FileNotFoundException e) {
           throw new RuntimeException(e);
         }
@@ -219,35 +209,6 @@ public class Launch extends Application {
     });
     root.getChildren().addAll(comboBox);
   }
-
-  public void openMap (String map_name) throws FileNotFoundException {
-      current_map = new Map(map_name);
-  }
-
-
-  public String readMap (String path) {
-      try {
-        InputStream inputStream = new FileInputStream(path);
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        StringBuilder map_content = new StringBuilder();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-          map_content.append(line).append("\n");
-        }
-        bufferedReader.close();
-        return map_content.toString();
-      } catch (IOException e) {
-        e.printStackTrace();
-        return "";
-      }
-    }
-
-    public void app(Stage stage) {
-        Scene scene = stage.getScene();
-
-        Config config = initialize(scene);
-    }
 
     private Config initialize(Scene scene) {
         ConfigBuilder cb = new ConfigBuilder();
