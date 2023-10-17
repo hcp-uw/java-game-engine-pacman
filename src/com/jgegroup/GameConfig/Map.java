@@ -18,12 +18,13 @@ public class Map implements MapWriter {
 
 
   //New MAP
-  public Map(String map_name, int column, int row) {
+  public Map(String map_name, int row, int column) {
     this.map_name = map_name;
     this.path = "res/maps/" + map_name;
     this.column = column;
     this.row = row;
     this.ArrayMap = new int[column][row];
+    loadBasicMap();
   }
   //Existing MAP
   public Map(String map_name) throws FileNotFoundException {
