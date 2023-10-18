@@ -1,1 +1,3 @@
-
+pacman lives: 2
+ghost speed : 8
+pacman speed: 10
