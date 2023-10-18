@@ -140,14 +140,14 @@ public class Launch extends Application {
 
       // Save map button
       Button saveMapButton = new Button("Save Map");
-      saveMapButton.relocate(210, 0);
+      saveMapButton.relocate(840, 0);
       saveMapButton.setOnAction(event -> {
         try {
           current_map.saveMap();
         } catch (NullPointerException e) {
           Text errText = new Text();
           errText.setText("Not working with a map!");
-          errText.relocate(300, 5);
+          errText.relocate(920, 20);
           root.getChildren().add(errText);
         }
       });
@@ -155,13 +155,14 @@ public class Launch extends Application {
 
       // Show Map button
       Button showMapButton = new Button("Show map");
-      showMapButton.relocate(210, 25);
+      showMapButton.relocate(765, 0);
       Text map_text = new Text();
       showMapButton.setOnAction(event -> {
         try {
           String content = current_map.showMapContent();
           root.getChildren().remove(map_text);
           map_text.setText(content);
+          map_text.relocate(5, 50);
           root.getChildren().add(map_text);
         } catch (NullPointerException e) {
           Text errText = new Text();
@@ -173,7 +174,7 @@ public class Launch extends Application {
 
       // Create new map button
       Button createNewMapButton = new Button("Create New Map");
-      createNewMapButton.relocate(100, 0);
+      createNewMapButton.relocate(0, 0);
       createNewMapButton.setOnAction(event -> {
         getMapInfo();
       });
@@ -188,7 +189,7 @@ public class Launch extends Application {
 
   public void addMapDropBox(Pane root) {
     ComboBox<String> comboBox = new ComboBox<>();
-    comboBox.relocate(0, 0);
+    comboBox.relocate(910, 0);
     File directory = new File("res/maps");
     File[] maps = directory.listFiles();
     if (maps != null) {
@@ -201,7 +202,9 @@ public class Launch extends Application {
       if (selectedMap != null) {
         System.out.println("selecting map: " + selectedMap);
         try {
+          // Change the currently working map.
           current_map = new Map(selectedMap);
+
         } catch (FileNotFoundException e) {
           throw new RuntimeException(e);
         }
@@ -252,5 +255,7 @@ public class Launch extends Application {
           }
         });
       });
+      // change the currently working map.
+      current_map = new Map(newMapName,vertical_length, horizontal_length);
     }
 }
