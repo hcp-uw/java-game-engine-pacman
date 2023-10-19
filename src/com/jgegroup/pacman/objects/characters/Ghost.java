@@ -32,21 +32,13 @@ public class Ghost extends Entity // implements GhostMovement
     private Pac pacman;
     private GhostMovement gm;
 
-//
-//    public Ghost(int x, int y, int spookLength, Color color) {
-//        super(x,y);
-//        this.spookLength = spookLength;
-//        this.base_color = color;
-//        this.current_color = color;
-//        // this indicates that it is not spooked, -1 <- no spook. > 0 <- yes spook
-//        this.spookState = -1;
-//        this.direction = Direction.STOP;
-//    }
+    public enum State {
+        SPAWN, CHASE, SCATTER, SCARED, DEATH
+    }
 
-
-
+    public State state;
     private GameScene gameScene;
-    private long last_time;
+    private long last_time, state_base_time;
     private long moveCounter = 0;
     public Ghost(int spookLength, GameScene gameScene, Color color, Pac pacman) {
         this.spookLength = pacman.superLength;
@@ -59,7 +51,7 @@ public class Ghost extends Entity // implements GhostMovement
         setGhostImage();
         setWhiteGhostImage();
         initialize();
-        last_time = System.currentTimeMillis();
+        last_time = state_base_time = System.currentTimeMillis();
     }
 
     public void initialize() {
@@ -70,11 +62,66 @@ public class Ghost extends Entity // implements GhostMovement
         spookState = -1;
         speed = 1;
         direction = Direction.STOP;
+        state = State.SPAWN;
     }
 
+    public void updateState() {
+        long elapsed_time = System.currentTimeMillis() - state_base_time;
+        switch(state) {
+            case SPAWN -> {
+                if (pacman.isSuper()) {
+                    state = State.SCARED;
+                    this.setSpooked();
+                    state_base_time = System.currentTimeMillis();
+                } else if (elapsed_time > 3000) {
+                    state = State.CHASE;
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+            case SCATTER -> {
+                if (pacman.isSuper()) {
+                    state = State.SCARED;
+                    this.setSpooked();
+                    state_base_time = System.currentTimeMillis();
+                } else if (elapsed_time > 10000) {
+                    state = State.CHASE;
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+            case CHASE -> {
+                if (pacman.isSuper()) {
+                    state = State.SCARED;
+                    this.setSpooked();
+                    state_base_time = System.currentTimeMillis();
+                } else if (elapsed_time > 20000) {
+                    state = State.SCATTER;
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+            case SCARED -> {
+                if (elapsed_time > 10000) {
+                    if (!this.updateSpooked())  {
+                        state = State.CHASE;
+                    }
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+            case DEATH -> {
+                if (elapsed_time > 3000) {
+                    state = State.SPAWN;
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+
+            default -> System.out.println("Weird thing occurred");
+        }
+
+
+    }
 
     public void update() {
         collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
+        updateState();
         Set<Direction> restrictions = new HashSet<>();
         if (direction.equals(Direction.DOWN)) {
             restrictions.add(Direction.UP);
@@ -85,17 +132,31 @@ public class Ghost extends Entity // implements GhostMovement
         } else if (direction.equals(Direction.LEFT)) {
             restrictions.add(Direction.RIGHT);
         }
-        if (moveCounter == 32) {
-            direction = isSpooked() ? gm.spooked(restrictions) : gm.chase(restrictions);
-            collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
-            while (collisionDetected) {
-                restrictions.add(direction);
-                direction = isSpooked() ? gm.spooked(restrictions) : gm.chase(restrictions);
+        if (state != State.DEATH) {
+            if (moveCounter == 32) {
+                switch (state) {
+                    case SCARED -> direction = gm.spooked(restrictions);
+                    case SCATTER -> direction = gm.scatter(restrictions);
+                    case CHASE -> direction = gm.chase(restrictions);
+                    case SPAWN -> direction = gm.spawn(restrictions);
+                }
                 collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
+                while (collisionDetected) {
+                    restrictions.add(direction);
+                    switch (state) {
+                        case SCARED -> direction = gm.spooked(restrictions);
+                        case SCATTER -> direction = gm.scatter(restrictions);
+                        case CHASE -> direction = gm.chase(restrictions);
+                        case SPAWN -> direction = gm.spawn(restrictions);
+                    }
+                    collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
+                }
+                moveCounter = 0;
             }
+            moveCounter++;
+        } else {
             moveCounter = 0;
         }
-        moveCounter++;
         pacmanCollision();
         if (pacman.isSuper() && !isSpooked()) {
             setSpooked();
@@ -130,10 +191,12 @@ public class Ghost extends Entity // implements GhostMovement
     }
 
     public void redraw(GraphicsContext painter) {
-        if (isSpooked()) {
-          updateSpookedImage();
-        } else {
-          updateNormalImage();
+        if (state != State.DEATH) {
+            if (state == State.SCARED) {
+                updateSpookedImage();
+            } else {
+                updateNormalImage();
+            }
         }
         painter.drawImage(spriteImage, x, y, gameScene.TILE_SIZE, gameScene.TILE_SIZE);
     }
@@ -159,7 +222,7 @@ public class Ghost extends Entity // implements GhostMovement
                 pacman.death();
             } else {
                 this.setSpawnPosition(0);
-                this.spookState = -1;
+                state = State.DEATH;
                 pacman.point += 500;
             }
             return true;

@@ -149,7 +149,8 @@ public class GameScene implements Runnable{
     MediaPlayer mp2 = new MediaPlayer(m2);
     MediaPlayer mp3 = new MediaPlayer(m3);
     mp.setVolume(0.25f);
-    mp.setVolume(0.1f);
+    mp2.setVolume(0.25f);
+    mp3.setVolume(0.25f);
     mp.play();
     while (pac.getLives() >= 0) {
       update();
