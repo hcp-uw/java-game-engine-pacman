@@ -273,20 +273,20 @@ public class GameConfig extends Application {
       // Create new map button
       Button createNewMapButton = new Button("Create New Map");
       createNewMapButton.relocate(0, 0);
-      createNewMapButton.setOnAction(event -> {
+        ComboBox<String> addMapDropBox = addMapDropBox();
+        createNewMapButton.setOnAction(event -> {
         getMapInfo();
-        updateMapDropBox(root);
+        updateMapDropBox(addMapDropBox);
       });
 
 
-      root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton);
-      addMapDropBox(root);
+      root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton, addMapDropBox);
 
 
       return root;
     }
 
-  public void addMapDropBox(Pane root) {
+  public ComboBox<String> addMapDropBox() {
     ComboBox<String> comboBox = new ComboBox<>();
     comboBox.relocate(710, 0);
     File directory = new File("res/maps");
@@ -309,10 +309,17 @@ public class GameConfig extends Application {
         }
       }
     });
-    root.getChildren().addAll(comboBox);
+    return comboBox;
   }
-  public void updateMapDropBox(Pane root) {
-        ComboBox<String> mapbox = (ComboBox<String>) root.getChildren().get(3);
+  public void updateMapDropBox(ComboBox<String> dropDown) {
+        dropDown.getItems().clear();
+      File directory = new File("res/maps");
+      File[] maps = directory.listFiles();
+      if (maps != null) {
+          for (File map : maps) {
+              dropDown.getItems().add(map.getName());
+          }
+      }
   }
 
     public void getMapInfo() {
