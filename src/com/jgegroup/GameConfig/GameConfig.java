@@ -12,15 +12,15 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
+import javafx.scene.image.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -484,13 +484,11 @@ public class GameConfig extends Application {
         Image floor, wall;
         WritableImage dot, bigDot;
 
-        public TilePickerButton(int curr, Image floor, Image wall, WritableImage dot, WritableImage bigDot) {
+        public TilePickerButton(int curr, Image floor, Image wall, Image dot, Image bigDot) {
             super();
             this.curr = curr;
             this.floor = floor;
             this.wall = wall;
-            this.dot = dot;
-            this.bigDot = bigDot;
             initDot(dot);
             initBigDot(bigDot);
             setCurrGraphic();
@@ -528,6 +526,36 @@ public class GameConfig extends Application {
                 bigDotView.setFitWidth(15);
                 bigDotView.setFitHeight(15);
                 this.setGraphic(bigDotView);
+            }
+        }
+
+        public void initDot(Image dot) {
+            int dotsize = 8;
+            double x = dot.getWidth();
+            double y = dot.getHeight();
+            this.dot = new WritableImage(dot.getPixelReader(), (int) x, (int) y);
+            int dotstart_x = ((int) x / 2) - dotsize / 2;
+            int dotstart_y = ((int) y / 2) - dotsize / 2;
+            PixelWriter writer = this.dot.getPixelWriter();
+            for (int i = dotstart_x; i < dotstart_x + dotsize; i++) {
+                for (int j = dotstart_y; j < dotstart_y + dotsize; j++) {
+                    writer.setColor(i, j, Color.YELLOW);
+                }
+            }
+        }
+
+        public void initBigDot(Image bigDot) {
+            int dotsize = 16;
+            double x = dot.getWidth();
+            double y = dot.getHeight();
+            this.dot = new WritableImage(dot.getPixelReader(), (int) x, (int) y);
+            int dotstart_x = ((int) x / 2) - dotsize / 2;
+            int dotstart_y = ((int) y / 2) - dotsize / 2;
+            PixelWriter writer = this.dot.getPixelWriter();
+            for (int i = dotstart_x; i < dotstart_x + dotsize; i++) {
+                for (int j = dotstart_y; j < dotstart_y + dotsize; j++) {
+                    writer.setColor(i, j, Color.YELLOW);
+                }
             }
         }
     }
