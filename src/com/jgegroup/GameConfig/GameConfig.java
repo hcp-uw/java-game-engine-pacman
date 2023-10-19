@@ -14,6 +14,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -480,15 +481,18 @@ public class GameConfig extends Application {
 
     class TilePickerButton extends Button {
         int curr;
-        Image floor, wall, dot, bigDot;
+        Image floor, wall;
+        WritableImage dot, bigDot;
 
-        public TilePickerButton(int curr, Image floor, Image wall, Image dot, Image bigDot) {
+        public TilePickerButton(int curr, Image floor, Image wall, WritableImage dot, WritableImage bigDot) {
             super();
             this.curr = curr;
             this.floor = floor;
             this.wall = wall;
             this.dot = dot;
             this.bigDot = bigDot;
+            initDot(dot);
+            initBigDot(bigDot);
             setCurrGraphic();
             this.setOnAction(event -> {
                 if (this.curr > 3)
