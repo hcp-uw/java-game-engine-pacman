@@ -1,7 +1,6 @@
 package com.jgegroup.GameConfig;
 
 import com.jgegroup.GameConfig.config.Settings;
-//import com.jgegroup.pacman.GameLaunch;
 import com.jgegroup.pacman.GameScene;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -25,16 +24,19 @@ import java.util.List;
 
 public class GameConfig extends Application {
 
-//    public GameLaunch gameLaunch;
+    //    public GameLaunch gameLaunch;
     public String newMapName; // For it to work with lambda ex
     public int horizontal_length; // For it to work with lambda ex
     public int vertical_length; // For it to work with lambda ex
     public static Map current_map;
+
     public static void main(String[] args) {
         launch(args);
     }
+
     private Stage stage;
     private Settings settings;
+
     @Override
     public void start(Stage stage) throws Exception {
         // Creating tab pane, tabs, then adding tabs to tab pane
@@ -67,7 +69,7 @@ public class GameConfig extends Application {
 
     public Pane GameSettingsContent() {
         Pane root = new Pane();
-        Label label = new Label ("Game Settings");
+        Label label = new Label("Game Settings");
         label.relocate(150, 10);
 
         // Lives for PacMan
@@ -79,7 +81,7 @@ public class GameConfig extends Application {
         pacManLivesSlider.setMinorTickCount(0);
         pacManLivesSlider.setShowTickMarks(true);
         pacManLivesSlider.setShowTickLabels(true);
-        Label pacManLives = new Label ("Pacman Lives");
+        Label pacManLives = new Label("Pacman Lives");
         pacManLives.relocate(25, 100);
 
         // Speed for Ghost
@@ -91,7 +93,7 @@ public class GameConfig extends Application {
         ghostLivesSlider.setMinorTickCount(0);
         ghostLivesSlider.setShowTickMarks(true);
         ghostLivesSlider.setShowTickLabels(true);
-        Label ghostSpeed = new Label ("Ghost Speed");
+        Label ghostSpeed = new Label("Ghost Speed");
         ghostSpeed.relocate(25, 150);
 
         // PacMan Speed default
@@ -103,12 +105,12 @@ public class GameConfig extends Application {
         pacManSpeedSlider.setMinorTickCount(0);
         pacManSpeedSlider.setShowTickMarks(true);
         pacManSpeedSlider.setShowTickLabels(true);
-        Label pacManSpeed = new Label ("Pacman Speed");
+        Label pacManSpeed = new Label("Pacman Speed");
         pacManSpeed.relocate(25, 200);
 
 
-        Button button = new Button ("Game Launch");
-        button.relocate(125,50);
+        Button button = new Button("Game Launch");
+        button.relocate(125, 50);
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 System.out.println("button pressed");
@@ -152,7 +154,6 @@ public class GameConfig extends Application {
         };
 
 
-
         // when button is pressed
         button.setOnAction(event);
         root.getChildren().addAll(label, button, pacManLivesSlider, ghostLivesSlider, pacManSpeedSlider,
@@ -161,10 +162,10 @@ public class GameConfig extends Application {
     }
 
     public Pane MapWriterContent() {
-      Pane root = new Pane();
-      Canvas mapWriterCanvas = new Canvas(400, 400);
-      GraphicsContext mapPainter = mapWriterCanvas.getGraphicsContext2D();
-      root.getChildren().add(mapWriterCanvas);
+        Pane root = new Pane();
+        Canvas mapWriterCanvas = new Canvas(400, 400);
+        GraphicsContext mapPainter = mapWriterCanvas.getGraphicsContext2D();
+        root.getChildren().add(mapWriterCanvas);
 
         // Dropdown for images
         // floor
@@ -236,130 +237,131 @@ public class GameConfig extends Application {
 
         root.getChildren().addAll(floorBox, wallBox);
 
-      // Save map button
-      Button saveMapButton = new Button("Save Map");
-      saveMapButton.relocate(640, 0);
-      saveMapButton.setOnAction(event -> {
-        try {
-          current_map.saveMap();
-        } catch (NullPointerException e) {
-          Text errText = new Text();
-          errText.setText("Not working with a map!");
-          errText.relocate(720, 20);
-          root.getChildren().add(errText);
-        }
-      });
+        // Save map button
+        Button saveMapButton = new Button("Save Map");
+        saveMapButton.relocate(640, 0);
+        saveMapButton.setOnAction(event -> {
+            try {
+                current_map.saveMap();
+            } catch (NullPointerException e) {
+                Text errText = new Text();
+                errText.setText("Not working with a map!");
+                errText.relocate(720, 20);
+                root.getChildren().add(errText);
+            }
+        });
 
 
-      // Show Map button
-      Button showMapButton = new Button("Show map");
-      showMapButton.relocate(565, 0);
-      Text map_text = new Text();
-      showMapButton.setOnAction(event -> {
-        try {
-          String content = current_map.showMapContent();
-          root.getChildren().remove(map_text);
-          map_text.setText(content);
-          map_text.relocate(5, 50);
-          root.getChildren().add(map_text);
-        } catch (NullPointerException e) {
-          Text errText = new Text();
-          errText.setText("Not working with a map!");
-          errText.relocate(300, 30);
-          root.getChildren().add(errText);
-        }
-      });
+        // Show Map button
+        Button showMapButton = new Button("Show map");
+        showMapButton.relocate(565, 0);
+        Text map_text = new Text();
+        showMapButton.setOnAction(event -> {
+            try {
+                String content = current_map.showMapContent();
+                root.getChildren().remove(map_text);
+                map_text.setText(content);
+                map_text.relocate(5, 50);
+                root.getChildren().add(map_text);
+            } catch (NullPointerException e) {
+                Text errText = new Text();
+                errText.setText("Not working with a map!");
+                errText.relocate(300, 30);
+                root.getChildren().add(errText);
+            }
+        });
 
-      // Create new map button
-      Button createNewMapButton = new Button("Create New Map");
-      createNewMapButton.relocate(0, 0);
+        // Create new map button
+        Button createNewMapButton = new Button("Create New Map");
+        createNewMapButton.relocate(0, 0);
         ComboBox<String> addMapDropBox = addMapDropBox();
         createNewMapButton.setOnAction(event -> {
-        getMapInfo();
-        updateMapDropBox(addMapDropBox);
-      });
+            getMapInfo();
+            updateMapDropBox(addMapDropBox);
+        });
 
 
-      root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton, addMapDropBox);
+        root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton, addMapDropBox);
 
 
-      return root;
+        return root;
     }
 
-  public ComboBox<String> addMapDropBox() {
-    ComboBox<String> comboBox = new ComboBox<>();
-    comboBox.relocate(710, 0);
-    File directory = new File("res/maps");
-    File[] maps = directory.listFiles();
-    if (maps != null) {
-      for (File map : maps) {
-          comboBox.getItems().add(map.getName());
-      }
-    }
-    comboBox.setOnAction(event -> {
-      String selectedMap = comboBox.getValue();
-      if (selectedMap != null) {
-        System.out.println("selecting map: " + selectedMap);
-        try {
-          // Change the currently working map.
-          current_map = new Map(selectedMap);
-
-        } catch (FileNotFoundException e) {
-          throw new RuntimeException(e);
+    public ComboBox<String> addMapDropBox() {
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.relocate(710, 0);
+        File directory = new File("res/maps");
+        File[] maps = directory.listFiles();
+        if (maps != null) {
+            for (File map : maps) {
+                comboBox.getItems().add(map.getName());
+            }
         }
-      }
-    });
-    return comboBox;
-  }
-  public void updateMapDropBox(ComboBox<String> dropDown) {
+        comboBox.setOnAction(event -> {
+            String selectedMap = comboBox.getValue();
+            if (selectedMap != null) {
+                System.out.println("selecting map: " + selectedMap);
+                try {
+                    // Change the currently working map.
+                    current_map = new Map(selectedMap);
+
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        return comboBox;
+    }
+
+    public void updateMapDropBox(ComboBox<String> dropDown) {
         dropDown.getItems().clear();
-      File directory = new File("res/maps");
-      File[] maps = directory.listFiles();
-      if (maps != null) {
-          for (File map : maps) {
-              dropDown.getItems().add(map.getName());
-          }
-      }
-  }
+        File directory = new File("res/maps");
+        File[] maps = directory.listFiles();
+        if (maps != null) {
+            for (File map : maps) {
+                dropDown.getItems().add(map.getName());
+            }
+        }
+    }
 
     public void getMapInfo() {
-      String map_name;
-      TextInputDialog nameDialog = new TextInputDialog();
-      nameDialog.setTitle("Create New Map");
-      nameDialog.setHeaderText(null);
-      nameDialog.setContentText("Enter Map Name:");
+        String map_name;
+        TextInputDialog nameDialog = new TextInputDialog();
+        nameDialog.setTitle("Create New Map");
+        nameDialog.setHeaderText(null);
+        nameDialog.setContentText("Enter Map Name:");
 
-      nameDialog.showAndWait().ifPresent(name -> {
+        nameDialog.showAndWait().ifPresent(name -> {
 
-        this.newMapName = name;
+            this.newMapName = name;
 
-        TextInputDialog horizontaLengthDialog = new TextInputDialog();
-        horizontaLengthDialog.setTitle("Create New Map");
-        horizontaLengthDialog.setHeaderText(null);
-        horizontaLengthDialog.setContentText("Enter number of tile horizontal");
-        horizontaLengthDialog.showAndWait().ifPresent(horizontal_length -> {
-          try {
+            TextInputDialog horizontaLengthDialog = new TextInputDialog();
+            horizontaLengthDialog.setTitle("Create New Map");
+            horizontaLengthDialog.setHeaderText(null);
+            horizontaLengthDialog.setContentText("Enter number of tile horizontal");
+            horizontaLengthDialog.showAndWait().ifPresent(horizontal_length -> {
+                try {
 
-          this.horizontal_length = Integer.parseInt(horizontal_length);
+                    this.horizontal_length = Integer.parseInt(horizontal_length);
 
-          TextInputDialog verticalLengthDialog = new TextInputDialog();
-          verticalLengthDialog.setTitle("Create New Map");
-          verticalLengthDialog.setHeaderText(null);
-          verticalLengthDialog.setContentText("Enter number of tile vertical");
-          verticalLengthDialog.showAndWait().ifPresent(vertical_length -> {
-            try {
-              this.vertical_length = Integer.parseInt(vertical_length);
+                    TextInputDialog verticalLengthDialog = new TextInputDialog();
+                    verticalLengthDialog.setTitle("Create New Map");
+                    verticalLengthDialog.setHeaderText(null);
+                    verticalLengthDialog.setContentText("Enter number of tile vertical");
+                    verticalLengthDialog.showAndWait().ifPresent(vertical_length -> {
+                        try {
+                            this.vertical_length = Integer.parseInt(vertical_length);
 
-            } catch (NumberFormatException e) {
-              System.out.println("Invalid number");
-            }
-          });
-          } catch (NumberFormatException e) {
-            System.out.println("Invalid number");
-          }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid number");
+                        }
+                    });
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid number");
+                }
+            });
         });
-      });
-      // change the currently working map.
-      current_map = new Map(newMapName,vertical_length, horizontal_length);
+        // change the currently working map.
+        current_map = new Map(newMapName, vertical_length, horizontal_length);
     }
 }
