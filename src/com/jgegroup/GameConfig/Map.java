@@ -149,4 +149,8 @@ public class Map implements MapWriter {
   public String getPath() {
     return path;
   }
+
+  public int[][] getArrayMap() {
+    return ArrayMap;
+  }
 }

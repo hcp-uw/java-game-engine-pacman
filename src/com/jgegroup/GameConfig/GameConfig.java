@@ -4,7 +4,6 @@ import com.jgegroup.GameConfig.config.Settings;
 import com.jgegroup.pacman.GameScene;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
@@ -15,7 +14,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -24,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameConfig extends Application {
 
@@ -252,7 +251,13 @@ public class GameConfig extends Application {
         Button showMapButton = new Button("Show map");
         showMapButton.relocate(525, 10);
         Text map_text = new Text();
+        AtomicInteger scrollPane_index = new AtomicInteger(-1);
+        AtomicInteger tilePickerButton_index = new AtomicInteger(-1);
         showMapButton.setOnAction(event -> {
+            if (scrollPane_index.get() != -1)
+                root.getChildren().remove(scrollPane_index.get());
+            if (tilePickerButton_index.get() != -1)
+                root.getChildren().remove(tilePickerButton_index);
             try {
                 String content = current_map.showMapContent();
                 root.getChildren().remove(map_text);
@@ -265,6 +270,33 @@ public class GameConfig extends Application {
                 errText.relocate(300, 30);
                 root.getChildren().add(errText);
             }
+            ScrollPane scrollPane = new ScrollPane();
+            TilePickerButton tilePickerButton = new TilePickerButton(0,
+                    settings.selectedFloorImage() ?
+                            settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"),
+                    settings.selectedWallImage() ?
+                            settings.getWallImage() : new Image("tiles/wall tiles/wall.png"),
+                    settings.selectedFloorImage() ?
+                            settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"),
+                    settings.selectedFloorImage() ?
+                            settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"));
+            tilePickerButton.relocate(215, 100);
+            TilePane tilePane = new TilePane(current_map.getArrayMap(),
+                    settings.selectedFloorImage() ?
+                            settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"),
+                    settings.selectedWallImage() ?
+                            settings.getWallImage() : new Image("tiles/wall tiles/wall.png"),
+                    tilePickerButton);
+            scrollPane.setContent(tilePane);
+            tilePane.setPrefHeight(800);
+            scrollPane.relocate(5, 150);
+            scrollPane.setMaxHeight(400);
+            scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            root.getChildren().addAll(scrollPane, tilePickerButton);
+            scrollPane_index.set(root.getChildren().indexOf(scrollPane));
+            tilePickerButton_index.set(root.getChildren().indexOf(tilePickerButton));
+
         });
 
         // Create new map button
@@ -328,22 +360,29 @@ public class GameConfig extends Application {
             this.newMapName = name;
 
             TextInputDialog horizontaLengthDialog = new TextInputDialog();
-            horizontaLengthDialog.setTitle("Create New Map");
+            horizontaLengthDialog.setTitle("Creating New Map");
             horizontaLengthDialog.setHeaderText(null);
-            horizontaLengthDialog.setContentText("Enter number of tile horizontal");
+            horizontaLengthDialog.setContentText("Enter number of horizontal tiles");
             horizontaLengthDialog.showAndWait().ifPresent(horizontal_length -> {
                 try {
 
-                    this.horizontal_length = Integer.parseInt(horizontal_length);
+                    int hor_len = Integer.parseInt(horizontal_length);
 
+                    if (hor_len > 32) {
+                        throw new NumberFormatException("Number was too big!!!");
+                    }
+                    this.horizontal_length = hor_len;
                     TextInputDialog verticalLengthDialog = new TextInputDialog();
                     verticalLengthDialog.setTitle("Create New Map");
                     verticalLengthDialog.setHeaderText(null);
-                    verticalLengthDialog.setContentText("Enter number of tile vertical");
+                    verticalLengthDialog.setContentText("Enter number of vertical tiles");
                     verticalLengthDialog.showAndWait().ifPresent(vertical_length -> {
                         try {
-                            this.vertical_length = Integer.parseInt(vertical_length);
-
+                            int ver_len = Integer.parseInt(vertical_length);
+                            if (ver_len > 32) {
+                                throw new NumberFormatException("Number was too big!!!");
+                            }
+                            this.vertical_length = ver_len;
                         } catch (NumberFormatException e) {
                             System.out.println("Invalid number");
                         }
@@ -374,6 +413,118 @@ public class GameConfig extends Application {
             }
 
             setText("");
+        }
+    }
+
+    class TilePane extends Pane {
+        int[][] mapArray;
+        Image floor, wall;
+        TilePickerButton picker;
+
+        public TilePane(int[][] mapArray, Image floor, Image wall, TilePickerButton picker) {
+            super();
+            System.out.println("Creating TilePane");
+            this.mapArray = mapArray;
+            this.floor = floor;
+            this.wall = wall;
+            this.picker = picker;
+            initialize(this);
+        }
+
+        public void initialize(TilePane tilePane) {
+            int height = mapArray.length;
+            int width = mapArray[0].length;
+            int height_spacer = 5; // account for space from top bar
+            int width_spacer = 5;
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+
+                    Button newButton = new Button();
+                    if (mapArray[i][j] != 1) {
+                        ImageView floorView = new ImageView(floor);
+                        floorView.setFitHeight(12);
+                        floorView.setFitWidth(12);
+                        newButton.setGraphic(floorView);
+                    } else {
+                        ImageView wallView = new ImageView(wall);
+                        wallView.setFitWidth(12);
+                        wallView.setFitHeight(12);
+                        newButton.setGraphic(wallView);
+                    }
+                    int finalI = i;
+                    int finalJ = j;
+                    newButton.setOnAction(event -> {
+                        if (picker.getValue() != 1) {
+                            ImageView wallView = new ImageView(wall);
+                            wallView.setFitWidth(12);
+                            wallView.setFitHeight(12);
+                            mapArray[finalI][finalJ] = 0;
+                            newButton.setGraphic(wallView);
+                        } else {
+                            ImageView floorView = new ImageView(floor);
+                            floorView.setFitHeight(12);
+                            floorView.setFitWidth(12);
+                            mapArray[finalI][finalJ] = 1;
+                            newButton.setGraphic(floorView);
+                        }
+                    });
+                    newButton.relocate(width_spacer + (i * 32), height_spacer + (j * 32));
+                    newButton.setMaxHeight(10);
+                    newButton.setMaxWidth(10);
+                    newButton.setPrefSize(10, 10);
+                    tilePane.getChildren().add(newButton);
+                }
+            }
+        }
+    }
+
+    class TilePickerButton extends Button {
+        int curr;
+        Image floor, wall, dot, bigDot;
+
+        public TilePickerButton(int curr, Image floor, Image wall, Image dot, Image bigDot) {
+            super();
+            this.curr = curr;
+            this.floor = floor;
+            this.wall = wall;
+            this.dot = dot;
+            this.bigDot = bigDot;
+            setCurrGraphic();
+            this.setOnAction(event -> {
+                if (this.curr > 3)
+                    this.curr = 0;
+                else
+                    this.curr++;
+                setCurrGraphic();
+            });
+        }
+
+        public int getValue() {
+            return this.curr;
+        }
+
+        public void setCurrGraphic() {
+            if (this.curr == 0) {
+                ImageView floorView = new ImageView(floor);
+                floorView.setFitHeight(15);
+                floorView.setFitWidth(15);
+                this.setGraphic(floorView);
+            } else if (this.curr == 1) {
+                ImageView wallView = new ImageView(wall);
+                wallView.setFitWidth(15);
+                wallView.setFitHeight(15);
+                this.setGraphic(wallView);
+            } else if (this.curr == 2) {
+                ImageView dotView = new ImageView(wall);
+                dotView.setFitWidth(15);
+                dotView.setFitHeight(15);
+                this.setGraphic(dotView);
+            } else if (this.curr == 3) {
+                ImageView bigDotView = new ImageView(bigDot);
+                bigDotView.setFitWidth(15);
+                bigDotView.setFitHeight(15);
+                this.setGraphic(bigDotView);
+            }
         }
     }
 }
