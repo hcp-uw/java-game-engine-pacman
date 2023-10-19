@@ -1,4 +1,5 @@
 package com.jgegroup.pacman;
+import com.jgegroup.GameConfig.config.Settings;
 import com.jgegroup.pacman.objects.Map;
 
 import com.jgegroup.pacman.objects.UI;
@@ -57,10 +58,16 @@ public class GameScene implements Runnable{
 
   public UI ui;
 
+  private Settings settings;
 
 
 
-  public GameScene(int ghostNumber) {
+
+  public GameScene(int ghostNumber, Settings settings) {
+    if (settings == null) {
+      settings = new Settings();
+    }
+    this.settings = settings;
     stackPane = new StackPane();
     gameScene = new javafx.scene.Scene(stackPane, RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL, Color.BLACK);
     gameCanvas = new Canvas(RESOLUTION_HORIZONTAL, RESOLUTION_VERTICAL);
@@ -113,7 +120,7 @@ public class GameScene implements Runnable{
    */
   public void startThread() {
     gameThread = new Thread(this);
-    init();
+    init(settings);
     gameThread.start();
   }
 
@@ -121,9 +128,9 @@ public class GameScene implements Runnable{
   /** @@Author: Tung
    * Init the game before run the game.
    */
-  public void init() {
+  public void init(Settings settings) {
     map = Map.getMapInstance();
-    map.createMap();
+    map.createMap(settings);
     collisionChecker = new CollisionChecker(map);
 
     pac = new Pac(this, keyHandler);
@@ -131,8 +138,18 @@ public class GameScene implements Runnable{
     ghosts = new Ghost[ghostNumber];
 
     for (int i = 0; i < ghostNumber; i++) {
-      ghosts[i] = new Ghost(10, this, colors[i], pac);
+      ghosts[i] = new Ghost(10, this, colors[i % 4], pac);
       ghosts[i].setSpawnPosition(i);
+    }
+
+    if (settings.selectedLives())
+      pac.setLife(settings.getPacmanLives());
+    if (settings.selectedPacmanSpeed())
+      pac.setSpeed(settings.getPacmanSpeed());
+    if (settings.selectedGhostSpeed()) {
+      for (int i = 0; i < ghostNumber; i++) {
+        ghosts[i].setSpeed(settings.getGhostSpeed());
+      }
     }
   }
 
@@ -192,7 +209,13 @@ public class GameScene implements Runnable{
     });
   }
 
-
+  public void readContext(Settings settings) {
+    pac.setLife(settings.getPacmanLives());
+    pac.setSpeed(settings.getPacmanSpeed());
+    for (int i = 0; i < ghostNumber; i++) {
+      ghosts[i].setSpeed(settings.getGhostSpeed());
+    }
+  }
 
   /** @@Author: Tung
    * Attach canvas to game panel(stackPane)

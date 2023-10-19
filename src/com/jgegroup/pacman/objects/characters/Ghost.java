@@ -190,6 +190,10 @@ public class Ghost extends Entity // implements GhostMovement
       }
     }
 
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
     public void redraw(GraphicsContext painter) {
         if (state != State.DEATH) {
             if (state == State.SCARED) {

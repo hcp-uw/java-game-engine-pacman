@@ -1,9 +1,49 @@
 package com.jgegroup.GameConfig.config;
 
+import javafx.scene.image.Image;
+
 public class Settings {
-    private int pacmanLives;
-    private int pacmanSpeed;
-    private int ghostSpeed;
+    private Integer pacmanLives = null;
+    private Integer pacmanSpeed = null;
+    private Integer ghostSpeed = null;
+    private Image floorImage = null;
+    private Image wallImage = null;
+
+    public boolean selectedLives() {
+        return pacmanLives != null;
+    }
+
+    public boolean selectedPacmanSpeed() {
+        return pacmanSpeed != null;
+    }
+
+    public boolean selectedGhostSpeed() {
+        return ghostSpeed != null;
+    }
+
+    public boolean selectedFloorImage() {
+        return floorImage != null;
+    }
+
+    public boolean selectedWallImage() {
+        return wallImage != null;
+    }
+
+    public Image getFloorImage() {
+        return floorImage;
+    }
+
+    public void setFloorImage(Image floorImage) {
+        this.floorImage = floorImage;
+    }
+
+    public Image getWallImage() {
+        return wallImage;
+    }
+
+    public void setWallImage(Image wallImage) {
+        this.wallImage = wallImage;
+    }
 
     public int getPacmanLives() {
         return pacmanLives;

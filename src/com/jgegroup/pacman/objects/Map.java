@@ -1,5 +1,6 @@
 package com.jgegroup.pacman.objects;
 
+import com.jgegroup.GameConfig.config.Settings;
 import com.jgegroup.pacman.GameScene;
 import com.jgegroup.pacman.legacy.Position;
 import com.jgegroup.pacman.objects.immovable.Tile;
@@ -13,6 +14,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+
+import javax.management.ImmutableDescriptor;
 
 
 public class Map {
@@ -60,11 +63,18 @@ public class Map {
      * @return map instance objects
      * Takes in nothing
      */
-    public void createMap(/*Map Context*/) {
-        loadTileImage();
+    public void createMap(Settings settings) {
+        Image floor = settings.selectedFloorImage() ?
+                        settings.getFloorImage() :
+                        new Image("tiles/floor tiles/floor.png");
+        Image wall = settings.selectedWallImage() ?
+                        settings.getWallImage() :
+                        new Image("tiles/wall tiles/wall.png");
+        loadTileImage(floor, wall);
         readMap();
         extractMapToBoard(mapArray2D, tileType);
     }
+
 
   /** @@Author: Tung
    * Load image for Map
@@ -72,12 +82,10 @@ public class Map {
    * @return nothing
    * Takes in nothing
    */
-    public void loadTileImage() {
-      Image floor = new Image("tiles/floor.png");
+    public void loadTileImage(Image floor, Image wall) {
       tileType[0]  = new Tile(floor);
       tileType[0].setCollisionOn(false);
 
-      Image wall = new Image("tiles/wall.png");
       tileType[1] = new Tile(wall);
       tileType[1].setCollisionOn(true);
 

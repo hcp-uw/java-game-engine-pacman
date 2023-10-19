@@ -1,29 +1,35 @@
 package com.jgegroup.GameConfig;
 
-import com.google.gson.Gson;
 import com.jgegroup.GameConfig.config.Config;
 import com.jgegroup.GameConfig.config.ConfigBuilder;
 import com.jgegroup.GameConfig.config.Settings;
-import com.jgegroup.pacman.GameLaunch;
+//import com.jgegroup.pacman.GameLaunch;
+import com.jgegroup.pacman.GameScene;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.control.Slider;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Launch extends Application {
 
-    public GameLaunch gameLaunch;
+//    public GameLaunch gameLaunch;
     public String newMapName; // For it to work with lambda ex
     public int horizontal_length; // For it to work with lambda ex
     public int vertical_length; // For it to work with lambda ex
@@ -31,9 +37,11 @@ public class Launch extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    private Stage stage;
     @Override
     public void start(Stage stage) throws Exception {
         // Creating tab pane, tabs, then adding tabs to tab pane
+        this.stage = stage;
         TabPane tabPane = new TabPane();
         tabPane.setSide(Side.TOP);
         Tab tab1 = new Tab("Game Settings");
@@ -47,7 +55,7 @@ public class Launch extends Application {
 
         // Set up
         Group root = new Group(); // No longer used - Gabriel Sison
-        Scene scene = new Scene(tabPane, 1000, 800);
+        Scene scene = new Scene(tabPane, 800, 800);
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setTitle("JGE Settings");
@@ -78,7 +86,7 @@ public class Launch extends Application {
         Slider ghostLivesSlider = new Slider(1, 5, 3);
         ghostLivesSlider.setPrefWidth(250);
         ghostLivesSlider.relocate(125, 150);
-        ghostLivesSlider.setBlockIncrement(1);
+        ghostLivesSlider.setBlockIncrement(2);
         ghostLivesSlider.setMajorTickUnit(1);
         ghostLivesSlider.setMinorTickCount(0);
         ghostLivesSlider.setShowTickMarks(true);
@@ -90,7 +98,7 @@ public class Launch extends Application {
         Slider pacManSpeedSlider = new Slider(1, 5, 3);
         pacManSpeedSlider.setPrefWidth(250);
         pacManSpeedSlider.relocate(125, 200);
-        pacManSpeedSlider.setBlockIncrement(1);
+        pacManSpeedSlider.setBlockIncrement(2);
         pacManSpeedSlider.setMajorTickUnit(1);
         pacManSpeedSlider.setMinorTickCount(0);
         pacManSpeedSlider.setShowTickMarks(true);
@@ -98,14 +106,71 @@ public class Launch extends Application {
         Label pacManSpeed = new Label ("Pacman Speed");
         pacManSpeed.relocate(25, 200);
 
+        // Dropdown for images
+        // floor
+        ComboBox<Label> floorBox = new ComboBox<>();
+        floorBox.setPrefWidth(250);
+        floorBox.relocate(450, 50);
+
+        File floorDir = new File("res/tiles/floor tiles");
+        File[] floors = floorDir.listFiles();
+
+        List<Image> floorImagesList = new ArrayList<>();
+        if (floors != null) {
+            for (int i = 0; i < floors.length; i++) {
+                String name = floors[i].getName();
+                int pos = name.lastIndexOf('.');
+                Label floorlabel = new Label(pos > -1 ? name.substring(0, pos) : name);
+                Image image = new Image("tiles/floor tiles/" + floors[i].getName());
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(30);
+                imageView.setFitHeight(30);
+                floorlabel.setGraphic(imageView);
+                floorImagesList.add(image);
+                floorBox.getItems().add(floorlabel);
+            }
+        }
+
+
+        //wall
+        ComboBox<Label> wallBox = new ComboBox<>();
+        wallBox.setPrefWidth(250);
+        wallBox.relocate(450, 100);
+
+        File wallDir = new File("res/tiles/wall tiles");
+        File[] walls = wallDir.listFiles();
+
+        List<Image> wallImagesList = new ArrayList<>();
+        if (walls != null) {
+            for (int i = 0; i < walls.length; i++) {
+                String name = walls[i].getName();
+                int pos = name.lastIndexOf('.');
+                Label walllabel = new Label(pos > -1 ? name.substring(0, pos) : name);
+                Image image = new Image("tiles/wall tiles/" + walls[i].getName());
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(30);
+                imageView.setFitHeight(30);
+                walllabel.setGraphic(imageView);
+                wallImagesList.add(image);
+                wallBox.getItems().add(walllabel);
+            }
+        }
+
+
+
+
         Button button = new Button ("Game Launch");
-        button.relocate(300,300);
+        button.relocate(125,50);
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 System.out.println("button pressed");
                 int pacmanLives = (int) (pacManLivesSlider.getValue() + 0.5);
-                int ghostSpeed = (int) (ghostLivesSlider.getValue() + 0.5) * 2;
-                int pacmanSpeed = (int) (pacManSpeedSlider.getValue() + 0.5) * 2;
+                int ghostSpeed = (int) (ghostLivesSlider.getValue() + 0.5);
+                int pacmanSpeed = (int) (pacManSpeedSlider.getValue() + 0.5);
+                ghostSpeed -= ghostSpeed % 2;
+                pacmanSpeed -= pacmanSpeed % 2;
+                ghostSpeed = Math.max(1, ghostSpeed);
+                pacmanSpeed = Math.max(1, pacmanSpeed);
                 System.out.println("Our lives for pacman is " + pacmanLives);
                 System.out.println("Our speed for ghost  is " + ghostSpeed);
                 System.out.println("Our speed for pacman is " + pacmanSpeed);
@@ -115,35 +180,40 @@ public class Launch extends Application {
                 settings.setPacmanLives(pacmanLives);
                 settings.setGhostSpeed(ghostSpeed);
                 settings.setPacmanSpeed(pacmanSpeed);
+                if (!floorBox.getSelectionModel().isSelected(-1))
+                    settings.setFloorImage(floorImagesList.get(floorBox.getSelectionModel().getSelectedIndex()));
+                if (!wallBox.getSelectionModel().isSelected(-1))
+                    settings.setWallImage(wallImagesList.get(wallBox.getSelectionModel().getSelectedIndex()));
 
-                Gson gson = new Gson();
+                GameScene scene = new GameScene(6, settings);
+                stage.setResizable(true);
+                stage.show();
+                scene.startThread();
+                scene.readContext(settings);
 
-                String settingsJson = gson.toJson(settings);
-                String[] args = new String[] {settingsJson};
-                GameLaunch.main(args);
-
-                // Exports to settings.txt in setting directory
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter("res/settings/settings.txt"));
-                    writer.write("pacman lives: " + pacmanLives);
-                    writer.write("\nghost speed : " + ghostSpeed);
-                    writer.write("\npacman speed: " + pacmanSpeed);
-                    writer.close();
-                } catch (IOException c) {
-                    throw new RuntimeException(c);
-                }
+                stage.setScene(scene.gameScene);
+//
+//                // Exports to settings.txt in setting directory
+//                try {
+//                    BufferedWriter writer = new BufferedWriter(new FileWriter("res/settings/settings.txt"));
+//                    writer.write("pacman lives: " + pacmanLives);
+//                    writer.write("\nghost speed : " + ghostSpeed);
+//                    writer.write("\npacman speed: " + pacmanSpeed);
+//                    writer.close();
+//                } catch (IOException c) {
+//                    throw new RuntimeException(c);
+//                }
 
 
             }
         };
 
-        // Create print stream
 
 
         // when button is pressed
         button.setOnAction(event);
         root.getChildren().addAll(label, button, pacManLivesSlider, ghostLivesSlider, pacManSpeedSlider,
-                ghostSpeed, pacManSpeed, pacManLives);
+                ghostSpeed, pacManSpeed, pacManLives, floorBox, wallBox);
         return root;
     }
 
@@ -155,14 +225,14 @@ public class Launch extends Application {
 
       // Save map button
       Button saveMapButton = new Button("Save Map");
-      saveMapButton.relocate(840, 0);
+      saveMapButton.relocate(640, 0);
       saveMapButton.setOnAction(event -> {
         try {
           current_map.saveMap();
         } catch (NullPointerException e) {
           Text errText = new Text();
           errText.setText("Not working with a map!");
-          errText.relocate(920, 20);
+          errText.relocate(720, 20);
           root.getChildren().add(errText);
         }
       });
@@ -170,7 +240,7 @@ public class Launch extends Application {
 
       // Show Map button
       Button showMapButton = new Button("Show map");
-      showMapButton.relocate(765, 0);
+      showMapButton.relocate(565, 0);
       Text map_text = new Text();
       showMapButton.setOnAction(event -> {
         try {
@@ -204,7 +274,7 @@ public class Launch extends Application {
 
   public void addMapDropBox(Pane root) {
     ComboBox<String> comboBox = new ComboBox<>();
-    comboBox.relocate(910, 0);
+    comboBox.relocate(710, 0);
     File directory = new File("res/maps");
     File[] maps = directory.listFiles();
     if (maps != null) {

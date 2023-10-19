@@ -33,6 +33,9 @@ public class Pac extends Entity {
         setPacImage();
     }
 
+    public void setLife(int life) {
+        this.life = life;
+    }
     public void initialize() {
       setPacImage();
       spriteImage = pacZero;
