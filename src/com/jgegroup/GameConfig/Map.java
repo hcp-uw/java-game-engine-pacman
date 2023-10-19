@@ -25,6 +25,7 @@ public class Map implements MapWriter {
     this.row = row;
     this.ArrayMap = new int[column][row];
     loadBasicMap();
+    saveMap();
   }
   //Existing MAP
   public Map(String map_name) throws FileNotFoundException {

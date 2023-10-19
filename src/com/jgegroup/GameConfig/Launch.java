@@ -1,7 +1,9 @@
 package com.jgegroup.GameConfig;
 
+import com.google.gson.Gson;
 import com.jgegroup.GameConfig.config.Config;
 import com.jgegroup.GameConfig.config.ConfigBuilder;
+import com.jgegroup.GameConfig.config.Settings;
 import com.jgegroup.pacman.GameLaunch;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -109,6 +111,17 @@ public class Launch extends Application {
                 System.out.println("Our speed for pacman is " + pacmanSpeed);
                 // How do I launch the game from here?
 
+                Settings settings = new Settings();
+                settings.setPacmanLives(pacmanLives);
+                settings.setGhostSpeed(ghostSpeed);
+                settings.setPacmanSpeed(pacmanSpeed);
+
+                Gson gson = new Gson();
+
+                String settingsJson = gson.toJson(settings);
+                String[] args = new String[] {settingsJson};
+                GameLaunch.main(args);
+
                 // Exports to settings.txt in setting directory
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter("res/settings/settings.txt"));
@@ -119,6 +132,8 @@ public class Launch extends Application {
                 } catch (IOException c) {
                     throw new RuntimeException(c);
                 }
+
+
             }
         };
 

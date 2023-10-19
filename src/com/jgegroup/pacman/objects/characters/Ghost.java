@@ -68,7 +68,17 @@ public class Ghost extends Entity // implements GhostMovement
     public void updateState() {
         long elapsed_time = System.currentTimeMillis() - state_base_time;
         switch(state) {
-            case SPAWN, SCATTER -> {
+            case SPAWN -> {
+                if (pacman.isSuper()) {
+                    state = State.SCARED;
+                    this.setSpooked();
+                    state_base_time = System.currentTimeMillis();
+                } else if (elapsed_time > 3000) {
+                    state = State.CHASE;
+                    state_base_time = System.currentTimeMillis();
+                }
+            }
+            case SCATTER -> {
                 if (pacman.isSuper()) {
                     state = State.SCARED;
                     this.setSpooked();
