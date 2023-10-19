@@ -71,7 +71,7 @@ public class Map {
                         settings.getWallImage() :
                         new Image("tiles/wall tiles/wall.png");
         loadTileImage(floor, wall);
-        readMap();
+        readMap(settings.selectedMap() ? settings.getMapPath() : "/maps/map1.txt");
         extractMapToBoard(mapArray2D, tileType);
     }
 
@@ -105,9 +105,9 @@ public class Map {
    * @write a 2D array mapArray2D.
    * Takes in tile positions
    */
-   public void readMap() {
+   public void readMap(String path) {
      try {
-       InputStream is = getClass().getResourceAsStream("/maps/map1.txt");
+       InputStream is = getClass().getResourceAsStream(path);
        BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
        int column = 0;

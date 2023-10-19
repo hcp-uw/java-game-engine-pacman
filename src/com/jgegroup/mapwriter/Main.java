@@ -1,9 +1,9 @@
 package com.jgegroup.mapwriter;
 
-import com.jgegroup.GameConfig.Launch;
+import com.jgegroup.GameConfig.GameConfig;
 
 public class Main {
     public static void main(String[] args) {
-        Launch.main(args);
+        GameConfig.main(args);
     }
 }

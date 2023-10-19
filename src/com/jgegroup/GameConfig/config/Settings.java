@@ -9,6 +9,20 @@ public class Settings {
     private Image floorImage = null;
     private Image wallImage = null;
 
+    private String mapPath = null;
+
+    public String getMapPath() {
+        return mapPath;
+    }
+
+    public void setMapPath(String mapPath) {
+        this.mapPath = mapPath;
+    }
+
+    public boolean selectedMap() {
+        return mapPath != null;
+    }
+
     public boolean selectedLives() {
         return pacmanLives != null;
     }

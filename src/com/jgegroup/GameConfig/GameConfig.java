@@ -1,15 +1,11 @@
 package com.jgegroup.GameConfig;
 
-import com.jgegroup.GameConfig.config.Config;
-import com.jgegroup.GameConfig.config.ConfigBuilder;
 import com.jgegroup.GameConfig.config.Settings;
 //import com.jgegroup.pacman.GameLaunch;
 import com.jgegroup.pacman.GameScene;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -27,7 +23,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Launch extends Application {
+public class GameConfig extends Application {
 
 //    public GameLaunch gameLaunch;
     public String newMapName; // For it to work with lambda ex
@@ -38,10 +34,14 @@ public class Launch extends Application {
         launch(args);
     }
     private Stage stage;
+    private Settings settings;
     @Override
     public void start(Stage stage) throws Exception {
         // Creating tab pane, tabs, then adding tabs to tab pane
         this.stage = stage;
+        settings = new Settings();
+
+
         TabPane tabPane = new TabPane();
         tabPane.setSide(Side.TOP);
         Tab tab1 = new Tab("Game Settings");
@@ -106,58 +106,6 @@ public class Launch extends Application {
         Label pacManSpeed = new Label ("Pacman Speed");
         pacManSpeed.relocate(25, 200);
 
-        // Dropdown for images
-        // floor
-        ComboBox<Label> floorBox = new ComboBox<>();
-        floorBox.setPrefWidth(250);
-        floorBox.relocate(450, 50);
-
-        File floorDir = new File("res/tiles/floor tiles");
-        File[] floors = floorDir.listFiles();
-
-        List<Image> floorImagesList = new ArrayList<>();
-        if (floors != null) {
-            for (int i = 0; i < floors.length; i++) {
-                String name = floors[i].getName();
-                int pos = name.lastIndexOf('.');
-                Label floorlabel = new Label(pos > -1 ? name.substring(0, pos) : name);
-                Image image = new Image("tiles/floor tiles/" + floors[i].getName());
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(30);
-                imageView.setFitHeight(30);
-                floorlabel.setGraphic(imageView);
-                floorImagesList.add(image);
-                floorBox.getItems().add(floorlabel);
-            }
-        }
-
-
-        //wall
-        ComboBox<Label> wallBox = new ComboBox<>();
-        wallBox.setPrefWidth(250);
-        wallBox.relocate(450, 100);
-
-        File wallDir = new File("res/tiles/wall tiles");
-        File[] walls = wallDir.listFiles();
-
-        List<Image> wallImagesList = new ArrayList<>();
-        if (walls != null) {
-            for (int i = 0; i < walls.length; i++) {
-                String name = walls[i].getName();
-                int pos = name.lastIndexOf('.');
-                Label walllabel = new Label(pos > -1 ? name.substring(0, pos) : name);
-                Image image = new Image("tiles/wall tiles/" + walls[i].getName());
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(30);
-                imageView.setFitHeight(30);
-                walllabel.setGraphic(imageView);
-                wallImagesList.add(image);
-                wallBox.getItems().add(walllabel);
-            }
-        }
-
-
-
 
         Button button = new Button ("Game Launch");
         button.relocate(125,50);
@@ -176,14 +124,9 @@ public class Launch extends Application {
                 System.out.println("Our speed for pacman is " + pacmanSpeed);
                 // How do I launch the game from here?
 
-                Settings settings = new Settings();
                 settings.setPacmanLives(pacmanLives);
                 settings.setGhostSpeed(ghostSpeed);
                 settings.setPacmanSpeed(pacmanSpeed);
-                if (!floorBox.getSelectionModel().isSelected(-1))
-                    settings.setFloorImage(floorImagesList.get(floorBox.getSelectionModel().getSelectedIndex()));
-                if (!wallBox.getSelectionModel().isSelected(-1))
-                    settings.setWallImage(wallImagesList.get(wallBox.getSelectionModel().getSelectedIndex()));
 
                 GameScene scene = new GameScene(6, settings);
                 stage.setResizable(true);
@@ -213,7 +156,7 @@ public class Launch extends Application {
         // when button is pressed
         button.setOnAction(event);
         root.getChildren().addAll(label, button, pacManLivesSlider, ghostLivesSlider, pacManSpeedSlider,
-                ghostSpeed, pacManSpeed, pacManLives, floorBox, wallBox);
+                ghostSpeed, pacManSpeed, pacManLives);
         return root;
     }
 
@@ -222,6 +165,76 @@ public class Launch extends Application {
       Canvas mapWriterCanvas = new Canvas(400, 400);
       GraphicsContext mapPainter = mapWriterCanvas.getGraphicsContext2D();
       root.getChildren().add(mapWriterCanvas);
+
+        // Dropdown for images
+        // floor
+        ComboBox<Label> floorBox = new ComboBox<>();
+        floorBox.setPrefWidth(250);
+        floorBox.relocate(450, 50);
+
+        File floorDir = new File("res/tiles/floor tiles");
+        File[] floors = floorDir.listFiles();
+
+        List<Image> floorImagesList = new ArrayList<>();
+        List<Image> wallImagesList = new ArrayList<>();
+
+        if (floors != null) {
+            for (int i = 0; i < floors.length; i++) {
+                String name = floors[i].getName();
+                int pos = name.lastIndexOf('.');
+                Label floorlabel = new Label(pos > -1 ? name.substring(0, pos) : name);
+                Image image = new Image("tiles/floor tiles/" + floors[i].getName());
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(30);
+                imageView.setFitHeight(30);
+                floorlabel.setGraphic(imageView);
+                floorImagesList.add(image);
+                floorBox.getItems().add(floorlabel);
+            }
+        }
+
+        floorBox.setOnAction(event -> {
+            Label label = floorBox.getValue();
+            int index = floorBox.getItems().indexOf(label);
+            if (index > -1) {
+                settings.setFloorImage(floorImagesList.get(index));
+            }
+            floorBox.getSelectionModel().clearAndSelect(index);
+        });
+
+        //wall
+        ComboBox<Label> wallBox = new ComboBox<>();
+        wallBox.setPrefWidth(250);
+        wallBox.relocate(450, 100);
+
+        File wallDir = new File("res/tiles/wall tiles");
+        File[] walls = wallDir.listFiles();
+
+        if (walls != null) {
+            for (int i = 0; i < walls.length; i++) {
+                String name = walls[i].getName();
+                int pos = name.lastIndexOf('.');
+                Label walllabel = new Label(pos > -1 ? name.substring(0, pos) : name);
+                Image image = new Image("tiles/wall tiles/" + walls[i].getName());
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(30);
+                imageView.setFitHeight(30);
+                walllabel.setGraphic(imageView);
+                wallImagesList.add(image);
+                wallBox.getItems().add(walllabel);
+            }
+        }
+
+        wallBox.setOnAction(event -> {
+            Label label = wallBox.getValue();
+            int index = wallBox.getItems().indexOf(label);
+            if (index > -1) {
+                settings.setFloorImage(wallImagesList.get(index));
+            }
+            wallBox.getSelectionModel().clearAndSelect(index);
+        });
+
+        root.getChildren().addAll(floorBox, wallBox);
 
       // Save map button
       Button saveMapButton = new Button("Save Map");
@@ -262,6 +275,7 @@ public class Launch extends Application {
       createNewMapButton.relocate(0, 0);
       createNewMapButton.setOnAction(event -> {
         getMapInfo();
+        updateMapDropBox(root);
       });
 
 
@@ -297,11 +311,9 @@ public class Launch extends Application {
     });
     root.getChildren().addAll(comboBox);
   }
-
-    private Config initialize(Scene scene) {
-        ConfigBuilder cb = new ConfigBuilder();
-        return cb.build();
-    }
+  public void updateMapDropBox(Pane root) {
+        ComboBox<String> mapbox = (ComboBox<String>) root.getChildren().get(3);
+  }
 
     public void getMapInfo() {
       String map_name;
