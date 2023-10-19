@@ -17,6 +17,8 @@ import javafx.geometry.Pos;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.util.Duration;
+
 import java.io.File;
 
 
@@ -134,13 +136,19 @@ public class GameScene implements Runnable{
     }
   }
 
-  /** @@Author: Tung
+  /** @@Author: Tung, Noah, Ethan
    * Run the game after Init().
    */
   @Override
   public void run() {
+    // testing media during game
     Media media = new Media(new File("res/sounds/du hast.mp3").toURI().toString());
+    Media m2 = new Media(new File("res/sounds/death.mp3").toURI().toString());
+    Media m3 = new Media(new File("res/sounds/laugh.mp3").toURI().toString());
     MediaPlayer mp = new MediaPlayer(media);
+    MediaPlayer mp2 = new MediaPlayer(m2);
+    MediaPlayer mp3 = new MediaPlayer(m3);
+    mp.setVolume(0.25f);
     mp.setVolume(0.1f);
     mp.play();
     while (pac.getLives() >= 0) {
@@ -148,7 +156,11 @@ public class GameScene implements Runnable{
       redraw();
       controlFPS(); // DANGER!!!  REMOVE THIS CAUSE ATOMIC EXPLOSION
     }
+    mp2.play();
+    mp3.play();
+    mp.setVolume(0.10f);
     ui.displayGameFinish(getGamePainter());
+
   }
 
   /** @@Author: Tung, Noah, Jesse

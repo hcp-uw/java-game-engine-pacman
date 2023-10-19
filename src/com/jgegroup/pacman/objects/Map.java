@@ -24,6 +24,9 @@ public class Map {
     public Tile[] tileType = new Tile[4]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
     public int[][] mapArray2D = new int[GameScene.NUMBER_OF_TILE_COLUMN][GameScene.NUMBER_OF_TILE_ROW];
 
+    // Blank map
+    // GUI
+
 
     public Map(/*Map Context*/){
 //        objects = new HashMap<>();
@@ -50,8 +53,6 @@ public class Map {
      * Takes in nothing
      */
     public HashMap<Position, Tile> getTiles() { return Map_Instance.tiles; }
-
-    public Canvas getCanvas() { return Map_Instance.canvas; }
 
     /** @@Author: Noah, Tung
      * Load tile image for map, read map from txt file, and extract map to board
@@ -80,10 +81,10 @@ public class Map {
       tileType[1] = new Tile(wall);
       tileType[1].setCollisionOn(true);
 
-      tileType[2] = new Tile(floor);
+      tileType[2] = new Tile(floor); // Dots
       tileType[2].setCollisionOn(false);
 
-      tileType[3] = new Tile(floor);
+      tileType[3] = new Tile(floor); // Big Dots
       tileType[3].setCollisionOn(false);
    }
 
@@ -91,9 +92,9 @@ public class Map {
 
 
   /** @@Author: Tung
-   * A map context reader, read from "res/maps/map1.txt"
+   * A map context reader, read from "res/maps/map1.txt".
    * Throws IOException when streams cannot be made or cannot be read from
-   * @write tile position to 2D array.
+   * @write a 2D array mapArray2D.
    * Takes in tile positions
    */
    public void readMap() {
