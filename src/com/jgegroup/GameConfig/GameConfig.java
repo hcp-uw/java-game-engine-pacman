@@ -3,6 +3,8 @@ package com.jgegroup.GameConfig;
 import com.jgegroup.GameConfig.config.Settings;
 import com.jgegroup.pacman.GameScene;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
@@ -13,6 +15,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -169,84 +172,77 @@ public class GameConfig extends Application {
 
         // Dropdown for images
         // floor
-        ComboBox<Label> floorBox = new ComboBox<>();
-        floorBox.setPrefWidth(250);
-        floorBox.relocate(450, 50);
+        ComboBox<String> floorBox = new ComboBox<>();
+        floorBox.setPrefWidth(258);
+        floorBox.relocate(525, 50);
 
         File floorDir = new File("res/tiles/floor tiles");
         File[] floors = floorDir.listFiles();
 
         List<Image> floorImagesList = new ArrayList<>();
         List<Image> wallImagesList = new ArrayList<>();
+        List<String> floorPaths = new ArrayList<>();
+        List<String> wallPaths = new ArrayList<>();
 
+        floorBox.setCellFactory(param -> new TileListCell());
+        floorBox.setButtonCell(new TileListCell());
         if (floors != null) {
             for (int i = 0; i < floors.length; i++) {
                 String name = floors[i].getName();
                 int pos = name.lastIndexOf('.');
-                Label floorlabel = new Label(pos > -1 ? name.substring(0, pos) : name);
                 Image image = new Image("tiles/floor tiles/" + floors[i].getName());
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(30);
-                imageView.setFitHeight(30);
-                floorlabel.setGraphic(imageView);
+                floorPaths.add("tiles/floor tiles/" + floors[i].getName());
                 floorImagesList.add(image);
-                floorBox.getItems().add(floorlabel);
             }
         }
+        floorBox.setItems(FXCollections.observableArrayList(floorPaths));
 
         floorBox.setOnAction(event -> {
-            Label label = floorBox.getValue();
-            int index = floorBox.getItems().indexOf(label);
-            if (index > -1) {
+            int index = floorBox.getSelectionModel().getSelectedIndex();
+            if (index > -1)
                 settings.setFloorImage(floorImagesList.get(index));
-            }
-            floorBox.getSelectionModel().clearAndSelect(index);
         });
 
         //wall
-        ComboBox<Label> wallBox = new ComboBox<>();
-        wallBox.setPrefWidth(250);
-        wallBox.relocate(450, 100);
+        ComboBox<String> wallBox = new ComboBox<>();
+        wallBox.setPrefWidth(258);
+        wallBox.relocate(525, 100);
 
         File wallDir = new File("res/tiles/wall tiles");
         File[] walls = wallDir.listFiles();
-
+        wallBox.setCellFactory(param -> new TileListCell());
+        wallBox.setButtonCell(new TileListCell());
         if (walls != null) {
             for (int i = 0; i < walls.length; i++) {
                 String name = walls[i].getName();
                 int pos = name.lastIndexOf('.');
-                Label walllabel = new Label(pos > -1 ? name.substring(0, pos) : name);
                 Image image = new Image("tiles/wall tiles/" + walls[i].getName());
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(30);
-                imageView.setFitHeight(30);
-                walllabel.setGraphic(imageView);
+                wallPaths.add("tiles/wall tiles/" + walls[i].getName());
                 wallImagesList.add(image);
-                wallBox.getItems().add(walllabel);
             }
         }
+        wallBox.setItems(FXCollections.observableArrayList(wallPaths));
+
+
 
         wallBox.setOnAction(event -> {
-            Label label = wallBox.getValue();
-            int index = wallBox.getItems().indexOf(label);
-            if (index > -1) {
-                settings.setFloorImage(wallImagesList.get(index));
-            }
-            wallBox.getSelectionModel().clearAndSelect(index);
+            int index = wallBox.getSelectionModel().getSelectedIndex();
+            if (index > -1)
+                settings.setWallImage(wallImagesList.get(index));
         });
 
         root.getChildren().addAll(floorBox, wallBox);
 
         // Save map button
         Button saveMapButton = new Button("Save Map");
-        saveMapButton.relocate(640, 0);
+        saveMapButton.relocate(600, 10);
         saveMapButton.setOnAction(event -> {
             try {
                 current_map.saveMap();
             } catch (NullPointerException e) {
                 Text errText = new Text();
                 errText.setText("Not working with a map!");
-                errText.relocate(720, 20);
+                errText.relocate(620, 20);
                 root.getChildren().add(errText);
             }
         });
@@ -254,14 +250,14 @@ public class GameConfig extends Application {
 
         // Show Map button
         Button showMapButton = new Button("Show map");
-        showMapButton.relocate(565, 0);
+        showMapButton.relocate(525, 10);
         Text map_text = new Text();
         showMapButton.setOnAction(event -> {
             try {
                 String content = current_map.showMapContent();
                 root.getChildren().remove(map_text);
                 map_text.setText(content);
-                map_text.relocate(5, 50);
+                map_text.relocate(5, 200);
                 root.getChildren().add(map_text);
             } catch (NullPointerException e) {
                 Text errText = new Text();
@@ -273,23 +269,19 @@ public class GameConfig extends Application {
 
         // Create new map button
         Button createNewMapButton = new Button("Create New Map");
-        createNewMapButton.relocate(0, 0);
+        createNewMapButton.relocate(10, 10);
         ComboBox<String> addMapDropBox = addMapDropBox();
         createNewMapButton.setOnAction(event -> {
             getMapInfo();
             updateMapDropBox(addMapDropBox);
         });
-
-
         root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton, addMapDropBox);
-
-
         return root;
     }
 
     public ComboBox<String> addMapDropBox() {
         ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.relocate(710, 0);
+        comboBox.relocate(670, 10);
         File directory = new File("res/maps");
         File[] maps = directory.listFiles();
         if (maps != null) {
@@ -363,5 +355,25 @@ public class GameConfig extends Application {
         });
         // change the currently working map.
         current_map = new Map(newMapName, vertical_length, horizontal_length);
+    }
+
+    class TileListCell extends ListCell<String> {
+        @Override
+        protected void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+            if (item == null || empty) {
+                setGraphic(null);
+            } else {
+                Image image = new Image(item);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(30);
+                imageView.setFitHeight(30);
+                int pos1 = item.lastIndexOf('/');
+                int pos2 = item.lastIndexOf('.');
+                setGraphic(new Label(item.substring(pos1 + 1, pos2), imageView));
+            }
+
+            setText("");
+        }
     }
 }
