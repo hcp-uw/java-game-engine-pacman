@@ -153,4 +153,8 @@ public class Map implements MapWriter {
   public int[][] getArrayMap() {
     return ArrayMap;
   }
+
+  public void setArrayMap(int[][] arrayMap) {
+    this.ArrayMap = arrayMap;
+  }
 }

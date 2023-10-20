@@ -33,8 +33,8 @@ public class GameScene implements Runnable{
   private static long elapsedTime;
   private static long sleepTime;
   public static final int TILE_SIZE = 32;
-  public static final int NUMBER_OF_TILE_COLUMN = 20;
-  public static final int NUMBER_OF_TILE_ROW = 28;
+  public static int NUMBER_OF_TILE_COLUMN = 20;
+  public static int NUMBER_OF_TILE_ROW = 28;
 
   public static final int RESOLUTION_HORIZONTAL = TILE_SIZE * NUMBER_OF_TILE_COLUMN; // 768
   public static final int RESOLUTION_VERTICAL = TILE_SIZE * NUMBER_OF_TILE_ROW; // 1024
@@ -129,6 +129,11 @@ public class GameScene implements Runnable{
    * Init the game before run the game.
    */
   public void init(Settings settings) {
+    if (settings.selectedMapSize()) {
+      NUMBER_OF_TILE_ROW = settings.getMapHeight();
+      NUMBER_OF_TILE_COLUMN = settings.getMapWidth();
+    }
+
     map = Map.getMapInstance();
     map.createMap(settings);
     collisionChecker = new CollisionChecker(map);

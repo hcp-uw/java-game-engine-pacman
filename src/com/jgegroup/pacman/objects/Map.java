@@ -71,8 +71,8 @@ public class Map {
                         settings.getWallImage() :
                         new Image("tiles/wall tiles/wall.png");
         loadTileImage(floor, wall);
+        System.out.println(settings.selectedMap() ? settings.getMapPath() : "");
         readMap(settings.selectedMap() ? settings.getMapPath() : "/maps/map1.txt");
-        extractMapToBoard(mapArray2D, tileType);
     }
 
 
@@ -179,17 +179,5 @@ public class Map {
       }
     }
   }
-
-
-   public void extractMapToBoard(int[][] tiles, Tile[] tileTypes) {
-       for (int x = 0; x < tiles.length; x++) {
-           for (int y = 0; y < tiles[x].length; y++) {
-               Position pos = new Position(x,y);
-               int tileType = tiles[x][y];
-               Map_Instance.tiles.put(pos, tileTypes[tileType]);
-           }
-       }
-   }
-
 }
 

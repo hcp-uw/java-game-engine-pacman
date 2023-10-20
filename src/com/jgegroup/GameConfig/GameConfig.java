@@ -236,7 +236,7 @@ public class GameConfig extends Application {
         // Save map button
         Button saveMapButton = new Button("Save Map");
         saveMapButton.relocate(600, 10);
-        saveMapButton.setOnAction(event -> {
+        saveMapButton.setOnAction(saveEvent -> {
             try {
                 current_map.saveMap();
             } catch (NullPointerException e) {
@@ -246,12 +246,12 @@ public class GameConfig extends Application {
                 root.getChildren().add(errText);
             }
         });
+        root.getChildren().add(saveMapButton);
 
 
         // Show Map button
         Button showMapButton = new Button("Show map");
-        showMapButton.relocate(525, 10);
-        Text map_text = new Text();
+        showMapButton.relocate(526, 10);
         AtomicInteger scrollPane_index = new AtomicInteger(-1);
         AtomicInteger tilePickerButton_index = new AtomicInteger(-1);
         showMapButton.setOnAction(event -> {
@@ -261,10 +261,6 @@ public class GameConfig extends Application {
                 root.getChildren().remove(tilePickerButton_index);
             try {
                 String content = current_map.showMapContent();
-                root.getChildren().remove(map_text);
-                map_text.setText(content);
-                map_text.relocate(5, 200);
-                root.getChildren().add(map_text);
             } catch (NullPointerException e) {
                 Text errText = new Text();
                 errText.setText("Not working with a map!");
@@ -298,7 +294,27 @@ public class GameConfig extends Application {
             scrollPane_index.set(root.getChildren().indexOf(scrollPane));
             tilePickerButton_index.set(root.getChildren().indexOf(tilePickerButton));
 
+            Button updateMap = new Button("Update Map");
+            updateMap.setOnAction(event1 -> {
+                current_map.setArrayMap(tilePane.mapArray);
+            });
+            updateMap.relocate(442, 10);
+
+            root.getChildren().add(updateMap);
+
+            Button selectMap = new Button("Select Map");
+            selectMap.setOnAction(event2 -> {
+                if (current_map != null) {
+                    settings.setMapPath(current_map.getPath().substring(3));
+                    settings.setMapHeight(current_map.getArrayMap().length);
+                    settings.setMapWidth(current_map.getArrayMap()[0].length);
+                }
+            });
+            selectMap.relocate(365, 10);
+            root.getChildren().add(selectMap);
+
         });
+
 
         // Create new map button
         Button createNewMapButton = new Button("Create New Map");
@@ -308,7 +324,7 @@ public class GameConfig extends Application {
             getMapInfo();
             updateMapDropBox(addMapDropBox);
         });
-        root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton, addMapDropBox);
+        root.getChildren().addAll(showMapButton, createNewMapButton, addMapDropBox);
         return root;
     }
 
@@ -369,7 +385,7 @@ public class GameConfig extends Application {
 
                     int hor_len = Integer.parseInt(horizontal_length);
 
-                    if (hor_len > 32) {
+                    if (hor_len > 20) {
                         throw new NumberFormatException("Number was too big!!!");
                     }
                     this.horizontal_length = hor_len;
@@ -380,7 +396,7 @@ public class GameConfig extends Application {
                     verticalLengthDialog.showAndWait().ifPresent(vertical_length -> {
                         try {
                             int ver_len = Integer.parseInt(vertical_length);
-                            if (ver_len > 32) {
+                            if (ver_len > 28) {
                                 throw new NumberFormatException("Number was too big!!!");
                             }
                             this.vertical_length = ver_len;
@@ -420,6 +436,7 @@ public class GameConfig extends Application {
     class TilePane extends Pane {
         int[][] mapArray;
         Image floor, wall;
+        WritableImage dot, bigDot;
         TilePickerButton picker;
 
         public TilePane(int[][] mapArray, Image floor, Image wall, TilePickerButton picker) {
@@ -428,6 +445,8 @@ public class GameConfig extends Application {
             this.mapArray = mapArray;
             this.floor = floor;
             this.wall = wall;
+            this.dot = picker.dot;
+            this.bigDot = picker.bigDot;
             this.picker = picker;
             initialize(this);
         }
@@ -441,32 +460,54 @@ public class GameConfig extends Application {
                 for (int j = 0; j < width; j++) {
 
                     Button newButton = new Button();
-                    if (mapArray[i][j] != 1) {
-                        ImageView floorView = new ImageView(floor);
-                        floorView.setFitHeight(12);
-                        floorView.setFitWidth(12);
-                        newButton.setGraphic(floorView);
-                    } else {
+                    if (mapArray[i][j] == 0) {
+                        ImageView dotView = new ImageView(dot);
+                        dotView.setFitHeight(12);
+                        dotView.setFitWidth(12);
+                        newButton.setGraphic(dotView);
+                    } else if (mapArray[i][j] == 1){
                         ImageView wallView = new ImageView(wall);
                         wallView.setFitWidth(12);
                         wallView.setFitHeight(12);
                         newButton.setGraphic(wallView);
+                    }  else if (mapArray[i][j] == 2){
+                        ImageView floorView = new ImageView(floor);
+                        floorView.setFitHeight(12);
+                        floorView.setFitWidth(12);
+                        newButton.setGraphic(floorView);
+                    } else if (mapArray[i][j] == 3){
+                        ImageView bigDotView = new ImageView(bigDot);
+                        bigDotView.setFitHeight(12);
+                        bigDotView.setFitWidth(12);
+                        newButton.setGraphic(bigDotView);
                     }
                     int finalI = i;
                     int finalJ = j;
                     newButton.setOnAction(event -> {
-                        if (picker.getValue() != 1) {
+                        if (picker.getValue() == 0) {
+                            ImageView dotView = new ImageView(dot);
+                            dotView.setFitHeight(12);
+                            dotView.setFitWidth(12);
+                            mapArray[finalI][finalJ] = 0;
+                            newButton.setGraphic(dotView);
+                        } else if (picker.getValue() == 1){
                             ImageView wallView = new ImageView(wall);
                             wallView.setFitWidth(12);
                             wallView.setFitHeight(12);
-                            mapArray[finalI][finalJ] = 0;
+                            mapArray[finalI][finalJ] = 1;
                             newButton.setGraphic(wallView);
-                        } else {
+                        } else if (picker.getValue() == 2){
                             ImageView floorView = new ImageView(floor);
                             floorView.setFitHeight(12);
                             floorView.setFitWidth(12);
-                            mapArray[finalI][finalJ] = 1;
+                            mapArray[finalI][finalJ] = 2;
                             newButton.setGraphic(floorView);
+                        } else if (picker.getValue() == 3){
+                            ImageView bigDotView = new ImageView(bigDot);
+                            bigDotView.setFitHeight(12);
+                            bigDotView.setFitWidth(12);
+                            mapArray[finalI][finalJ] = 3;
+                            newButton.setGraphic(bigDotView);
                         }
                     });
                     newButton.relocate(width_spacer + (i * 32), height_spacer + (j * 32));
@@ -493,10 +534,9 @@ public class GameConfig extends Application {
             initBigDot(bigDot);
             setCurrGraphic();
             this.setOnAction(event -> {
+                this.curr++;
                 if (this.curr > 3)
                     this.curr = 0;
-                else
-                    this.curr++;
                 setCurrGraphic();
             });
         }
@@ -507,20 +547,20 @@ public class GameConfig extends Application {
 
         public void setCurrGraphic() {
             if (this.curr == 0) {
-                ImageView floorView = new ImageView(floor);
-                floorView.setFitHeight(15);
-                floorView.setFitWidth(15);
-                this.setGraphic(floorView);
+                ImageView dotView = new ImageView(dot);
+                dotView.setFitHeight(15);
+                dotView.setFitWidth(15);
+                this.setGraphic(dotView);
             } else if (this.curr == 1) {
                 ImageView wallView = new ImageView(wall);
                 wallView.setFitWidth(15);
                 wallView.setFitHeight(15);
                 this.setGraphic(wallView);
             } else if (this.curr == 2) {
-                ImageView dotView = new ImageView(wall);
-                dotView.setFitWidth(15);
-                dotView.setFitHeight(15);
-                this.setGraphic(dotView);
+                ImageView floorView = new ImageView(floor);
+                floorView.setFitWidth(15);
+                floorView.setFitHeight(15);
+                this.setGraphic(floorView);
             } else if (this.curr == 3) {
                 ImageView bigDotView = new ImageView(bigDot);
                 bigDotView.setFitWidth(15);
@@ -530,31 +570,49 @@ public class GameConfig extends Application {
         }
 
         public void initDot(Image dot) {
-            int dotsize = 8;
-            double x = dot.getWidth();
-            double y = dot.getHeight();
-            this.dot = new WritableImage(dot.getPixelReader(), (int) x, (int) y);
-            int dotstart_x = ((int) x / 2) - dotsize / 2;
-            int dotstart_y = ((int) y / 2) - dotsize / 2;
+            int W = (int) dot.getWidth();
+            int H = (int) dot.getHeight();
+            int dotsize = W / 3;
+            this.dot = new WritableImage(W, H);
+            PixelReader reader = dot.getPixelReader();
             PixelWriter writer = this.dot.getPixelWriter();
-            for (int i = dotstart_x; i < dotstart_x + dotsize; i++) {
-                for (int j = dotstart_y; j < dotstart_y + dotsize; j++) {
-                    writer.setColor(i, j, Color.YELLOW);
+            for (int y = 0; y < H; y++) {
+                for (int x = 0; x < W; x++) {
+                    Color color = reader.getColor(x, y);
+
+                    writer.setColor(x, y, color);
+
+                }
+            }
+            int dotstart_x = ((int) W / 2) - dotsize / 2;
+            int dotstart_y = ((int) H / 2) - dotsize / 2;
+            for (int i = dotstart_y; i < dotstart_y + dotsize; i++) {
+                for (int j = dotstart_x; j < dotstart_x + dotsize; j++) {
+                    writer.setColor(j, i, Color.YELLOW);
                 }
             }
         }
 
         public void initBigDot(Image bigDot) {
-            int dotsize = 16;
-            double x = dot.getWidth();
-            double y = dot.getHeight();
-            this.dot = new WritableImage(dot.getPixelReader(), (int) x, (int) y);
-            int dotstart_x = ((int) x / 2) - dotsize / 2;
-            int dotstart_y = ((int) y / 2) - dotsize / 2;
-            PixelWriter writer = this.dot.getPixelWriter();
-            for (int i = dotstart_x; i < dotstart_x + dotsize; i++) {
-                for (int j = dotstart_y; j < dotstart_y + dotsize; j++) {
-                    writer.setColor(i, j, Color.YELLOW);
+            int W = (int) bigDot.getWidth();
+            int H = (int) bigDot.getHeight();
+            int dotsize = W / 2;
+            this.bigDot = new WritableImage(W, H);
+            PixelReader reader = bigDot.getPixelReader();
+            PixelWriter writer = this.bigDot.getPixelWriter();
+            for (int y = 0; y < H; y++) {
+                for (int x = 0; x < W; x++) {
+                    Color color = reader.getColor(x, y);
+
+                    writer.setColor(x, y, color);
+
+                }
+            }
+            int dotstart_x = ((int) W / 2) - dotsize / 2;
+            int dotstart_y = ((int) H / 2) - dotsize / 2;
+            for (int i = dotstart_y; i < dotstart_y + dotsize; i++) {
+                for (int j = dotstart_x; j < dotstart_x + dotsize; j++) {
+                    writer.setColor(j, i, Color.YELLOW);
                 }
             }
         }
