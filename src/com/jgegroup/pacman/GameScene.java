@@ -78,34 +78,6 @@ public class GameScene implements Runnable{
     keyHandler = new KeyHandler();
     gameScene.setOnKeyPressed(keyHandler);
     this.ghostNumber = ghostNumber;
-
-
-    // New Stuff
-    VBox vbox = new VBox();
-    vbox.setSpacing(10);
-
-    speedSlider = new Slider();
-    speedSlider.setMin(1);
-    speedSlider.setMax(3);
-    speedSlider.setValue(1);
-    speedSlider.setFocusTraversable(false);
-    speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-      int newSpeed = newValue.intValue();
-      pac.setSpeed(newSpeed);
-    });
-
-    vbox.getChildren().add(speedSlider);
-    StackPane.setAlignment(vbox, Pos.TOP_RIGHT);
-    stackPane.getChildren().addAll(vbox);
-
-    // Fix scene focus set on slider.
-    speedSlider.setOnMouseClicked(event -> {
-      gameCanvas.requestFocus();
-    });
-
-    speedSlider.setOnMouseDragged(event -> {
-      gameCanvas.requestFocus();
-    });
   }
 
 
