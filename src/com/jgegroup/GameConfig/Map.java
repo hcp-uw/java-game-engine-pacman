@@ -50,7 +50,7 @@ public class Map implements MapWriter {
     }
     this.ArrayMap = new int[column][row];
     constructArrayMap();
-    System.out.println("x: " + column + "y: " + row);
+    System.out.println("x: " + column + " y: " + row);
   }
 
 
@@ -73,9 +73,11 @@ public class Map implements MapWriter {
   public void saveMap() {
     try {
       FileWriter writer = new FileWriter(path);
-      for (int i = 0; i< column; i++) {
-        for (int j = 0; j< row; j++) {
-          writer.write(ArrayMap[i][j] + " ");
+      for (int i = 0; i < column; i++) {
+        for (int j = 0; j < row; j++) {
+          writer.write((char) ('0' + ArrayMap[j][i]));
+          if (i < column - 1)
+            writer.write(' ');
         }
         writer.write("\n");
       }
@@ -83,48 +85,6 @@ public class Map implements MapWriter {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  @Override
-  public void showMap(GraphicsContext painter) {
-    int row = 0;
-    int column = 0;
-
-    while (column < this.column && row < this.row) {
-      System.out.println("col:" + column + "row:" + row );
-      Color color = ArrayMap[column][row] == 0 ? Color.GREEN : Color.BLUE;
-      painter.setFill(color);
-      painter.fillRect(column * 2, row * 2, 2, 2);
-
-      column++;
-      if (column == this.column) {
-
-        column = 0;
-        row++;
-      }
-    }
-  }
-
-  public String showMapContent() {
-    StringBuilder mapContent = new StringBuilder();
-    for (int i = 0; i < column; i++) {
-      for (int j = 0; j < row; j++) {
-        mapContent.append(ArrayMap[i][j]);
-        mapContent.append(" ");
-      }
-      mapContent.append("\n");
-    }
-    return mapContent.toString();
-  }
-
-  @Override
-  public void changeTile() {
-
-  }
-
-  @Override
-  public void changeTileHorizontally() {
-
   }
 
   public void constructArrayMap() {

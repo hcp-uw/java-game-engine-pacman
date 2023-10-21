@@ -13,10 +13,4 @@ public interface  MapWriter {
 
   // Save the current map to a txt file.
   void saveMap();
-  // Show the map to the screen.
-  void showMap(GraphicsContext painter);
-  // Change a singe tile of the current map.
-  void changeTile();
- // Change many tile horizontally.
-  void changeTileHorizontally();
 }

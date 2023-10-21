@@ -25,15 +25,14 @@ public class Map {
     private  Canvas canvas = new Canvas(GameScene.RESOLUTION_HORIZONTAL, GameScene.RESOLUTION_VERTICAL); // tool
     private GraphicsContext graphicsContext = canvas.getGraphicsContext2D(); // tool within tool(canvas)
     public Tile[] tileType = new Tile[4]; // Array of Tile object. For instant Tile[0] is object  floor, Tile[1] is object wall
-    public int[][] mapArray2D = new int[GameScene.NUMBER_OF_TILE_COLUMN][GameScene.NUMBER_OF_TILE_ROW];
+    public int[][] mapArray2D;
 
     // Blank map
     // GUI
 
 
     public Map(/*Map Context*/){
-//        objects = new HashMap<>();
-        tiles = new HashMap<>();
+        mapArray2D = new int[GameScene.NUMBER_OF_TILE_COLUMN][GameScene.NUMBER_OF_TILE_ROW];
     }
 
     /** @@Author: Noah

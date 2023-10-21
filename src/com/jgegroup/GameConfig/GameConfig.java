@@ -137,21 +137,8 @@ public class GameConfig extends Application {
                 stage.setResizable(true);
                 stage.show();
                 scene.startThread();
-                scene.readContext(settings);
 
                 stage.setScene(scene.gameScene);
-//
-//                // Exports to settings.txt in setting directory
-//                try {
-//                    BufferedWriter writer = new BufferedWriter(new FileWriter("res/settings/settings.txt"));
-//                    writer.write("pacman lives: " + pacmanLives);
-//                    writer.write("\nghost speed : " + ghostSpeed);
-//                    writer.write("\npacman speed: " + pacmanSpeed);
-//                    writer.close();
-//                } catch (IOException c) {
-//                    throw new RuntimeException(c);
-//                }
-
 
             }
         };
@@ -260,7 +247,7 @@ public class GameConfig extends Application {
             if (tilePickerButton_index.get() != -1)
                 root.getChildren().remove(tilePickerButton_index);
             try {
-                String content = current_map.showMapContent();
+                String content = current_map.getPath();
             } catch (NullPointerException e) {
                 Text errText = new Text();
                 errText.setText("Not working with a map!");
@@ -456,65 +443,57 @@ public class GameConfig extends Application {
             int width = mapArray[0].length;
             int height_spacer = 5; // account for space from top bar
             int width_spacer = 5;
+            int fitsize = 12;
+            int spacer = 2;
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
 
-                    Button newButton = new Button();
+                    ImageView newView = new ImageView();
+                    newView.setFitWidth(fitsize);
+                    newView.setFitHeight(fitsize);
                     if (mapArray[i][j] == 0) {
-                        ImageView dotView = new ImageView(dot);
-                        dotView.setFitHeight(12);
-                        dotView.setFitWidth(12);
-                        newButton.setGraphic(dotView);
+                        newView.setImage(dot);
                     } else if (mapArray[i][j] == 1){
-                        ImageView wallView = new ImageView(wall);
-                        wallView.setFitWidth(12);
-                        wallView.setFitHeight(12);
-                        newButton.setGraphic(wallView);
+                        newView.setImage(wall);
                     }  else if (mapArray[i][j] == 2){
-                        ImageView floorView = new ImageView(floor);
-                        floorView.setFitHeight(12);
-                        floorView.setFitWidth(12);
-                        newButton.setGraphic(floorView);
+                        newView.setImage(floor);
                     } else if (mapArray[i][j] == 3){
-                        ImageView bigDotView = new ImageView(bigDot);
-                        bigDotView.setFitHeight(12);
-                        bigDotView.setFitWidth(12);
-                        newButton.setGraphic(bigDotView);
+                        newView.setImage(bigDot);
                     }
                     int finalI = i;
                     int finalJ = j;
-                    newButton.setOnAction(event -> {
+                    newView.setOnMouseClicked(event -> {
                         if (picker.getValue() == 0) {
-                            ImageView dotView = new ImageView(dot);
-                            dotView.setFitHeight(12);
-                            dotView.setFitWidth(12);
                             mapArray[finalI][finalJ] = 0;
-                            newButton.setGraphic(dotView);
+                            newView.setImage(dot);
                         } else if (picker.getValue() == 1){
-                            ImageView wallView = new ImageView(wall);
-                            wallView.setFitWidth(12);
-                            wallView.setFitHeight(12);
                             mapArray[finalI][finalJ] = 1;
-                            newButton.setGraphic(wallView);
+                            newView.setImage(wall);
                         } else if (picker.getValue() == 2){
-                            ImageView floorView = new ImageView(floor);
-                            floorView.setFitHeight(12);
-                            floorView.setFitWidth(12);
                             mapArray[finalI][finalJ] = 2;
-                            newButton.setGraphic(floorView);
+                            newView.setImage(floor);
                         } else if (picker.getValue() == 3){
-                            ImageView bigDotView = new ImageView(bigDot);
-                            bigDotView.setFitHeight(12);
-                            bigDotView.setFitWidth(12);
                             mapArray[finalI][finalJ] = 3;
-                            newButton.setGraphic(bigDotView);
+                            newView.setImage(bigDot);
                         }
                     });
-                    newButton.relocate(width_spacer + (i * 32), height_spacer + (j * 32));
-                    newButton.setMaxHeight(10);
-                    newButton.setMaxWidth(10);
-                    newButton.setPrefSize(10, 10);
-                    tilePane.getChildren().add(newButton);
+                    newView.setOnMouseDragOver(event -> {
+                        if (picker.getValue() == 0) {
+                            mapArray[finalI][finalJ] = 0;
+                            newView.setImage(dot);
+                        } else if (picker.getValue() == 1){
+                            mapArray[finalI][finalJ] = 1;
+                            newView.setImage(wall);
+                        } else if (picker.getValue() == 2){
+                            mapArray[finalI][finalJ] = 2;
+                            newView.setImage(floor);
+                        } else if (picker.getValue() == 3){
+                            mapArray[finalI][finalJ] = 3;
+                            newView.setImage(bigDot);
+                        }
+                    });
+                    newView.relocate(width_spacer + (i * (fitsize + spacer)), height_spacer + j * (fitsize + spacer));
+                    tilePane.getChildren().add(newView);
                 }
             }
         }
