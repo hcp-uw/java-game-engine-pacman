@@ -113,8 +113,8 @@ public class GameScene implements Runnable {
         ghosts = new Ghost[ghostNumber];
 
         for (int i = 0; i < ghostNumber; i++) {
-            ghosts[i] = new Ghost(10, this, colors[i % 4], pac);
-            ghosts[i].setSpawnPosition(i);
+            ghosts[i] = new Ghost(10, this, colors[i % colors.length], pac);
+            ghosts[i].setSpawnPosition(i % colors.length);
         }
 
         if (settings.selectedLives())

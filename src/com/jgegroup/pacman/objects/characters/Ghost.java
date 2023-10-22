@@ -11,6 +11,7 @@ import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.shape.Rectangle;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 
@@ -69,11 +70,7 @@ public class Ghost extends Entity // implements GhostMovement
         long elapsed_time = System.currentTimeMillis() - state_base_time;
         switch(state) {
             case SPAWN -> {
-                if (pacman.isSuper()) {
-                    state = State.SCARED;
-                    this.setSpooked();
-                    state_base_time = System.currentTimeMillis();
-                } else if (elapsed_time > 3000) {
+                if (elapsed_time > 1000) {
                     state = State.CHASE;
                     state_base_time = System.currentTimeMillis();
                 }
@@ -99,11 +96,11 @@ public class Ghost extends Entity // implements GhostMovement
                 }
             }
             case SCARED -> {
-                if (elapsed_time > 10000) {
-                    if (!this.updateSpooked())  {
+                if (elapsed_time > 1000) {
+                    state_base_time = System.currentTimeMillis();
+                    if (!updateSpooked()) {
                         state = State.CHASE;
                     }
-                    state_base_time = System.currentTimeMillis();
                 }
             }
             case DEATH -> {
@@ -121,6 +118,7 @@ public class Ghost extends Entity // implements GhostMovement
 
     public void update() {
         collisionDetected = gameScene.collisionChecker.isValidDirection(this, direction);
+        pacmanCollision();
         updateState();
         Set<Direction> restrictions = new HashSet<>();
         if (direction.equals(Direction.DOWN)) {
@@ -156,14 +154,7 @@ public class Ghost extends Entity // implements GhostMovement
             moveCounter++;
         } else {
             moveCounter = 0;
-        }
-        pacmanCollision();
-        if (pacman.isSuper() && !isSpooked()) {
-            setSpooked();
-        }
-        if (System.currentTimeMillis() >= last_time + 1000) {
-            updateSpooked();
-            last_time = System.currentTimeMillis();
+            direction = Direction.STOP;
         }
         if (!collisionDetected) {
             switch (direction) {
@@ -201,8 +192,8 @@ public class Ghost extends Entity // implements GhostMovement
             } else {
                 updateNormalImage();
             }
+            painter.drawImage(spriteImage, x, y, gameScene.TILE_SIZE, gameScene.TILE_SIZE);
         }
-        painter.drawImage(spriteImage, x, y, gameScene.TILE_SIZE, gameScene.TILE_SIZE);
     }
 
     /**
@@ -224,9 +215,11 @@ public class Ghost extends Entity // implements GhostMovement
             && ghost_max_y - pacman_min_y <= 1.5 * GameScene.TILE_SIZE && ghost_max_y - pacman_min_y >= 0.5 * GameScene.TILE_SIZE) {
             if (!pacman.isSuper()) {
                 pacman.death();
-            } else {
+            } else if (this.state == State.SCARED) {
                 this.setSpawnPosition(0);
                 state = State.DEATH;
+                state_base_time = System.currentTimeMillis();
+                this.spookState = -1;
                 pacman.point += 500;
             }
             return true;
@@ -340,85 +333,4 @@ public class Ghost extends Entity // implements GhostMovement
       x = 32 * (10 + i);
       y = 32 * 13;
     }
-
-    /** @@Authors: Jesse / Noah / Davin
-     * Determines if the object has collided with something or not
-     * Throws, no exceptions
-     * Returns 1 if collided with Pacman or Wall, 0 otherwise
-     * Takes in a GameObject as a parameter
-    */
-//    @Override
-//    protected int collisionHandle(MovingObject object) {
-// //        if (object instanceof Pacman) {
-// //            return 1;
-// //        } else if (object instanceof Wall) {
-// //            return 2;
-// //        }
-//
-//        // here we will need to look for the overlap in the MovingObject
-//        // we will try to see if the circles overlap
-//
-//        // HOW WE WILL DO IT:
-//        // WE will need to get the centers of each of the circles.
-//        // We will need to check in all 4 directions, and we will need
-//        // check to see if there is any overlap in the four directions
-//
-//        Position otherPosition = object.getPosition();
-//
-////        Position currentPosition = this.position;
-//
-//        // now we will need to check
-//        // all of the possible cases
-//        int currentX = this.getPosition().getX();
-//        int currentY = this.getPosition().getY();
-//
-//        int currentRadius = object.getRadius();
-//
-//        int otherX = otherPosition.getX();
-//        int otherY = otherPosition.getY();
-//
-//        int otherRadius = this.getRadius();
-//
-//        // you will check for overlap in the X direction
-//        if (currentX == otherX) {
-//            if (currentY > otherY) {
-//                if (currentY - currentRadius > otherY + otherRadius) {
-//                    return 0;
-//                } else {
-//                    return 1;
-//                }
-//            } else if (currentY < otherY) {
-//                if (currentY + currentRadius < otherY - otherRadius) {
-//                    return 0;
-//                } else {
-//                    return 1;
-//                }
-//            } else {
-//                return 1;
-//            }
-//        }
-//
-//        // this is where you check for overlap in the Y direction
-//        if (currentY == otherY) {
-//            if (currentX > otherX) {
-//                if (currentX - currentRadius > otherX + otherRadius) {
-//                    return 0;
-//                } else {
-//                    return 1;
-//                }
-//            } else if (currentX < otherX) {
-//                if (currentX + currentRadius < otherX - otherRadius) {
-//                    return 0;
-//                } else {
-//                    return 1;
-//                }
-//            } else {
-//                return 1;
-//            }
-//        }
-//
-//        // this is when you do not have any overlap that could be possible in any direction
-//        return 0;
-//    }
-
 }

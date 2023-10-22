@@ -264,7 +264,7 @@ public class GameConfig extends Application {
                             settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"),
                     settings.selectedFloorImage() ?
                             settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"));
-            tilePickerButton.relocate(215, 100);
+            tilePickerButton.relocate(15, 100);
             TilePane tilePane = new TilePane(current_map.getArrayMap(),
                     settings.selectedFloorImage() ?
                             settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"),
@@ -273,7 +273,7 @@ public class GameConfig extends Application {
                     tilePickerButton);
             scrollPane.setContent(tilePane);
             tilePane.setPrefHeight(800);
-            scrollPane.relocate(5, 150);
+            scrollPane.relocate(15, 200);
             scrollPane.setMaxHeight(400);
             scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
             scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -293,8 +293,8 @@ public class GameConfig extends Application {
             selectMap.setOnAction(event2 -> {
                 if (current_map != null) {
                     settings.setMapPath(current_map.getPath().substring(3));
-                    settings.setMapHeight(current_map.getArrayMap().length);
-                    settings.setMapWidth(current_map.getArrayMap()[0].length);
+                    settings.setMapHeight(current_map.getArrayMap()[0].length);
+                    settings.setMapWidth(current_map.getArrayMap().length);
                 }
             });
             selectMap.relocate(365, 10);
@@ -366,7 +366,7 @@ public class GameConfig extends Application {
             TextInputDialog horizontaLengthDialog = new TextInputDialog();
             horizontaLengthDialog.setTitle("Creating New Map");
             horizontaLengthDialog.setHeaderText(null);
-            horizontaLengthDialog.setContentText("Enter number of horizontal tiles");
+            horizontaLengthDialog.setContentText("Enter number of Columns, 20 Max");
             horizontaLengthDialog.showAndWait().ifPresent(horizontal_length -> {
                 try {
 
@@ -379,7 +379,7 @@ public class GameConfig extends Application {
                     TextInputDialog verticalLengthDialog = new TextInputDialog();
                     verticalLengthDialog.setTitle("Create New Map");
                     verticalLengthDialog.setHeaderText(null);
-                    verticalLengthDialog.setContentText("Enter number of vertical tiles");
+                    verticalLengthDialog.setContentText("Enter number of Rows, 28 Max");
                     verticalLengthDialog.showAndWait().ifPresent(vertical_length -> {
                         try {
                             int ver_len = Integer.parseInt(vertical_length);
@@ -392,12 +392,13 @@ public class GameConfig extends Application {
                         }
                     });
                 } catch (NumberFormatException e) {
+                    e.printStackTrace();
                     System.out.println("Invalid number");
                 }
             });
         });
         // change the currently working map.
-        current_map = new Map(newMapName, vertical_length, horizontal_length);
+        current_map = new Map(newMapName, horizontal_length , vertical_length);
     }
 
     class TileListCell extends ListCell<String> {
@@ -462,22 +463,24 @@ public class GameConfig extends Application {
                     }
                     int finalI = i;
                     int finalJ = j;
-                    newView.setOnMouseClicked(event -> {
-                        if (picker.getValue() == 0) {
-                            mapArray[finalI][finalJ] = 0;
-                            newView.setImage(dot);
-                        } else if (picker.getValue() == 1){
-                            mapArray[finalI][finalJ] = 1;
-                            newView.setImage(wall);
-                        } else if (picker.getValue() == 2){
-                            mapArray[finalI][finalJ] = 2;
-                            newView.setImage(floor);
-                        } else if (picker.getValue() == 3){
-                            mapArray[finalI][finalJ] = 3;
-                            newView.setImage(bigDot);
+                    newView.setOnMouseEntered(event -> {
+                        if (event.isShiftDown()) {
+                            if (picker.getValue() == 0) {
+                                mapArray[finalI][finalJ] = 0;
+                                newView.setImage(dot);
+                            } else if (picker.getValue() == 1){
+                                mapArray[finalI][finalJ] = 1;
+                                newView.setImage(wall);
+                            } else if (picker.getValue() == 2){
+                                mapArray[finalI][finalJ] = 2;
+                                newView.setImage(floor);
+                            } else if (picker.getValue() == 3){
+                                mapArray[finalI][finalJ] = 3;
+                                newView.setImage(bigDot);
+                            }
                         }
                     });
-                    newView.setOnMouseDragOver(event -> {
+                    newView.setOnMouseClicked(event -> {
                         if (picker.getValue() == 0) {
                             mapArray[finalI][finalJ] = 0;
                             newView.setImage(dot);

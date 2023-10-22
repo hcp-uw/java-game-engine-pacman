@@ -171,6 +171,7 @@ public class Pac extends Entity {
     public void spawn() {
       x = pacman_spawn_x;
       y = pacman_spawn_y;
+      direction = Direction.STOP;
     }
 
   /** @@Author: Tung, Iman

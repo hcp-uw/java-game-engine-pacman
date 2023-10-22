@@ -75,8 +75,8 @@ public class Map implements MapWriter {
       FileWriter writer = new FileWriter(path);
       for (int i = 0; i < column; i++) {
         for (int j = 0; j < row; j++) {
-          writer.write((char) ('0' + ArrayMap[j][i]));
-          if (i < column - 1)
+          writer.write((char) ('0' + ArrayMap[i][j]));
+          if (j < row - 1)
             writer.write(' ');
         }
         writer.write("\n");
@@ -89,15 +89,21 @@ public class Map implements MapWriter {
 
   public void constructArrayMap() {
     try (Scanner scanner = new Scanner(new File(path))) {
-      int row = 0;
-      while (scanner.hasNextLine() && row < this.row) {
-        String mapLine = scanner.nextLine();
-        String[] numbers = mapLine.split(" ");
-        for (int column = 0; column < this.column && column < numbers.length; column++) {
-          int num = Integer.parseInt(numbers[column]);
-          ArrayMap[column][row] = num;
+//      int row = 0;
+//      while (scanner.hasNextLine() && row < this.row) {
+//        String mapLine = scanner.nextLine();
+//        String[] numbers = mapLine.split(" ");
+//        for (int column = 0; column < this.column && column < numbers.length; column++) {
+//          int num = Integer.parseInt(numbers[column]);
+//          ArrayMap[column][row] = num;
+//        }
+//        row++;
+//      }
+      for (int row = 0; row < this.row && scanner.hasNextLine(); row++) {
+        String[] numbers = scanner.nextLine().split(" ");
+        for (int column = 0; column < this.column; column++) {
+          ArrayMap[column][row] = Integer.parseInt(numbers[column]);
         }
-        row++;
       }
     } catch (FileNotFoundException e) {
       System.err.println("Error occurred while reading the map file: " + path);
