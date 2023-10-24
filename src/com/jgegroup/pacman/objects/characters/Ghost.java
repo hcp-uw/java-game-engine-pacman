@@ -330,7 +330,7 @@ public class Ghost extends Entity // implements GhostMovement
       white2 = new Image("ghosts/spook4.png");
     }
     public void setSpawnPosition (int i) {
-      x = 32 * (10 + i);
-      y = 32 * 13;
+      x = 32 * 9;
+      y = 32 * (8 + i);
     }
 }
