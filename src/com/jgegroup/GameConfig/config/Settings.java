@@ -10,6 +10,28 @@ public class Settings {
     private Image wallImage = null;
 
     private String mapPath = null;
+    private Integer mapWidth = null;
+    private Integer mapHeight = null;
+
+    public boolean selectedMapSize() {
+        return mapHeight != null && mapWidth != null;
+    }
+
+    public Integer getMapWidth() {
+        return mapWidth;
+    }
+
+    public void setMapWidth(Integer mapWidth) {
+        this.mapWidth = mapWidth;
+    }
+
+    public Integer getMapHeight() {
+        return mapHeight;
+    }
+
+    public void setMapHeight(Integer mapHeight) {
+        this.mapHeight = mapHeight;
+    }
 
     public String getMapPath() {
         return mapPath;

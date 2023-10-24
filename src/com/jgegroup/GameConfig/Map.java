@@ -50,7 +50,7 @@ public class Map implements MapWriter {
     }
     this.ArrayMap = new int[column][row];
     constructArrayMap();
-    System.out.println("x: " + column + "y: " + row);
+    System.out.println("x: " + column + " y: " + row);
   }
 
 
@@ -73,9 +73,11 @@ public class Map implements MapWriter {
   public void saveMap() {
     try {
       FileWriter writer = new FileWriter(path);
-      for (int i = 0; i< column; i++) {
-        for (int j = 0; j< row; j++) {
-          writer.write(ArrayMap[i][j] + " ");
+      for (int i = 0; i < column; i++) {
+        for (int j = 0; j < row; j++) {
+          writer.write((char) ('0' + ArrayMap[i][j]));
+          if (j < row - 1)
+            writer.write(' ');
         }
         writer.write("\n");
       }
@@ -85,59 +87,23 @@ public class Map implements MapWriter {
     }
   }
 
-  @Override
-  public void showMap(GraphicsContext painter) {
-    int row = 0;
-    int column = 0;
-
-    while (column < this.column && row < this.row) {
-      System.out.println("col:" + column + "row:" + row );
-      Color color = ArrayMap[column][row] == 0 ? Color.GREEN : Color.BLUE;
-      painter.setFill(color);
-      painter.fillRect(column * 2, row * 2, 2, 2);
-
-      column++;
-      if (column == this.column) {
-
-        column = 0;
-        row++;
-      }
-    }
-  }
-
-  public String showMapContent() {
-    StringBuilder mapContent = new StringBuilder();
-    for (int i = 0; i < column; i++) {
-      for (int j = 0; j < row; j++) {
-        mapContent.append(ArrayMap[i][j]);
-        mapContent.append(" ");
-      }
-      mapContent.append("\n");
-    }
-    return mapContent.toString();
-  }
-
-  @Override
-  public void changeTile() {
-
-  }
-
-  @Override
-  public void changeTileHorizontally() {
-
-  }
-
   public void constructArrayMap() {
     try (Scanner scanner = new Scanner(new File(path))) {
-      int row = 0;
-      while (scanner.hasNextLine() && row < this.row) {
-        String mapLine = scanner.nextLine();
-        String[] numbers = mapLine.split(" ");
-        for (int column = 0; column < this.column && column < numbers.length; column++) {
-          int num = Integer.parseInt(numbers[column]);
-          ArrayMap[column][row] = num;
+//      int row = 0;
+//      while (scanner.hasNextLine() && row < this.row) {
+//        String mapLine = scanner.nextLine();
+//        String[] numbers = mapLine.split(" ");
+//        for (int column = 0; column < this.column && column < numbers.length; column++) {
+//          int num = Integer.parseInt(numbers[column]);
+//          ArrayMap[column][row] = num;
+//        }
+//        row++;
+//      }
+      for (int row = 0; row < this.row && scanner.hasNextLine(); row++) {
+        String[] numbers = scanner.nextLine().split(" ");
+        for (int column = 0; column < this.column; column++) {
+          ArrayMap[column][row] = Integer.parseInt(numbers[column]);
         }
-        row++;
       }
     } catch (FileNotFoundException e) {
       System.err.println("Error occurred while reading the map file: " + path);
@@ -152,5 +118,9 @@ public class Map implements MapWriter {
 
   public int[][] getArrayMap() {
     return ArrayMap;
+  }
+
+  public void setArrayMap(int[][] arrayMap) {
+    this.ArrayMap = arrayMap;
   }
 }

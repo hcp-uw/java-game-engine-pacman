@@ -43,7 +43,7 @@ public class Pac extends Entity {
       life = 3;
       point = 0;
       collidedGhost = false;
-      pacman_spawn_x = 32 * 13;
+      pacman_spawn_x = 32 * 10;
       pacman_spawn_y = 32 * 15;
       x = pacman_spawn_x;
       y = pacman_spawn_y;
@@ -171,6 +171,7 @@ public class Pac extends Entity {
     public void spawn() {
       x = pacman_spawn_x;
       y = pacman_spawn_y;
+      direction = Direction.STOP;
     }
 
   /** @@Author: Tung, Iman

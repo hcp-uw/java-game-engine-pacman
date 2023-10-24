@@ -12,14 +12,15 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -136,21 +137,8 @@ public class GameConfig extends Application {
                 stage.setResizable(true);
                 stage.show();
                 scene.startThread();
-                scene.readContext(settings);
 
                 stage.setScene(scene.gameScene);
-//
-//                // Exports to settings.txt in setting directory
-//                try {
-//                    BufferedWriter writer = new BufferedWriter(new FileWriter("res/settings/settings.txt"));
-//                    writer.write("pacman lives: " + pacmanLives);
-//                    writer.write("\nghost speed : " + ghostSpeed);
-//                    writer.write("\npacman speed: " + pacmanSpeed);
-//                    writer.close();
-//                } catch (IOException c) {
-//                    throw new RuntimeException(c);
-//                }
-
 
             }
         };
@@ -235,7 +223,7 @@ public class GameConfig extends Application {
         // Save map button
         Button saveMapButton = new Button("Save Map");
         saveMapButton.relocate(600, 10);
-        saveMapButton.setOnAction(event -> {
+        saveMapButton.setOnAction(saveEvent -> {
             try {
                 current_map.saveMap();
             } catch (NullPointerException e) {
@@ -245,12 +233,12 @@ public class GameConfig extends Application {
                 root.getChildren().add(errText);
             }
         });
+        root.getChildren().add(saveMapButton);
 
 
         // Show Map button
         Button showMapButton = new Button("Show map");
-        showMapButton.relocate(525, 10);
-        Text map_text = new Text();
+        showMapButton.relocate(526, 10);
         AtomicInteger scrollPane_index = new AtomicInteger(-1);
         AtomicInteger tilePickerButton_index = new AtomicInteger(-1);
         showMapButton.setOnAction(event -> {
@@ -259,11 +247,7 @@ public class GameConfig extends Application {
             if (tilePickerButton_index.get() != -1)
                 root.getChildren().remove(tilePickerButton_index);
             try {
-                String content = current_map.showMapContent();
-                root.getChildren().remove(map_text);
-                map_text.setText(content);
-                map_text.relocate(5, 200);
-                root.getChildren().add(map_text);
+                String content = current_map.getPath();
             } catch (NullPointerException e) {
                 Text errText = new Text();
                 errText.setText("Not working with a map!");
@@ -280,7 +264,7 @@ public class GameConfig extends Application {
                             settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"),
                     settings.selectedFloorImage() ?
                             settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"));
-            tilePickerButton.relocate(215, 100);
+            tilePickerButton.relocate(15, 100);
             TilePane tilePane = new TilePane(current_map.getArrayMap(),
                     settings.selectedFloorImage() ?
                             settings.getFloorImage() : new Image("tiles/floor tiles/floor.png"),
@@ -289,7 +273,7 @@ public class GameConfig extends Application {
                     tilePickerButton);
             scrollPane.setContent(tilePane);
             tilePane.setPrefHeight(800);
-            scrollPane.relocate(5, 150);
+            scrollPane.relocate(15, 200);
             scrollPane.setMaxHeight(400);
             scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
             scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -297,7 +281,27 @@ public class GameConfig extends Application {
             scrollPane_index.set(root.getChildren().indexOf(scrollPane));
             tilePickerButton_index.set(root.getChildren().indexOf(tilePickerButton));
 
+            Button updateMap = new Button("Update Map");
+            updateMap.setOnAction(event1 -> {
+                current_map.setArrayMap(tilePane.mapArray);
+            });
+            updateMap.relocate(442, 10);
+
+            root.getChildren().add(updateMap);
+
+            Button selectMap = new Button("Select Map");
+            selectMap.setOnAction(event2 -> {
+                if (current_map != null) {
+                    settings.setMapPath(current_map.getPath().substring(3));
+                    settings.setMapHeight(current_map.getArrayMap()[0].length);
+                    settings.setMapWidth(current_map.getArrayMap().length);
+                }
+            });
+            selectMap.relocate(365, 10);
+            root.getChildren().add(selectMap);
+
         });
+
 
         // Create new map button
         Button createNewMapButton = new Button("Create New Map");
@@ -307,7 +311,7 @@ public class GameConfig extends Application {
             getMapInfo();
             updateMapDropBox(addMapDropBox);
         });
-        root.getChildren().addAll(saveMapButton, showMapButton, createNewMapButton, addMapDropBox);
+        root.getChildren().addAll(showMapButton, createNewMapButton, addMapDropBox);
         return root;
     }
 
@@ -362,24 +366,24 @@ public class GameConfig extends Application {
             TextInputDialog horizontaLengthDialog = new TextInputDialog();
             horizontaLengthDialog.setTitle("Creating New Map");
             horizontaLengthDialog.setHeaderText(null);
-            horizontaLengthDialog.setContentText("Enter number of horizontal tiles");
+            horizontaLengthDialog.setContentText("Enter number of Columns, 20 Max");
             horizontaLengthDialog.showAndWait().ifPresent(horizontal_length -> {
                 try {
 
                     int hor_len = Integer.parseInt(horizontal_length);
 
-                    if (hor_len > 32) {
+                    if (hor_len > 20) {
                         throw new NumberFormatException("Number was too big!!!");
                     }
                     this.horizontal_length = hor_len;
                     TextInputDialog verticalLengthDialog = new TextInputDialog();
                     verticalLengthDialog.setTitle("Create New Map");
                     verticalLengthDialog.setHeaderText(null);
-                    verticalLengthDialog.setContentText("Enter number of vertical tiles");
+                    verticalLengthDialog.setContentText("Enter number of Rows, 28 Max");
                     verticalLengthDialog.showAndWait().ifPresent(vertical_length -> {
                         try {
                             int ver_len = Integer.parseInt(vertical_length);
-                            if (ver_len > 32) {
+                            if (ver_len > 28) {
                                 throw new NumberFormatException("Number was too big!!!");
                             }
                             this.vertical_length = ver_len;
@@ -388,12 +392,13 @@ public class GameConfig extends Application {
                         }
                     });
                 } catch (NumberFormatException e) {
+                    e.printStackTrace();
                     System.out.println("Invalid number");
                 }
             });
         });
         // change the currently working map.
-        current_map = new Map(newMapName, vertical_length, horizontal_length);
+        current_map = new Map(newMapName, horizontal_length , vertical_length);
     }
 
     class TileListCell extends ListCell<String> {
@@ -419,6 +424,7 @@ public class GameConfig extends Application {
     class TilePane extends Pane {
         int[][] mapArray;
         Image floor, wall;
+        WritableImage dot, bigDot;
         TilePickerButton picker;
 
         public TilePane(int[][] mapArray, Image floor, Image wall, TilePickerButton picker) {
@@ -427,6 +433,8 @@ public class GameConfig extends Application {
             this.mapArray = mapArray;
             this.floor = floor;
             this.wall = wall;
+            this.dot = picker.dot;
+            this.bigDot = picker.bigDot;
             this.picker = picker;
             initialize(this);
         }
@@ -436,43 +444,59 @@ public class GameConfig extends Application {
             int width = mapArray[0].length;
             int height_spacer = 5; // account for space from top bar
             int width_spacer = 5;
+            int fitsize = 12;
+            int spacer = 2;
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
 
-                    Button newButton = new Button();
-                    if (mapArray[i][j] != 1) {
-                        ImageView floorView = new ImageView(floor);
-                        floorView.setFitHeight(12);
-                        floorView.setFitWidth(12);
-                        newButton.setGraphic(floorView);
-                    } else {
-                        ImageView wallView = new ImageView(wall);
-                        wallView.setFitWidth(12);
-                        wallView.setFitHeight(12);
-                        newButton.setGraphic(wallView);
+                    ImageView newView = new ImageView();
+                    newView.setFitWidth(fitsize);
+                    newView.setFitHeight(fitsize);
+                    if (mapArray[i][j] == 0) {
+                        newView.setImage(dot);
+                    } else if (mapArray[i][j] == 1){
+                        newView.setImage(wall);
+                    }  else if (mapArray[i][j] == 2){
+                        newView.setImage(floor);
+                    } else if (mapArray[i][j] == 3){
+                        newView.setImage(bigDot);
                     }
                     int finalI = i;
                     int finalJ = j;
-                    newButton.setOnAction(event -> {
-                        if (picker.getValue() != 1) {
-                            ImageView wallView = new ImageView(wall);
-                            wallView.setFitWidth(12);
-                            wallView.setFitHeight(12);
-                            mapArray[finalI][finalJ] = 0;
-                            newButton.setGraphic(wallView);
-                        } else {
-                            ImageView floorView = new ImageView(floor);
-                            floorView.setFitHeight(12);
-                            floorView.setFitWidth(12);
-                            mapArray[finalI][finalJ] = 1;
-                            newButton.setGraphic(floorView);
+                    newView.setOnMouseEntered(event -> {
+                        if (event.isShiftDown()) {
+                            if (picker.getValue() == 0) {
+                                mapArray[finalI][finalJ] = 0;
+                                newView.setImage(dot);
+                            } else if (picker.getValue() == 1){
+                                mapArray[finalI][finalJ] = 1;
+                                newView.setImage(wall);
+                            } else if (picker.getValue() == 2){
+                                mapArray[finalI][finalJ] = 2;
+                                newView.setImage(floor);
+                            } else if (picker.getValue() == 3){
+                                mapArray[finalI][finalJ] = 3;
+                                newView.setImage(bigDot);
+                            }
                         }
                     });
-                    newButton.relocate(width_spacer + (i * 32), height_spacer + (j * 32));
-                    newButton.setMaxHeight(10);
-                    newButton.setMaxWidth(10);
-                    newButton.setPrefSize(10, 10);
-                    tilePane.getChildren().add(newButton);
+                    newView.setOnMouseClicked(event -> {
+                        if (picker.getValue() == 0) {
+                            mapArray[finalI][finalJ] = 0;
+                            newView.setImage(dot);
+                        } else if (picker.getValue() == 1){
+                            mapArray[finalI][finalJ] = 1;
+                            newView.setImage(wall);
+                        } else if (picker.getValue() == 2){
+                            mapArray[finalI][finalJ] = 2;
+                            newView.setImage(floor);
+                        } else if (picker.getValue() == 3){
+                            mapArray[finalI][finalJ] = 3;
+                            newView.setImage(bigDot);
+                        }
+                    });
+                    newView.relocate(width_spacer + (i * (fitsize + spacer)), height_spacer + j * (fitsize + spacer));
+                    tilePane.getChildren().add(newView);
                 }
             }
         }
@@ -480,21 +504,21 @@ public class GameConfig extends Application {
 
     class TilePickerButton extends Button {
         int curr;
-        Image floor, wall, dot, bigDot;
+        Image floor, wall;
+        WritableImage dot, bigDot;
 
         public TilePickerButton(int curr, Image floor, Image wall, Image dot, Image bigDot) {
             super();
             this.curr = curr;
             this.floor = floor;
             this.wall = wall;
-            this.dot = dot;
-            this.bigDot = bigDot;
+            initDot(dot);
+            initBigDot(bigDot);
             setCurrGraphic();
             this.setOnAction(event -> {
+                this.curr++;
                 if (this.curr > 3)
                     this.curr = 0;
-                else
-                    this.curr++;
                 setCurrGraphic();
             });
         }
@@ -505,25 +529,73 @@ public class GameConfig extends Application {
 
         public void setCurrGraphic() {
             if (this.curr == 0) {
-                ImageView floorView = new ImageView(floor);
-                floorView.setFitHeight(15);
-                floorView.setFitWidth(15);
-                this.setGraphic(floorView);
+                ImageView dotView = new ImageView(dot);
+                dotView.setFitHeight(15);
+                dotView.setFitWidth(15);
+                this.setGraphic(dotView);
             } else if (this.curr == 1) {
                 ImageView wallView = new ImageView(wall);
                 wallView.setFitWidth(15);
                 wallView.setFitHeight(15);
                 this.setGraphic(wallView);
             } else if (this.curr == 2) {
-                ImageView dotView = new ImageView(wall);
-                dotView.setFitWidth(15);
-                dotView.setFitHeight(15);
-                this.setGraphic(dotView);
+                ImageView floorView = new ImageView(floor);
+                floorView.setFitWidth(15);
+                floorView.setFitHeight(15);
+                this.setGraphic(floorView);
             } else if (this.curr == 3) {
                 ImageView bigDotView = new ImageView(bigDot);
                 bigDotView.setFitWidth(15);
                 bigDotView.setFitHeight(15);
                 this.setGraphic(bigDotView);
+            }
+        }
+
+        public void initDot(Image dot) {
+            int W = (int) dot.getWidth();
+            int H = (int) dot.getHeight();
+            int dotsize = W / 3;
+            this.dot = new WritableImage(W, H);
+            PixelReader reader = dot.getPixelReader();
+            PixelWriter writer = this.dot.getPixelWriter();
+            for (int y = 0; y < H; y++) {
+                for (int x = 0; x < W; x++) {
+                    Color color = reader.getColor(x, y);
+
+                    writer.setColor(x, y, color);
+
+                }
+            }
+            int dotstart_x = ((int) W / 2) - dotsize / 2;
+            int dotstart_y = ((int) H / 2) - dotsize / 2;
+            for (int i = dotstart_y; i < dotstart_y + dotsize; i++) {
+                for (int j = dotstart_x; j < dotstart_x + dotsize; j++) {
+                    writer.setColor(j, i, Color.YELLOW);
+                }
+            }
+        }
+
+        public void initBigDot(Image bigDot) {
+            int W = (int) bigDot.getWidth();
+            int H = (int) bigDot.getHeight();
+            int dotsize = W / 2;
+            this.bigDot = new WritableImage(W, H);
+            PixelReader reader = bigDot.getPixelReader();
+            PixelWriter writer = this.bigDot.getPixelWriter();
+            for (int y = 0; y < H; y++) {
+                for (int x = 0; x < W; x++) {
+                    Color color = reader.getColor(x, y);
+
+                    writer.setColor(x, y, color);
+
+                }
+            }
+            int dotstart_x = ((int) W / 2) - dotsize / 2;
+            int dotstart_y = ((int) H / 2) - dotsize / 2;
+            for (int i = dotstart_y; i < dotstart_y + dotsize; i++) {
+                for (int j = dotstart_x; j < dotstart_x + dotsize; j++) {
+                    writer.setColor(j, i, Color.YELLOW);
+                }
             }
         }
     }
