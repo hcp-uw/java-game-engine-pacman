@@ -4,9 +4,16 @@ import com.jgegroup.pacman.KeyHandler;
 import com.jgegroup.pacman.GameScene;
 import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
+
+import java.io.File;
+import java.time.Duration;
 
 public class Pac extends Entity {
 
@@ -20,8 +27,10 @@ public class Pac extends Entity {
     int pacman_spawn_x;
     int pacman_spawn_y;
     long last_time;
-
-
+    private final Media sirenMedia = new Media(new File("res/sounds/ghostSirenLong.mp3").toURI().toString());
+    private final MediaPlayer ghostSiren = new MediaPlayer(sirenMedia);
+    private final Media chompMedia = new Media(new File("res/sounds/Chomp.mp3").toURI().toString());
+    private final Media powerUpMedia = new Media(new File("res/sounds/powerUp.mp3").toURI().toString());
 
     public Pac(GameScene gameScene, KeyHandler keyHandler) {
         this.gameScene = gameScene;
@@ -31,6 +40,8 @@ public class Pac extends Entity {
         superLength = 10;
         initialize();
         setPacImage();
+        ghostSiren.setVolume(0.05f);
+        ghostSiren.play();
     }
 
     public void setLife(int life) {
@@ -85,19 +96,28 @@ public class Pac extends Entity {
     }
   }
 
-  /** @@Author: Tung, Noah
+  /** @@Author: Tung, Noah, Ethan
    * Check Pacman & Dot collision.
    */
   public void eatDot() {
       int current_column = x / GameScene.TILE_SIZE;
       int current_row = y / GameScene.TILE_SIZE;
+      MediaPlayer chomp = new MediaPlayer(chompMedia);
+      //MediaPlayer powerUp = new MediaPlayer(powerUpMedia);
+      chomp.setVolume(0.20f);
+      //powerUp.setVolume(0.25f);
       if (gameScene.map.mapArray2D[current_column][current_row] == 0) {
-        gameScene.map.mapArray2D[current_column][current_row] = 2;
-        point += 10;
+          chomp.play();
+          gameScene.map.mapArray2D[current_column][current_row] = 2;
+          point += 10;
       } else if (gameScene.map.mapArray2D[current_column][current_row] == 3) {
+          //powerUp.play();
           gameScene.map.mapArray2D[current_column][current_row] = 2;
           point += 100;
           setSuper();
+      } else {
+          chomp.stop();
+          //powerUp.stop();
       }
   }
     /** @@Author Noah
@@ -108,6 +128,7 @@ public class Pac extends Entity {
      **/
     public void setSuper() {
         setSuper(superLength);
+        ghostSiren.stop();
     }
 
     public void setSuper(int length) {
@@ -128,6 +149,7 @@ public class Pac extends Entity {
             this.Super--;
             return true;
         }
+        ghostSiren.play();
         return false;
     }
 

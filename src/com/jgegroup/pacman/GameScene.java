@@ -61,6 +61,10 @@ public class GameScene implements Runnable {
 
     private Settings settings;
 
+    private final Media deathMedia = new Media(new File("res/sounds/Death.mp3").toURI().toString());
+    private final Media introMedia = new Media(new File("res/sounds/Intro.mp3").toURI().toString());
+    private final MediaPlayer intro = new MediaPlayer(introMedia);
+    private final MediaPlayer death = new MediaPlayer(deathMedia);
 
     public GameScene(int ghostNumber, Settings settings) {
         if (settings == null) {
@@ -134,25 +138,15 @@ public class GameScene implements Runnable {
      */
     @Override
     public void run() {
-        // testing media during game
-        Media media = new Media(new File("res/sounds/du hast.mp3").toURI().toString());
-        Media m2 = new Media(new File("res/sounds/death.mp3").toURI().toString());
-        Media m3 = new Media(new File("res/sounds/laugh.mp3").toURI().toString());
-        MediaPlayer mp = new MediaPlayer(media);
-        MediaPlayer mp2 = new MediaPlayer(m2);
-        MediaPlayer mp3 = new MediaPlayer(m3);
-        mp.setVolume(0.25f);
-        mp2.setVolume(0.25f);
-        mp3.setVolume(0.25f);
-        mp.play();
+        intro.setVolume(0.25f);
+        death.setVolume(0.25f);
+        intro.play();
         while (pac.getLives() >= 0) {
             update();
             redraw();
             controlFPS(); // DANGER!!!  REMOVE THIS CAUSE ATOMIC EXPLOSION
         }
-        mp2.play();
-        mp3.play();
-        mp.setVolume(0.10f);
+        death.play();
         ui.displayGameFinish(getGamePainter());
 
     }

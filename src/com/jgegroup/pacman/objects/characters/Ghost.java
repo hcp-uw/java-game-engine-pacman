@@ -6,10 +6,13 @@ import com.jgegroup.pacman.PathFinder;
 import com.jgegroup.pacman.objects.Entity;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import com.jgegroup.pacman.objects.Enums.*;
 import javafx.scene.shape.Rectangle;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -41,6 +44,8 @@ public class Ghost extends Entity // implements GhostMovement
     private GameScene gameScene;
     private long last_time, state_base_time;
     private long moveCounter = 0;
+    private final Media eatenMedia = new Media(new File("res/sounds/ghostEaten.mp3").toURI().toString());
+    private final MediaPlayer eaten = new MediaPlayer(eatenMedia);
     public Ghost(int spookLength, GameScene gameScene, Color color, Pac pacman) {
         this.spookLength = pacman.superLength;
         this.gameScene = gameScene;
@@ -53,6 +58,7 @@ public class Ghost extends Entity // implements GhostMovement
         setWhiteGhostImage();
         initialize();
         last_time = state_base_time = System.currentTimeMillis();
+        eaten.setVolume(0.35f);
     }
 
     public void initialize() {
@@ -216,6 +222,7 @@ public class Ghost extends Entity // implements GhostMovement
             if (!pacman.isSuper()) {
                 pacman.death();
             } else if (this.state == State.SCARED) {
+                eaten.play();
                 this.setSpawnPosition(0);
                 state = State.DEATH;
                 state_base_time = System.currentTimeMillis();
@@ -228,27 +235,28 @@ public class Ghost extends Entity // implements GhostMovement
     }
 
 
-    /** @@Authors: Noah / Nikola
+    /** @@Authors: Noah / Nikola / Ethan
      * Sets spookState to maximum spook state 'spookLength'
      * spook length represents the number of cycles to be spooked
+     * Stops the ghost siren
      * Throws no exceptions
      * Returns nothing
      * Takes no parameters
     */
     public void setSpooked() {
-      spookState += spookLength;
-      spriteImage = white1;
+        spookState += spookLength;
+        spriteImage = white1;
     }
 
     public void updateSpookedImage() {
-      this.spriteImage = this.spriteNumber == 1 ? white1 : white2;
-      if (spookState % 2 == 0) {
-        this.spriteImage = this.spriteNumber == 1 ? blue1 : blue2;
-      }
+        this.spriteImage = this.spriteNumber == 1 ? white1 : white2;
+        if (spookState % 2 == 0) {
+            this.spriteImage = this.spriteNumber == 1 ? blue1 : blue2;
+        }
     }
 
     /** @@Authors: Noah / Nikola
-     * Updatess the spook state, if the state is even it will change the color of the ghost
+     * Updates the spook state, if the state is even it will change the color of the ghost
      * to white, and if its odd then it will change to blue, if not spooked it will return to original color
      * Throws no exceptions
      * Returns true if is currently spooked or if its coming out of being spooked
