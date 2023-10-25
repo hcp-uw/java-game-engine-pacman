@@ -88,10 +88,10 @@ public class GameConfig extends Application {
         pacManLives.relocate(25, 100);
 
         // Speed for Ghost
-        Slider ghostLivesSlider = new Slider(1, 5, 3);
+        Slider ghostLivesSlider = new Slider(1, 6, 1);
         ghostLivesSlider.setPrefWidth(250);
         ghostLivesSlider.relocate(125, 150);
-        ghostLivesSlider.setBlockIncrement(2);
+        ghostLivesSlider.setBlockIncrement(1);
         ghostLivesSlider.setMajorTickUnit(1);
         ghostLivesSlider.setMinorTickCount(0);
         ghostLivesSlider.setShowTickMarks(true);
@@ -100,10 +100,10 @@ public class GameConfig extends Application {
         ghostSpeed.relocate(25, 150);
 
         // PacMan Speed default
-        Slider pacManSpeedSlider = new Slider(1, 5, 3);
+        Slider pacManSpeedSlider = new Slider(1, 6, 1);
         pacManSpeedSlider.setPrefWidth(250);
         pacManSpeedSlider.relocate(125, 200);
-        pacManSpeedSlider.setBlockIncrement(2);
+        pacManSpeedSlider.setBlockIncrement(1);
         pacManSpeedSlider.setMajorTickUnit(1);
         pacManSpeedSlider.setMinorTickCount(0);
         pacManSpeedSlider.setShowTickMarks(true);
@@ -116,7 +116,6 @@ public class GameConfig extends Application {
         button.relocate(125, 50);
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                System.out.println("button pressed");
                 int pacmanLives = (int) (pacManLivesSlider.getValue() + 0.5);
                 int ghostSpeed = (int) (ghostLivesSlider.getValue() + 0.5);
                 int pacmanSpeed = (int) (pacManSpeedSlider.getValue() + 0.5);
@@ -124,21 +123,14 @@ public class GameConfig extends Application {
                 pacmanSpeed -= pacmanSpeed % 2;
                 ghostSpeed = Math.max(1, ghostSpeed);
                 pacmanSpeed = Math.max(1, pacmanSpeed);
-                System.out.println("Our lives for pacman is " + pacmanLives);
-                System.out.println("Our speed for ghost  is " + ghostSpeed);
-                System.out.println("Our speed for pacman is " + pacmanSpeed);
-                // How do I launch the game from here?
-
                 settings.setPacmanLives(pacmanLives);
                 settings.setGhostSpeed(ghostSpeed);
                 settings.setPacmanSpeed(pacmanSpeed);
-
-                GameScene scene = new GameScene(6, settings);
                 stage.setResizable(true);
-                stage.show();
+                GameScene scene = new GameScene(6, settings);
+                stage.setScene(scene.gameScene);
                 scene.startThread();
 
-                stage.setScene(scene.gameScene);
 
             }
         };

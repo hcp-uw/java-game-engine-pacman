@@ -92,8 +92,8 @@ public class GameScene implements Runnable {
      * Start thread. Called from Main class.
      */
     public void startThread() {
-        gameThread = new Thread(this);
         init(settings);
+        gameThread = new Thread(this);
         gameThread.start();
     }
 
@@ -120,7 +120,26 @@ public class GameScene implements Runnable {
             ghosts[i] = new Ghost(10, this, colors[i % colors.length], pac);
             ghosts[i].setSpawnPosition(i % colors.length);
         }
+    }
 
+    /**
+     * @@Author: Tung, Noah, Ethan
+     * Run the game after Init().
+     */
+    @Override
+    public void run() {
+        death.setVolume(0.25f);
+        intro.setVolume(0.25f);
+        intro.play();
+        long start = System.currentTimeMillis();
+        long wait = start + 4000;
+        for (Ghost ghost : ghosts)
+            ghost.setSpeed(0);
+        pac.setSpeed(0);
+        redraw();
+        while (start < wait) {
+            start = System.currentTimeMillis();
+        }
         if (settings.selectedLives())
             pac.setLife(settings.getPacmanLives());
         if (settings.selectedPacmanSpeed())
@@ -130,17 +149,6 @@ public class GameScene implements Runnable {
                 ghosts[i].setSpeed(settings.getGhostSpeed());
             }
         }
-    }
-
-    /**
-     * @@Author: Tung, Noah, Ethan
-     * Run the game after Init().
-     */
-    @Override
-    public void run() {
-        intro.setVolume(0.25f);
-        death.setVolume(0.25f);
-        intro.play();
         while (pac.getLives() >= 0) {
             update();
             redraw();

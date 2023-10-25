@@ -11,9 +11,9 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.io.File;
-import java.time.Duration;
 
 public class Pac extends Entity {
 
@@ -30,8 +30,7 @@ public class Pac extends Entity {
     private final Media sirenMedia = new Media(new File("res/sounds/ghostSirenLong.mp3").toURI().toString());
     private final MediaPlayer ghostSiren = new MediaPlayer(sirenMedia);
     private final Media chompMedia = new Media(new File("res/sounds/Chomp.mp3").toURI().toString());
-    private final Media powerUpMedia = new Media(new File("res/sounds/powerUp.mp3").toURI().toString());
-
+    private final MediaPlayer chomp = new MediaPlayer(chompMedia);
     public Pac(GameScene gameScene, KeyHandler keyHandler) {
         this.gameScene = gameScene;
         this.keyHandler = keyHandler;
@@ -40,8 +39,18 @@ public class Pac extends Entity {
         superLength = 10;
         initialize();
         setPacImage();
-        ghostSiren.setVolume(0.05f);
-        ghostSiren.play();
+        ghostSiren.setOnEndOfMedia(() -> {
+            if (life > 0)
+                ghostSiren.seek(Duration.ZERO);
+        });
+        ghostSiren.setVolume(0.2);
+        chomp.setVolume(0.2);
+        chomp.setStartTime(Duration.millis(150));
+        chomp.setStopTime(Duration.millis(680));
+        chomp.setOnEndOfMedia(() -> {
+            if (direction != Direction.STOP)
+                chomp.seek(Duration.millis(150));
+        });
     }
 
     public void setLife(int life) {
@@ -83,7 +92,19 @@ public class Pac extends Entity {
         if (spriteCounter > 10) {
           this.spriteNumber = spriteNumber == 1 ? 2: 1;
           spriteCounter = 0;
-      }
+        }
+
+        if (isSuper()) {
+            ghostSiren.stop();
+            ghostSiren.seek(Duration.ZERO);
+        } else {
+            if (ghostSiren.getStatus() != MediaPlayer.Status.PLAYING) {
+                ghostSiren.play();
+            }
+        }
+        if (direction != Direction.STOP && chomp.getStatus() != MediaPlayer.Status.PLAYING) {
+            chomp.play();
+        }
     }
 
   /** @@Author: Tung
@@ -102,22 +123,13 @@ public class Pac extends Entity {
   public void eatDot() {
       int current_column = x / GameScene.TILE_SIZE;
       int current_row = y / GameScene.TILE_SIZE;
-      MediaPlayer chomp = new MediaPlayer(chompMedia);
-      //MediaPlayer powerUp = new MediaPlayer(powerUpMedia);
-      chomp.setVolume(0.20f);
-      //powerUp.setVolume(0.25f);
       if (gameScene.map.mapArray2D[current_column][current_row] == 0) {
-          chomp.play();
           gameScene.map.mapArray2D[current_column][current_row] = 2;
           point += 10;
       } else if (gameScene.map.mapArray2D[current_column][current_row] == 3) {
-          //powerUp.play();
           gameScene.map.mapArray2D[current_column][current_row] = 2;
           point += 100;
           setSuper();
-      } else {
-          chomp.stop();
-          //powerUp.stop();
       }
   }
     /** @@Author Noah
@@ -149,7 +161,6 @@ public class Pac extends Entity {
             this.Super--;
             return true;
         }
-        ghostSiren.play();
         return false;
     }
 
@@ -194,6 +205,9 @@ public class Pac extends Entity {
       x = pacman_spawn_x;
       y = pacman_spawn_y;
       direction = Direction.STOP;
+      newDirection = Direction.STOP;
+      chomp.stop();
+      chomp.seek(Duration.ZERO);
     }
 
   /** @@Author: Tung, Iman
