@@ -41,13 +41,17 @@ public class Pac extends Entity {
         setPacImage();
         ghostSiren.setVolume(0.2);
         ghostSiren.setOnEndOfMedia(() -> {
-            ghostSiren.seek(Duration.ZERO);
-            ghostSiren.play();
+            if (life > 0) {
+                ghostSiren.seek(Duration.ZERO);
+                ghostSiren.play();
+            }
         });
         chomp.setVolume(0.2);
         chomp.setOnEndOfMedia(() -> {
-            chomp.seek(Duration.ZERO);
-            chomp.play();
+            if (direction != Direction.STOP) {
+                chomp.seek(Duration.ZERO);
+                chomp.play();
+            }
         });
     }
 

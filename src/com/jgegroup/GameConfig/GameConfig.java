@@ -130,8 +130,6 @@ public class GameConfig extends Application {
                 settings.setPacmanSpeed(pacmanSpeed);
                 stage.setResizable(true);
                 stage.hide();
-                long wait = System.currentTimeMillis() + 1000;
-                while (System.currentTimeMillis() < wait);
                 GameScene scene = new GameScene(6, settings);
                 stage.setScene(scene.gameScene);
                 stage.show();
