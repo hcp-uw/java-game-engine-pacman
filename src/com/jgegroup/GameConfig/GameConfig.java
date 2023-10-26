@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,6 +40,7 @@ public class GameConfig extends Application {
 
     private Stage stage;
     private Settings settings;
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -88,7 +90,7 @@ public class GameConfig extends Application {
         pacManLives.relocate(25, 100);
 
         // Speed for Ghost
-        Slider ghostLivesSlider = new Slider(1, 6, 1);
+        Slider ghostLivesSlider = new Slider(1, 4, 1);
         ghostLivesSlider.setPrefWidth(250);
         ghostLivesSlider.relocate(125, 150);
         ghostLivesSlider.setBlockIncrement(1);
@@ -100,7 +102,7 @@ public class GameConfig extends Application {
         ghostSpeed.relocate(25, 150);
 
         // PacMan Speed default
-        Slider pacManSpeedSlider = new Slider(1, 6, 1);
+        Slider pacManSpeedSlider = new Slider(1, 4, 1);
         pacManSpeedSlider.setPrefWidth(250);
         pacManSpeedSlider.relocate(125, 200);
         pacManSpeedSlider.setBlockIncrement(1);
@@ -127,8 +129,12 @@ public class GameConfig extends Application {
                 settings.setGhostSpeed(ghostSpeed);
                 settings.setPacmanSpeed(pacmanSpeed);
                 stage.setResizable(true);
+                stage.hide();
+                long wait = System.currentTimeMillis() + 1000;
+                while (System.currentTimeMillis() < wait);
                 GameScene scene = new GameScene(6, settings);
                 stage.setScene(scene.gameScene);
+                stage.show();
                 scene.startThread();
 
 
@@ -276,6 +282,7 @@ public class GameConfig extends Application {
             Button updateMap = new Button("Update Map");
             updateMap.setOnAction(event1 -> {
                 current_map.setArrayMap(tilePane.mapArray);
+                current_map.saveMap();
             });
             updateMap.relocate(442, 10);
 
@@ -284,7 +291,7 @@ public class GameConfig extends Application {
             Button selectMap = new Button("Select Map");
             selectMap.setOnAction(event2 -> {
                 if (current_map != null) {
-                    settings.setMapPath(current_map.getPath().substring(3));
+                    settings.setMapPath(current_map.getPath());
                     settings.setMapHeight(current_map.getArrayMap()[0].length);
                     settings.setMapWidth(current_map.getArrayMap().length);
                 }
@@ -298,16 +305,17 @@ public class GameConfig extends Application {
         // Create new map button
         Button createNewMapButton = new Button("Create New Map");
         createNewMapButton.relocate(10, 10);
-        ComboBox<String> addMapDropBox = addMapDropBox();
+        ComboBox<String> addMapDropBox = addMapDropBox(showMapButton);
         createNewMapButton.setOnAction(event -> {
             getMapInfo();
             updateMapDropBox(addMapDropBox);
+            showMapButton.fire();
         });
         root.getChildren().addAll(showMapButton, createNewMapButton, addMapDropBox);
         return root;
     }
 
-    public ComboBox<String> addMapDropBox() {
+    public ComboBox<String> addMapDropBox(Button showMapButton) {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.relocate(670, 10);
         File directory = new File("res/maps");
@@ -324,7 +332,7 @@ public class GameConfig extends Application {
                 try {
                     // Change the currently working map.
                     current_map = new Map(selectedMap);
-
+                    showMapButton.fire();
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 }
@@ -364,10 +372,11 @@ public class GameConfig extends Application {
 
                     int hor_len = Integer.parseInt(horizontal_length);
 
-                    if (hor_len > 20) {
-                        throw new NumberFormatException("Number was too big!!!");
+                    if (hor_len > 20 || hor_len < 0) {
+                        System.out.println("Illegal number reformatted");
+//                        throw new NumberFormatException("Number was too big!!!");
                     }
-                    this.horizontal_length = hor_len;
+                    this.horizontal_length = Math.max(0, Math.min(hor_len, 20));
                     TextInputDialog verticalLengthDialog = new TextInputDialog();
                     verticalLengthDialog.setTitle("Create New Map");
                     verticalLengthDialog.setHeaderText(null);
@@ -375,10 +384,11 @@ public class GameConfig extends Application {
                     verticalLengthDialog.showAndWait().ifPresent(vertical_length -> {
                         try {
                             int ver_len = Integer.parseInt(vertical_length);
-                            if (ver_len > 28) {
-                                throw new NumberFormatException("Number was too big!!!");
+                            if (ver_len > 28 || ver_len < 0) {
+                                System.out.println("Illegal number reformatted");
+//                                throw new NumberFormatException("Number was too big!!!");
                             }
-                            this.vertical_length = ver_len;
+                            this.vertical_length = Math.max(0, Math.min(ver_len, 28));
                         } catch (NumberFormatException e) {
                             System.out.println("Invalid number");
                         }
@@ -390,7 +400,7 @@ public class GameConfig extends Application {
             });
         });
         // change the currently working map.
-        current_map = new Map(newMapName, horizontal_length , vertical_length);
+        current_map = new Map(newMapName , vertical_length, horizontal_length);
     }
 
     class TileListCell extends ListCell<String> {
@@ -444,49 +454,52 @@ public class GameConfig extends Application {
                     ImageView newView = new ImageView();
                     newView.setFitWidth(fitsize);
                     newView.setFitHeight(fitsize);
-                    if (mapArray[i][j] == 0) {
+                    if (mapArray[i][j] == Map.DOT) {
                         newView.setImage(dot);
-                    } else if (mapArray[i][j] == 1){
+                    } else if (mapArray[i][j] == Map.WALL){
                         newView.setImage(wall);
-                    }  else if (mapArray[i][j] == 2){
+                    }  else if (mapArray[i][j] == Map.FLOOR){
                         newView.setImage(floor);
-                    } else if (mapArray[i][j] == 3){
+                    } else if (mapArray[i][j] == Map.BIGDOT){
                         newView.setImage(bigDot);
                     }
                     int finalI = i;
                     int finalJ = j;
-                    newView.setOnMouseEntered(event -> {
-                        if (event.isShiftDown()) {
-                            if (picker.getValue() == 0) {
-                                mapArray[finalI][finalJ] = 0;
+                    //If on the border, no event registered.
+                    if(!(i==0||j==0||i==height-1||j==width-1)) {
+                        newView.setOnMouseEntered(event -> {
+                            if (event.isShiftDown()) {
+                                if (picker.getValue() == Map.DOT) {
+                                    mapArray[finalI][finalJ] = Map.DOT;
+                                    newView.setImage(dot);
+                                } else if (picker.getValue() == Map.WALL) {
+                                    mapArray[finalI][finalJ] = Map.WALL;
+                                    newView.setImage(wall);
+                                } else if (picker.getValue() == Map.FLOOR) {
+                                    mapArray[finalI][finalJ] = Map.FLOOR;
+                                    newView.setImage(floor);
+                                } else if (picker.getValue() == Map.BIGDOT) {
+                                    mapArray[finalI][finalJ] = Map.BIGDOT;
+                                    newView.setImage(bigDot);
+                                }
+                            }
+                        });
+                        newView.setOnMouseClicked(event -> {
+                            if (picker.getValue() == Map.DOT) {
+                                mapArray[finalI][finalJ] = Map.DOT;
                                 newView.setImage(dot);
-                            } else if (picker.getValue() == 1){
-                                mapArray[finalI][finalJ] = 1;
+                            } else if (picker.getValue() == Map.WALL) {
+                                mapArray[finalI][finalJ] = Map.WALL;
                                 newView.setImage(wall);
-                            } else if (picker.getValue() == 2){
-                                mapArray[finalI][finalJ] = 2;
+                            } else if (picker.getValue() == Map.FLOOR) {
+                                mapArray[finalI][finalJ] = Map.FLOOR;
                                 newView.setImage(floor);
-                            } else if (picker.getValue() == 3){
-                                mapArray[finalI][finalJ] = 3;
+                            } else if (picker.getValue() == Map.BIGDOT) {
+                                mapArray[finalI][finalJ] = Map.BIGDOT;
                                 newView.setImage(bigDot);
                             }
-                        }
-                    });
-                    newView.setOnMouseClicked(event -> {
-                        if (picker.getValue() == 0) {
-                            mapArray[finalI][finalJ] = 0;
-                            newView.setImage(dot);
-                        } else if (picker.getValue() == 1){
-                            mapArray[finalI][finalJ] = 1;
-                            newView.setImage(wall);
-                        } else if (picker.getValue() == 2){
-                            mapArray[finalI][finalJ] = 2;
-                            newView.setImage(floor);
-                        } else if (picker.getValue() == 3){
-                            mapArray[finalI][finalJ] = 3;
-                            newView.setImage(bigDot);
-                        }
-                    });
+                        });
+                    }
                     newView.relocate(width_spacer + (i * (fitsize + spacer)), height_spacer + j * (fitsize + spacer));
                     tilePane.getChildren().add(newView);
                 }

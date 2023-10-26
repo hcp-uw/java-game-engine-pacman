@@ -223,7 +223,7 @@ public class Ghost extends Entity // implements GhostMovement
                 pacman.death();
             } else if (this.state == State.SCARED) {
                 eaten.play();
-                this.setSpawnPosition(0);
+                this.setSpawnPosition(9, 8);
                 state = State.DEATH;
                 state_base_time = System.currentTimeMillis();
                 this.spookState = -1;
@@ -337,6 +337,17 @@ public class Ghost extends Entity // implements GhostMovement
       white1 = new Image("ghosts/spook3.png");
       white2 = new Image("ghosts/spook4.png");
     }
+
+    public void setSpawnPosition(int tileX, int tileY){
+        x = 32 * tileX;
+        y = 32 * tileY;
+    }
+
+    public void spawn(int tileX, int tileY){
+         x = 32 * tileX;
+         y = 32 * tileY;
+    }
+
     public void setSpawnPosition (int i) {
       x = 32 * 9;
       y = 32 * (8 + i);

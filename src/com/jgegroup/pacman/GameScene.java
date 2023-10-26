@@ -55,13 +55,11 @@ public class GameScene implements Runnable {
 
     private int ghostNumber;
 
-    private Slider speedSlider;
-
     public UI ui;
 
     private Settings settings;
 
-    private final Media deathMedia = new Media(new File("res/sounds/Death.mp3").toURI().toString());
+    private final Media deathMedia = new Media(new File("res/sounds/death.mp3").toURI().toString());
     private final Media introMedia = new Media(new File("res/sounds/Intro.mp3").toURI().toString());
     private final MediaPlayer intro = new MediaPlayer(introMedia);
     private final MediaPlayer death = new MediaPlayer(deathMedia);
@@ -118,7 +116,7 @@ public class GameScene implements Runnable {
 
         for (int i = 0; i < ghostNumber; i++) {
             ghosts[i] = new Ghost(10, this, colors[i % colors.length], pac);
-            ghosts[i].setSpawnPosition(i % colors.length);
+            ghosts[i].setSpawnPosition(9, 8 + i % colors.length);
         }
     }
 

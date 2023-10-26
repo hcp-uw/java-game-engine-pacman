@@ -27,9 +27,9 @@ public class Pac extends Entity {
     int pacman_spawn_x;
     int pacman_spawn_y;
     long last_time;
-    private final Media sirenMedia = new Media(new File("res/sounds/ghostSirenLong.mp3").toURI().toString());
+    private final Media sirenMedia = new Media(new File("res/sounds/ghostSiren.mp3").toURI().toString());
     private final MediaPlayer ghostSiren = new MediaPlayer(sirenMedia);
-    private final Media chompMedia = new Media(new File("res/sounds/Chomp.mp3").toURI().toString());
+    private final Media chompMedia = new Media(new File("res/sounds/pacman_chomp.wav").toURI().toString());
     private final MediaPlayer chomp = new MediaPlayer(chompMedia);
     public Pac(GameScene gameScene, KeyHandler keyHandler) {
         this.gameScene = gameScene;
@@ -39,17 +39,15 @@ public class Pac extends Entity {
         superLength = 10;
         initialize();
         setPacImage();
-        ghostSiren.setOnEndOfMedia(() -> {
-            if (life > 0)
-                ghostSiren.seek(Duration.ZERO);
-        });
         ghostSiren.setVolume(0.2);
+        ghostSiren.setOnEndOfMedia(() -> {
+            ghostSiren.seek(Duration.ZERO);
+            ghostSiren.play();
+        });
         chomp.setVolume(0.2);
-        chomp.setStartTime(Duration.millis(150));
-        chomp.setStopTime(Duration.millis(680));
         chomp.setOnEndOfMedia(() -> {
-            if (direction != Direction.STOP)
-                chomp.seek(Duration.millis(150));
+            chomp.seek(Duration.ZERO);
+            chomp.play();
         });
     }
 
@@ -63,14 +61,9 @@ public class Pac extends Entity {
       life = 3;
       point = 0;
       collidedGhost = false;
-      pacman_spawn_x = 32 * 10;
-      pacman_spawn_y = 32 * 15;
-      x = pacman_spawn_x;
-      y = pacman_spawn_y;
+      spawn();
       speed = 1;
       collision_range = new Rectangle(0, 0, GameScene.TILE_SIZE - 1, GameScene.TILE_SIZE - 1);
-      direction = Direction.STOP;
-      newDirection = Direction.STOP;
     }
 
 
@@ -96,7 +89,6 @@ public class Pac extends Entity {
 
         if (isSuper()) {
             ghostSiren.stop();
-            ghostSiren.seek(Duration.ZERO);
         } else {
             if (ghostSiren.getStatus() != MediaPlayer.Status.PLAYING) {
                 ghostSiren.play();
@@ -104,7 +96,8 @@ public class Pac extends Entity {
         }
         if (direction != Direction.STOP && chomp.getStatus() != MediaPlayer.Status.PLAYING) {
             chomp.play();
-        }
+        } else if (direction == Direction.STOP)
+            chomp.stop();
     }
 
   /** @@Author: Tung
@@ -202,12 +195,16 @@ public class Pac extends Entity {
    * Set pacman's position back to spawn position.
    */
     public void spawn() {
-      x = pacman_spawn_x;
-      y = pacman_spawn_y;
-      direction = Direction.STOP;
-      newDirection = Direction.STOP;
-      chomp.stop();
-      chomp.seek(Duration.ZERO);
+      spawn(10,15);
+    }
+
+    public void spawn(int tile_x, int tile_y) {
+        x = 32 * tile_x;
+        y = 32 * tile_y;
+        direction = Direction.STOP;
+        newDirection = Direction.STOP;
+        chomp.stop();
+        chomp.seek(Duration.ZERO);
     }
 
   /** @@Author: Tung, Iman

@@ -2,11 +2,22 @@ package com.jgegroup.GameConfig;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.util.Scanner;
 import java.io.*;
 
 
 public class Map implements MapWriter {
+
+  public static final int DOT = 0;
+  public static final int WALL = 1;
+  public static final int FLOOR = 2;
+  public static final int BIGDOT = 3;
 
   private String map_name;
 
@@ -57,10 +68,19 @@ public class Map implements MapWriter {
 
   @Override
   public void loadBasicMap() {
-    for (int i = 0; i < column; i++) {
-      for (int j = 0; j < row; j++) {
-        ArrayMap[i][j] = 0;
+    for (int i = 1; i < column - 1; i++) {
+      for (int j = 1; j < row - 1; j++) {
+        ArrayMap[i][j] = DOT;
       }
+    }
+    // Add walls on the border
+    for (int i = 0; i < column; i++) {
+      ArrayMap[i][0] = WALL;
+      ArrayMap[i][row - 1] = WALL;
+    }
+    for (int j = 0; j < row; j++) {
+      ArrayMap[0][j] = WALL;
+      ArrayMap[column - 1][j] = WALL;
     }
   }
 
@@ -70,18 +90,24 @@ public class Map implements MapWriter {
   }
 
   @Override
-  public void saveMap() {
+  public void saveMap(){
     try {
+      System.out.printf("Writing file %n");
+      System.out.printf("Path is %s%n", path);
       FileWriter writer = new FileWriter(path);
-      for (int i = 0; i < column; i++) {
-        for (int j = 0; j < row; j++) {
-          writer.write((char) ('0' + ArrayMap[i][j]));
-          if (j < row - 1)
-            writer.write(' ');
+      StringBuilder sb = new StringBuilder();
+      for (int j = 0; j < row; j++) {
+        for (int i = 0; i < column; i++) {
+          sb.append((char) ('0' + ArrayMap[i][j]));
+          if (i < column - 1)
+            sb.append(' ');
         }
-        writer.write("\n");
+        sb.append('\n');
       }
+      writer.write(sb.toString());
       writer.close();
+      FileTime lastModifiedTime = FileTime.fromMillis(System.currentTimeMillis() + 3000);
+        System.out.printf("Finished writing file %n");
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -89,16 +115,7 @@ public class Map implements MapWriter {
 
   public void constructArrayMap() {
     try (Scanner scanner = new Scanner(new File(path))) {
-//      int row = 0;
-//      while (scanner.hasNextLine() && row < this.row) {
-//        String mapLine = scanner.nextLine();
-//        String[] numbers = mapLine.split(" ");
-//        for (int column = 0; column < this.column && column < numbers.length; column++) {
-//          int num = Integer.parseInt(numbers[column]);
-//          ArrayMap[column][row] = num;
-//        }
-//        row++;
-//      }
+
       for (int row = 0; row < this.row && scanner.hasNextLine(); row++) {
         String[] numbers = scanner.nextLine().split(" ");
         for (int column = 0; column < this.column; column++) {
