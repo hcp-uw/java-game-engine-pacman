@@ -55,12 +55,14 @@ public class GameScene implements Runnable {
 
     private int ghostNumber;
 
-    private Slider speedSlider;
-
     public UI ui;
 
     private Settings settings;
 
+    private final Media deathMedia = new Media(new File("res/sounds/death.mp3").toURI().toString());
+    private final Media introMedia = new Media(new File("res/sounds/Intro.mp3").toURI().toString());
+    private final MediaPlayer intro = new MediaPlayer(introMedia);
+    private final MediaPlayer death = new MediaPlayer(deathMedia);
 
     public GameScene(int ghostNumber, Settings settings) {
         if (settings == null) {
@@ -88,8 +90,8 @@ public class GameScene implements Runnable {
      * Start thread. Called from Main class.
      */
     public void startThread() {
-        gameThread = new Thread(this);
         init(settings);
+        gameThread = new Thread(this);
         gameThread.start();
     }
 
@@ -114,17 +116,7 @@ public class GameScene implements Runnable {
 
         for (int i = 0; i < ghostNumber; i++) {
             ghosts[i] = new Ghost(10, this, colors[i % colors.length], pac);
-            ghosts[i].setSpawnPosition(i % colors.length);
-        }
-
-        if (settings.selectedLives())
-            pac.setLife(settings.getPacmanLives());
-        if (settings.selectedPacmanSpeed())
-            pac.setSpeed(settings.getPacmanSpeed());
-        if (settings.selectedGhostSpeed()) {
-            for (int i = 0; i < ghostNumber; i++) {
-                ghosts[i].setSpeed(settings.getGhostSpeed());
-            }
+            ghosts[i].setSpawnPosition(9, 8 + i % colors.length);
         }
     }
 
@@ -134,25 +126,33 @@ public class GameScene implements Runnable {
      */
     @Override
     public void run() {
-        // testing media during game
-        Media media = new Media(new File("res/sounds/du hast.mp3").toURI().toString());
-        Media m2 = new Media(new File("res/sounds/death.mp3").toURI().toString());
-        Media m3 = new Media(new File("res/sounds/laugh.mp3").toURI().toString());
-        MediaPlayer mp = new MediaPlayer(media);
-        MediaPlayer mp2 = new MediaPlayer(m2);
-        MediaPlayer mp3 = new MediaPlayer(m3);
-        mp.setVolume(0.25f);
-        mp2.setVolume(0.25f);
-        mp3.setVolume(0.25f);
-        mp.play();
+        death.setVolume(0.25f);
+        intro.setVolume(0.25f);
+        intro.play();
+        long start = System.currentTimeMillis();
+        long wait = start + 4000;
+        for (Ghost ghost : ghosts)
+            ghost.setSpeed(0);
+        pac.setSpeed(0);
+        redraw();
+        while (start < wait) {
+            start = System.currentTimeMillis();
+        }
+        if (settings.selectedLives())
+            pac.setLife(settings.getPacmanLives());
+        if (settings.selectedPacmanSpeed())
+            pac.setSpeed(settings.getPacmanSpeed());
+        if (settings.selectedGhostSpeed()) {
+            for (int i = 0; i < ghostNumber; i++) {
+                ghosts[i].setSpeed(settings.getGhostSpeed());
+            }
+        }
         while (pac.getLives() >= 0) {
             update();
             redraw();
             controlFPS(); // DANGER!!!  REMOVE THIS CAUSE ATOMIC EXPLOSION
         }
-        mp2.play();
-        mp3.play();
-        mp.setVolume(0.10f);
+        death.play();
         ui.displayGameFinish(getGamePainter());
 
     }

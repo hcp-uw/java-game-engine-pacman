@@ -3,7 +3,7 @@ package com.jgegroup.pacman.objects;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import com.jgegroup.pacman.objects.Enums.*;
-
+// Entity
 public class Entity {
     public int x, y;
     public Direction newDirection;

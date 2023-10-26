@@ -4,9 +4,16 @@ import com.jgegroup.pacman.KeyHandler;
 import com.jgegroup.pacman.GameScene;
 import com.jgegroup.pacman.objects.Entity;
 import com.jgegroup.pacman.objects.Enums.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
+import java.io.File;
 
 public class Pac extends Entity {
 
@@ -20,9 +27,10 @@ public class Pac extends Entity {
     int pacman_spawn_x;
     int pacman_spawn_y;
     long last_time;
-
-
-
+    private final Media sirenMedia = new Media(new File("res/sounds/ghostSiren.mp3").toURI().toString());
+    private final MediaPlayer ghostSiren = new MediaPlayer(sirenMedia);
+    private final Media chompMedia = new Media(new File("res/sounds/pacman_chomp.wav").toURI().toString());
+    private final MediaPlayer chomp = new MediaPlayer(chompMedia);
     public Pac(GameScene gameScene, KeyHandler keyHandler) {
         this.gameScene = gameScene;
         this.keyHandler = keyHandler;
@@ -31,6 +39,16 @@ public class Pac extends Entity {
         superLength = 10;
         initialize();
         setPacImage();
+        ghostSiren.setVolume(0.2);
+        ghostSiren.setOnEndOfMedia(() -> {
+            ghostSiren.seek(Duration.ZERO);
+            ghostSiren.play();
+        });
+        chomp.setVolume(0.2);
+        chomp.setOnEndOfMedia(() -> {
+            chomp.seek(Duration.ZERO);
+            chomp.play();
+        });
     }
 
     public void setLife(int life) {
@@ -43,14 +61,9 @@ public class Pac extends Entity {
       life = 3;
       point = 0;
       collidedGhost = false;
-      pacman_spawn_x = 32 * 10;
-      pacman_spawn_y = 32 * 15;
-      x = pacman_spawn_x;
-      y = pacman_spawn_y;
+      spawn();
       speed = 1;
       collision_range = new Rectangle(0, 0, GameScene.TILE_SIZE - 1, GameScene.TILE_SIZE - 1);
-      direction = Direction.STOP;
-      newDirection = Direction.STOP;
     }
 
 
@@ -72,7 +85,19 @@ public class Pac extends Entity {
         if (spriteCounter > 10) {
           this.spriteNumber = spriteNumber == 1 ? 2: 1;
           spriteCounter = 0;
-      }
+        }
+
+        if (isSuper()) {
+            ghostSiren.stop();
+        } else {
+            if (ghostSiren.getStatus() != MediaPlayer.Status.PLAYING) {
+                ghostSiren.play();
+            }
+        }
+        if (direction != Direction.STOP && chomp.getStatus() != MediaPlayer.Status.PLAYING) {
+            chomp.play();
+        } else if (direction == Direction.STOP)
+            chomp.stop();
     }
 
   /** @@Author: Tung
@@ -85,15 +110,15 @@ public class Pac extends Entity {
     }
   }
 
-  /** @@Author: Tung, Noah
+  /** @@Author: Tung, Noah, Ethan
    * Check Pacman & Dot collision.
    */
   public void eatDot() {
       int current_column = x / GameScene.TILE_SIZE;
       int current_row = y / GameScene.TILE_SIZE;
       if (gameScene.map.mapArray2D[current_column][current_row] == 0) {
-        gameScene.map.mapArray2D[current_column][current_row] = 2;
-        point += 10;
+          gameScene.map.mapArray2D[current_column][current_row] = 2;
+          point += 10;
       } else if (gameScene.map.mapArray2D[current_column][current_row] == 3) {
           gameScene.map.mapArray2D[current_column][current_row] = 2;
           point += 100;
@@ -108,6 +133,7 @@ public class Pac extends Entity {
      **/
     public void setSuper() {
         setSuper(superLength);
+        ghostSiren.stop();
     }
 
     public void setSuper(int length) {
@@ -169,9 +195,16 @@ public class Pac extends Entity {
    * Set pacman's position back to spawn position.
    */
     public void spawn() {
-      x = pacman_spawn_x;
-      y = pacman_spawn_y;
-      direction = Direction.STOP;
+      spawn(10,15);
+    }
+
+    public void spawn(int tile_x, int tile_y) {
+        x = 32 * tile_x;
+        y = 32 * tile_y;
+        direction = Direction.STOP;
+        newDirection = Direction.STOP;
+        chomp.stop();
+        chomp.seek(Duration.ZERO);
     }
 
   /** @@Author: Tung, Iman

@@ -8,6 +8,9 @@ import com.jgegroup.pacman.objects.immovable.Tile;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -63,7 +66,7 @@ public class Map {
                 new Image("tiles/wall tiles/wall.png");
         loadTileImage(floor, wall);
         System.out.println(settings.selectedMap() ? settings.getMapPath() : "");
-        readMap(settings.selectedMap() ? settings.getMapPath() : "/maps/map1.txt");
+        readMap(settings.selectedMap() ? settings.getMapPath() : "res/maps/map1.txt");
     }
 
 
@@ -98,8 +101,9 @@ public class Map {
      */
     public void readMap(String path) {
         try {
-            InputStream is = getClass().getResourceAsStream(path);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            BufferedReader br = null;
+            Path pathtofile = Paths.get(path);
+            br = Files.newBufferedReader(pathtofile);
 
             for (int y = 0; y < GameScene.NUMBER_OF_TILE_ROW; y++) {
                 String[] numbers = br.readLine().split(" ");
